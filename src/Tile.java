@@ -1,4 +1,9 @@
-
+/**
+ * 
+ * @author Wells
+ *
+ * Tiles for map
+ */
 public class Tile {
 	private boolean empty;
 	private Unit unit;

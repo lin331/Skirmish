@@ -1,4 +1,9 @@
-
+/**
+ * 
+ * @author Wells
+ *
+ * Game map
+ */
 public class Map {
 	private Tile tiles[][];
 	

@@ -1,15 +1,30 @@
-
+/**
+ * Fun game
+ * 
+ * @author Wells
+ *
+ * Contains main method for game
+ */
 public class Game {
 	private Map map;
-	
-	public void initialize() {
-		map = new Map();
-	}
-	
+
+	/**
+	 * Constructor for game
+	 */
 	public Game() {
 		initialize();
 	}
 	
+	/**
+	 * Initialize game map
+	 */
+	public void initialize() {
+		map = new Map();
+	}
+	
+	/**
+	 * Prints the current game map to screen
+	 */
 	public void viewMap() {
 		map.printMap();
 	}
