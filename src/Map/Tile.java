@@ -1,3 +1,6 @@
+package Map;
+import Player.Unit;
+
 /**
  * 
  * @author Wells

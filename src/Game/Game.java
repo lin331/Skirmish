@@ -1,3 +1,6 @@
+package Game;
+import Map.Map;
+
 /**
  * Fun game
  * 
