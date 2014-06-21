@@ -10,7 +10,7 @@ import Map.Map;
  */
 public class Game {
 	private Map map;
-
+	private boolean isOver;
 	/**
 	 * Constructor for game
 	 */
@@ -23,6 +23,14 @@ public class Game {
 	 */
 	public void initialize() {
 		map = new Map();
+		isOver = false;
+	}
+	
+	/**
+	 * Takes move commands and processes them
+	 */
+	public void processTurn() {
+		
 	}
 	
 	/**
@@ -36,5 +44,9 @@ public class Game {
 		Game game = new Game();
 		game.initialize();
 		game.viewMap();
+		while(!game.isOver) {
+			game.processTurn();
+			game.viewMap();
+		}
 	}
 }

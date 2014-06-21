@@ -15,4 +15,12 @@ public class Tile {
 		empty = true;
 		unit = null;
 	}
+	
+	public boolean empty() {
+		return empty;
+	}
+	
+	public Unit getUnit() {
+		return unit;
+	}
 }
