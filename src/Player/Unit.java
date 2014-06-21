@@ -1,4 +1,5 @@
 package Player;
+
 /**
  * 
  * @author Wells
@@ -6,10 +7,13 @@ package Player;
  * Generic Unit class
  */
 public class Unit {
+	protected Team team; // Unit's team
+	protected int num; // Unit's number
 	protected Type type; // Unit type
 	protected int health; // Unit's health stat
 	protected int attack; // Unit's attack stat
-	protected int coord[][]; // Unit's location
+	protected int move; // How far unit can move
+	protected Position pos; // Unit's location
 	protected boolean dead; // Dead?
 	
 	/**
@@ -17,13 +21,16 @@ public class Unit {
 	 * 
 	 * @param health Unit's health stat
 	 * @param attack Unit's attack stat
-	 * @param coord  Unit's location on map
+	 * @param pos  Unit's location on map
 	 */
-	public Unit(int health, int attack, int coord[][]) {
+	public Unit(Team team, int health, int attack, Position pos) {
+		this.team = team;
+		num = team.getNumUnits();
+		team.add();
 		type = Type.DEFAULT;
 		this.health = health;
 		this.attack = attack;
-		this.coord = coord;
+		this.pos = pos;
 		dead = false;
 	}
 	
@@ -33,12 +40,16 @@ public class Unit {
 	 * @param type   Unit type
 	 * @param health Unit's health stat
 	 * @param attack Unit's attack stat
-	 * @param coord  Unit's location on map
+	 * @param pos  Unit's location on map
 	 */
-	public Unit(Type type, int health, int attack, int coord[][]) {
+	public Unit(Team team, Type type, int health, int attack, Position pos) {
+		this.team = team;
+		num = team.getNumUnits();
+		team.add();
 		this.type = type;
 		this.health = health;
 		this.attack = attack;
+		this.pos = pos;
 		dead = false;
 	}
 	
@@ -60,5 +71,29 @@ public class Unit {
 		if (health < 1) {
 			dead = true;
 		}
+	}
+	
+	public Team getTeam() {
+		return team;
+	}
+	
+	public int getNum() {
+		return num;
+	}
+	
+	public int getHealth() {
+		return health;
+	}
+	
+	public int getAttack() {
+		return attack;
+	}
+	
+	public int getMove() {
+		return move;
+	}
+	
+	public Position getPos() {
+		return pos;
 	}
 }
