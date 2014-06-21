@@ -16,8 +16,13 @@ public class Tile {
 		unit = null;
 	}
 	
-	public boolean empty() {
+	public boolean isEmpty() {
 		return empty;
+	}
+	
+	public void setUnit(Unit unit) {
+		this.unit = unit;
+		empty = false;
 	}
 	
 	public Unit getUnit() {

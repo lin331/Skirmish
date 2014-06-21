@@ -1,6 +1,9 @@
 package Game;
-import Map.Map;
+import java.util.Scanner;
 
+import Map.Map;
+import Player.Position;
+import Player.Team;
 /**
  * Fun game
  * 
@@ -10,33 +13,53 @@ import Map.Map;
  */
 public class Game {
 	private Map map;
-	private boolean isOver;
+	private boolean active;
+	private Team[] teams;
+	
 	/**
 	 * Constructor for game
 	 */
-	public Game() {
+	private Game() {
 		initialize();
 	}
 	
 	/**
 	 * Initialize game map
 	 */
-	public void initialize() {
+	private void initialize() {
 		map = new Map();
-		isOver = false;
+		active = true;
+	}
+	
+	private void makeTeams() {
+		teams = new Team[2];
+		teams[0] = new Team("Team A");
+		teams[1] = new Team("Team B");
+	}
+	
+	private void setUnits() {
+		map.setUnits(teams);
 	}
 	
 	/**
 	 * Takes move commands and processes them
 	 */
-	public void processTurn() {
-		
+	private void processTurn() {
+		Scanner s = new Scanner(System.in);
+		Turn[] turns = new Turn[2];
+		for (int i = 0; i < 2; i++) {
+			turns[i] = new Turn(teams[i]);
+			turns[i].getTurn();
+		}
+		for (int i = 0; i < 2; i++) {
+			turns[i].processTurn();
+		}
 	}
 	
 	/**
 	 * Prints the current game map to screen
 	 */
-	public void viewMap() {
+	private void viewMap() {
 		map.printMap();
 	}
 	
@@ -44,7 +67,10 @@ public class Game {
 		Game game = new Game();
 		game.initialize();
 		game.viewMap();
-		while(!game.isOver) {
+		game.makeTeams();
+		game.setUnits();
+		game.viewMap();
+		while(game.active) {
 			game.processTurn();
 			game.viewMap();
 		}
