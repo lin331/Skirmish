@@ -18,33 +18,33 @@ public class Gui extends JFrame {
     public Gui() {
         initialize();
 	
-		ImageIcon tileIcon = new ImageIcon("res/tile.png");
-		for (int i = 0; i < map.getWidth()*map.getHeight(); i++) {
-		    JButton b = new JButton(tileIcon);
-			//b.setBorder(null);
-			mainPanel.add(b);
-			tileButtons.add(b);
-		}
+        ImageIcon tileIcon = new ImageIcon("res/tile.png");
+        for (int i = 0; i < map.getWidth()*map.getHeight(); i++) {
+            JButton b = new JButton(tileIcon);
+            //b.setBorder(null);
+            mainPanel.add(b);
+            tileButtons.add(b);
+        }
 		
-		validate();
+        validate();
     }
 	
     public void initialize() {
         map = new Map();
-		background = new JPanel();
-		tileButtons = new ArrayList<JButton>();
-		
-		GridLayout grid = new GridLayout(map.getHeight(), map.getWidth());
-		mainPanel = new JPanel(grid);
+        background = new JPanel();
+        tileButtons = new ArrayList<JButton>();
+
+        GridLayout grid = new GridLayout(map.getHeight(), map.getWidth());
+        mainPanel = new JPanel(grid);
 		
         setTitle("Skirmish");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	
-		
-		getContentPane().add(background);		
-		background.add(mainPanel);
-		
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	
+
+        getContentPane().add(background);		
+        background.add(mainPanel);
+
         setSize(600,300);
-		setVisible(true);		
+        setVisible(true);		
     }
 	
 }
