@@ -16,7 +16,7 @@ public class Gui extends JFrame {
 	private ArrayList<JButton> tileButtons;
 	
     public Gui() {
-	    initialize();
+        initialize();
 	
 		ImageIcon tileIcon = new ImageIcon("res/tile.png");
 		for (int i = 0; i < map.getWidth()*map.getHeight(); i++) {
@@ -27,24 +27,24 @@ public class Gui extends JFrame {
 		}
 		
 		validate();
-	}
+    }
 	
-	public void initialize() {
-	    map = new Map();
+    public void initialize() {
+        map = new Map();
 		background = new JPanel();
 		tileButtons = new ArrayList<JButton>();
 		
 		GridLayout grid = new GridLayout(map.getHeight(), map.getWidth());
 		mainPanel = new JPanel(grid);
 		
-	    setTitle("Skirmish");
+        setTitle("Skirmish");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	
 		
 		getContentPane().add(background);		
 		background.add(mainPanel);
 		
-	    setSize(600,300);
+        setSize(600,300);
 		setVisible(true);		
-	}
+    }
 	
 }
