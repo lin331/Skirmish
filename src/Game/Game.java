@@ -1,6 +1,7 @@
 package Game;
 import java.util.Scanner;
 
+import Graphics.Gui;
 import Map.Map;
 import Player.Position;
 import Player.Team;
@@ -67,6 +68,7 @@ public class Game {
 		Game game = new Game();
 		game.initialize();
 		game.viewMap();
+		Gui gui = new Gui();
 		game.makeTeams();
 		game.setUnits();
 		game.viewMap();
