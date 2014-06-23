@@ -28,6 +28,14 @@ public class Map {
 		}
 	}
 	
+	public int getWidth() {
+	    return width;
+	}
+	
+	public int getHeight() {
+	    return height;
+	}
+	
 	public void setUnits(Team teams[]) {
 		for (Team t : teams) {
 			Unit[] units = t.getUnits();
