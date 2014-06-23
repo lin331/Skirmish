@@ -52,7 +52,7 @@ Glass Cannon Soldier [maybe]
 Mechanics:
 	Planning Phase
 		{
-		Get 2 moves per planning phase, 30 seconds to plan <adjustable>
+		Get 3 moves per planning phase, 30 seconds to plan <adjustable>
 		Moves can be next turn moves, or delayed moves <So more than 2 moves can happen per turn>
 		3 types of movement:
 			(
