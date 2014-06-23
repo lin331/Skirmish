@@ -6,22 +6,13 @@ import Player.Position;
 import Player.Team;
 
 public class Turn {
-	private Team team;
 	private Move moves[];
 	
-	public Turn(Team team) {
-		this.team = team;
-		moves = new Move[2];
+	public Turn() {
 		
 	}
 	
-	public void getTurn() {
-		moves[0] = setMoves(team);
-		moves[1] = setMoves(team);
-		
-	}
-	
-	public void processTurn() {
+	public void process() {
 		
 	}
 	

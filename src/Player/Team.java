@@ -33,6 +33,9 @@ public class Team {
 		
 	}
 	
+	public Unit getUnit(int i) {
+		return units[i];
+	}
 	public Unit[] getUnits() {
 		return units;
 	}
@@ -46,6 +49,10 @@ public class Team {
 	}
 	
 	public String getName() {
+		return name;
+	}
+	
+	public String toString() {
 		return name;
 	}
 }

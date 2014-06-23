@@ -73,6 +73,9 @@ public class Unit {
 		}
 	}
 	
+	public void setPos(Position pos) {
+		this.pos = pos;
+	}
 	public Team getTeam() {
 		return team;
 	}
@@ -95,5 +98,9 @@ public class Unit {
 	
 	public Position getPos() {
 		return pos;
+	}
+	
+	public String toString() {
+		return Integer.toString(num);
 	}
 }
