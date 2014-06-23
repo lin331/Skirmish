@@ -2,8 +2,8 @@ package Game;
 
 public class MoveList {
 	// private final int MAXMOVES = 50;
-	private int num;
-	private Node head;
+	private int num; // number of moves in list
+	private Node head; // start of list
 	
 	public MoveList() {
 		head = new Node();
@@ -24,6 +24,10 @@ public class MoveList {
 		return num;
 	}
 	
+	/**
+	 * Adds move in list based on distance
+	 * @param move Move to be added
+	 */
 	public void add(Move move) {
 		if (head == null) {
 			Node node = new Node();
@@ -45,6 +49,10 @@ public class MoveList {
 		num += 1;
 	}
 	
+	/**
+	 * Removes first item in list
+	 * @return Move object to be processed
+	 */
 	public Move remove() {
 		Move move = head.move;
 		head = head.next;

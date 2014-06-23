@@ -5,11 +5,11 @@ import Player.Unit;
 import Player.Position;
 
 public class Move {
-	private Team team;
-	private Unit unit;
-	private Position pos;
-	private int dist;
-	private int delay;
+	private Team team; // unit's team
+	private Unit unit; // unit to be moved
+	private Position pos; // pos to be moved to
+	private int dist; // distance from unit's current pos
+	private int delay; // 0 if current turn, else delayed
 	
 	public Move(Team team, int unit, Position pos) {
 		this.team = team;
@@ -27,6 +27,7 @@ public class Move {
 	}
 	
 	public void print() {
-		System.out.format("%s: %s - %s", team.toString(), unit.toString(), pos.toString());
+		System.out.format("%s: %s - %s", team.toString(), unit.toString(),
+						  pos.toString());
 	}
 }

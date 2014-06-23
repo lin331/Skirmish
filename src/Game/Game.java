@@ -16,7 +16,7 @@ public class Game {
 	private Map map;
 	private boolean active;
 	private Team[] teams;
-	private Turn turn;
+	private MoveList moves;
 	
 	/**
 	 * Constructor for game
@@ -31,8 +31,8 @@ public class Game {
 	private void initialize() {
 		map = new Map();
 		active = false;
-		//makeTeams();
-		//turn = new Turn();
+		makeTeams();
+		moves = new MoveList();
 	}
 	
 	private void makeTeams() {
@@ -67,27 +67,15 @@ public class Game {
 	public static void main(String[] args) {
 		Game game = new Game();
 		game.initialize();
-<<<<<<< HEAD
-		//game.viewMap();
-		//game.setUnits();
-		//game.viewMap();
-		//while(game.active) {
-		//	game.getTurn();
-		//	//game.processTurn();
-		//	game.viewMap();
-		//}
-		MoveList moves = new MoveList();
-		
-=======
-		game.viewMap();
-		Gui gui = new Gui();
-		game.makeTeams();
+	/*	game.viewMap();
 		game.setUnits();
 		game.viewMap();
 		while(game.active) {
+			game.getTurn();
 			game.processTurn();
 			game.viewMap();
 		}
->>>>>>> origin/develop
+		Gui gui = new Gui();
+	*/
 	}
 }
