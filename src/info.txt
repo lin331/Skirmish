@@ -89,7 +89,16 @@ Mechanics:
 			if both units are using 
 			)
 			
-		
+		Battle mechanics:
+			{
+			if both units moving, they attack each other at the same time (both deal and recieve full damage)
+			if moving unit walks into stationary enemy, moving unit deals damage first, stationary unit retaliate
+			subsequent attackers <flankers> take 50% less damage if 2 opposing units are next to each other
+				~in other words <flankers> take 50% less damage
+				~<flankers> still do full amount of damage and attack first
+				~target enemy retaliates at 50% damage after (retaliation because they are stationary)
+			Archers have melee attack for when they get engaged on (current value 15dmg) in addition to their ranged shot
+			}
 		}
 	Pre-Planning phase
 		{
