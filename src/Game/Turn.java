@@ -2,7 +2,7 @@ package Game;
 
 import java.util.Scanner;
 
-import Player.Position;
+import Map.Position;
 import Player.Team;
 
 public class Turn {

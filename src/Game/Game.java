@@ -3,7 +3,7 @@ import java.util.Scanner;
 
 import Graphics.Gui;
 import Map.Map;
-import Player.Position;
+import Map.Position;
 import Player.Team;
 /**
  * Fun game

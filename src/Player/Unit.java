@@ -1,5 +1,7 @@
 package Player;
 
+import Map.Position;
+
 /**
  * 
  * @author Wells

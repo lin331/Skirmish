@@ -1,6 +1,5 @@
 package Map;
 
-import Player.Position;
 import Player.Team;
 import Player.Unit;
 

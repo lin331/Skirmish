@@ -1,5 +1,7 @@
 package Player;
 
+import Map.Position;
+
 import java.util.Scanner;
 
 public class Team {

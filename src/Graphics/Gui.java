@@ -21,7 +21,7 @@ public class Gui extends JFrame {
         ImageIcon tileIcon = new ImageIcon("res/tile.png");
         for (int i = 0; i < map.getWidth()*map.getHeight(); i++) {
             JButton b = new JButton(tileIcon);
-            //b.setBorder(null);
+            b.setBorder(null);
             mainPanel.add(b);
             tileButtons.add(b);
         }

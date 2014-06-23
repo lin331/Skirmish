@@ -1,8 +1,8 @@
 package Game;
 
+import Map.Position;
 import Player.Team;
 import Player.Unit;
-import Player.Position;
 
 public class Move {
 	private Team team; // unit's team
