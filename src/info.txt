@@ -63,6 +63,11 @@ Mechanics:
 	Execution Phase
 		{
 		Moves made in planning phase are executed
+		If there is a unit at the destination of a movement, moving unit will stop on the last available square
+			~will engage if enemy unit
+			~will just stop if friendly unit
+			~archer attack is cancelled if out of range
+		
 		Interruptable Move
 			(
 			Unit move along determined path, if adjacent or blocked by enemy at any point, will stop and engage
@@ -71,13 +76,20 @@ Mechanics:
 			(
 			Will move towards specified point at all costs:
 			 	~if adjacent to enemy, will take standard damage but keep moving
+			 		*interruptable move units stop after attacking, goal move keeps going
 			 	~if blocked by enemy, will move through, taking 2x damage
 			will engage on adjacent or blocking enemies on destination.
+			
+			if 2 units are both using goal move (not safe goal move) and need to cross paths directly (not adjacent)
+				~no damage is dealth to either unit, they pass through each other.
 			)
 		Safe Goal move
 			(
 			Same as goal move, but will engage rather than move through blocking units
+			if both units are using 
 			)
+			
+		
 		}
 	Pre-Planning phase
 		{
