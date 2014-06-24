@@ -1,9 +1,20 @@
 package Player;
 
+<<<<<<< HEAD
 import java.util.Scanner;
 
 import Map.Position;
 
+=======
+import Map.Position;
+
+/**
+ * 
+ * @author Wells
+ *
+ * Generic Unit class
+ */
+>>>>>>> origin/develop
 public class Unit {
 	protected Team team; // Unit's team
 	protected int num; // Unit's number
