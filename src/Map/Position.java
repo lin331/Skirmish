@@ -1,4 +1,4 @@
-package Player;
+package Map;
 
 public class Position {
 	private int x;
@@ -34,6 +34,8 @@ public class Position {
 	}
 	
 	public String toString() {
-		return "(" + Integer.toString(x) + ", " + Integer.toString(y) + ")";
+		String s = "(" + Integer.toString(x) + ", " + Integer.toString(y) + ")";
+		//System.out.println(s);
+		return s;
 	}
 }
