@@ -16,17 +16,8 @@ public class Gui extends JFrame {
 	private ArrayList<JButton> tileButtons;
 	
     public Gui() {
-        initialize();
-	
-        ImageIcon tileIcon = new ImageIcon("res/tile.png");
-        for (int i = 0; i < map.getWidth()*map.getHeight(); i++) {
-            JButton b = new JButton(tileIcon);
-            b.setBorder(null);
-            mainPanel.add(b);
-            tileButtons.add(b);
-        }
-		
-        validate();
+        initialize();      
+        renderTiles();
     }
 	
     public void initialize() {
@@ -47,4 +38,17 @@ public class Gui extends JFrame {
         setVisible(true);		
     }
 	
+    public void renderTiles() {
+        PathFinder pfinder = new PathFinder();
+        ImageIcon tileIcon = new ImageIcon("res/tile.png");
+        for (int i = 0; i < map.getWidth()*map.getHeight(); i++) {
+            JButton b = new JButton(tileIcon);
+            b.addMouseListener(pfinder);
+            b.setBorder(null);
+            mainPanel.add(b);
+            tileButtons.add(b);
+        }
+		
+        validate();
+    }
 }
