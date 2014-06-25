@@ -17,9 +17,9 @@ public class Map {
 		tiles = new Tile[HEIGHT][WIDTH];
 		for (int i = 0; i < HEIGHT; i++) {
 			for (int j = 0; j < WIDTH; j++) {
-                Position tilePos = new Position(i,j);
-                Tile t = new Tile();
-                t.setPos(tilePos);
+                	Position tilePos = new Position(i,j);
+                	Tile t = new Tile();
+        		t.setPos(tilePos);
 				tiles[i][j] = t;
 			}
 		}
