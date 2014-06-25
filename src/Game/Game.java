@@ -1,4 +1,5 @@
 package Game;
+
 import java.util.Scanner;
 
 import Graphics.Gui;
