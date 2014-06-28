@@ -1,7 +1,7 @@
 package Graphics;
 
+import Map.Path;
 import Map.Position;
-import Player.Path;
 
 import java.awt.*;
 import java.awt.event.*;

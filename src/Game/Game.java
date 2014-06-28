@@ -48,6 +48,11 @@ public class Game {
     private void setUnits() {
         map.setUnits(teams);
     }
+    
+    /** Get the game map */
+    public Map getMap() {
+        return this.map;
+    }
 
     /** Prompt for selecting unit */
     private Unit selectUnit(Team team) {
@@ -113,16 +118,22 @@ public class Game {
 
     public static void main(String[] args) {
         Game game = new Game();
+        Gui gui = new Gui(game);
         game.viewMap();
         game.addUnits();
         game.setUnits();
+        gui.renderTiles();
         game.viewMap();
         game.getTurn();
         game.turn.print();
         game.processTurn();
+        gui.renderTiles();
         /*
-         * while(game.active) { game.getTurn(); game.processTurn();
-         * game.viewMap(); } Gui gui = new Gui();
+        while(game.active) { 
+            game.getTurn(); 
+            game.processTurn();
+            game.viewMap(); 
+        }
          */
     }
 }

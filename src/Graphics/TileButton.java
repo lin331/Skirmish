@@ -1,6 +1,7 @@
 package Graphics;
 
 import Map.Position;
+import Map.Tile;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -8,19 +9,19 @@ import javax.swing.*;
 
 public class TileButton extends JButton {
 
-    private Position pos;
+    private Tile tile;
     
-    public TileButton(Position p) {
+    public TileButton(Tile t) {
         super();
-        this.pos = p;
+        this.tile = t;
     }
     
-    public TileButton(Position p, Icon icon) {
+    public TileButton(Tile t, Icon icon) {
         super(icon);
-        this.pos = p;
+        this.tile = t;
     }
     
-    public Position getPos() {
-        return this.pos;
+    public Tile getTile() {
+        return this.tile;
     }
 }

@@ -50,6 +50,7 @@ public class Position {
         return false;
     }
 
+    @Override
     public String toString() {
         return "(" + Integer.toString(x) + ", " + Integer.toString(y) + ")";
     }

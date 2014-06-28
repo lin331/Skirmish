@@ -5,7 +5,7 @@ import Player.Unit;
 
 /** Map for game */
 public class Map {
-    private Tile tiles[][];
+    private Tile[][] tiles;
     private final int WIDTH = 9;
     private final int HEIGHT = 6;
 
@@ -18,15 +18,21 @@ public class Map {
         for (int i = 0; i < HEIGHT; i++) {
             for (int j = 0; j < WIDTH; j++) {
                 tiles[i][j] = new Tile();
+                tiles[i][j].setPos(new Position(i, j));
             }
         }
     }
+    
+    public Tile[][] getTiles() {
+        return this.tiles;
+    }
 
-    /** Getter methods for map size */
+    /** Get map width */
     public int getWidth() {
         return WIDTH;
     }
 
+    /** Get map height */
     public int getHeight() {
         return HEIGHT;
     }

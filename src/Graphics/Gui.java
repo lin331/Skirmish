@@ -1,7 +1,9 @@
 package Graphics;
 
+import Game.Game;
 import Map.Map;
 import Map.Position;
+import Map.Tile;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -15,13 +17,13 @@ public class Gui extends JFrame {
 	private JPanel background;
 	private JPanel mainPanel;
 	
-    public Gui() {
-        initialize();      
+    public Gui(Game g) {
+        initialize(g);      
         renderTiles();
     }
 	
-    public void initialize() {
-        map = new Map();
+    private void initialize(Game g) {
+        map = g.getMap();
         background = new JPanel();
 
         GridLayout grid = new GridLayout(map.getHeight(), map.getWidth());
@@ -38,18 +40,26 @@ public class Gui extends JFrame {
     }
 	
     public void renderTiles() {
+        mainPanel.removeAll();
         PathFinder pfinder = new PathFinder();
         ImageIcon tileIcon = new ImageIcon("res/tile.png");
-        for (int i = 0; i < map.getWidth(); i++) {
-            for(int j = 0; j < map.getHeight(); j++) {
-                Position p = new Position(i,j);
-                TileButton b = new TileButton(p, tileIcon);
+        ImageIcon unitIcon = new ImageIcon("res/unitTile.png");
+        for (int i = 0; i < map.getHeight(); i++) {
+            for(int j = 0; j < map.getWidth(); j++) {
+                TileButton b;
+                System.out.println(map.getTiles()[i][j]);
+                if (map.getTiles()[i][j].isEmpty()) {
+                    b = new TileButton(new Tile(new Position(i, j)), tileIcon);
+                }
+                else {
+                    b = new TileButton(map.getTiles()[i][j], unitIcon);
+                }
                 b.addMouseListener(pfinder);
                 b.setBorder(null);
                 mainPanel.add(b);
             }
         }
 		
-        validate();
+        revalidate();
     }
 }
