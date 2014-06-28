@@ -24,10 +24,10 @@ public class Position {
 
     /** Check if position is adjacent */
     public boolean isAdjacent(Position p) {
-        if ((Math.abs(this.x - p.x) == 1) && !(Math.abs(this.y - p.y) == 0)) {
+        if ((Math.abs(this.x - p.x) == 1) && (Math.abs(this.y - p.y) == 0)) {
             return true;
         } else if ((Math.abs(this.y - p.y) == 1)
-                && !(Math.abs(this.x - p.x) == 0)) {
+                && (Math.abs(this.x - p.x) == 0)) {
             return true;
         }
         return false;

@@ -3,6 +3,7 @@ package Player;
 import java.util.Scanner;
 
 import Map.Map;
+import Map.Path;
 import Map.Position;
 
 public class Unit {
