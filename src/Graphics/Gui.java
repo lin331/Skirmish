@@ -1,19 +1,19 @@
 package Graphics;
 
+import Map.Map;
+import Map.Position;
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
 import java.util.ArrayList;
 
-import Map.Map;
-
 public class Gui extends JFrame {
 
     private Map map;
 	private JPanel background;
 	private JPanel mainPanel;
-	private ArrayList<JButton> tileButtons;
 	
     public Gui() {
         initialize();      
@@ -23,7 +23,6 @@ public class Gui extends JFrame {
     public void initialize() {
         map = new Map();
         background = new JPanel();
-        tileButtons = new ArrayList<JButton>();
 
         GridLayout grid = new GridLayout(map.getHeight(), map.getWidth());
         mainPanel = new JPanel(grid);
@@ -41,12 +40,14 @@ public class Gui extends JFrame {
     public void renderTiles() {
         PathFinder pfinder = new PathFinder();
         ImageIcon tileIcon = new ImageIcon("res/tile.png");
-        for (int i = 0; i < map.getWidth()*map.getHeight(); i++) {
-            JButton b = new JButton(tileIcon);
-            b.addMouseListener(pfinder);
-            b.setBorder(null);
-            mainPanel.add(b);
-            tileButtons.add(b);
+        for (int i = 0; i < map.getWidth(); i++) {
+            for(int j = 0; j < map.getHeight(); j++) {
+                Position p = new Position(i,j);
+                TileButton b = new TileButton(p, tileIcon);
+                b.addMouseListener(pfinder);
+                b.setBorder(null);
+                mainPanel.add(b);
+            }
         }
 		
         validate();
