@@ -49,7 +49,7 @@ public class Gui extends JFrame {
                 TileButton b;
                 System.out.println(map.getTiles()[i][j]);
                 if (map.getTiles()[i][j].isEmpty()) {
-                    b = new TileButton(new Tile(new Position(i, j)), tileIcon);
+                    b = new TileButton(new Tile(i,j), tileIcon);
                 }
                 else {
                     b = new TileButton(map.getTiles()[i][j], unitIcon);

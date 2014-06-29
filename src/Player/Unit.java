@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 import Map.Map;
 import Map.Path;
-import Map.Position;
+import Map.Tile;
 
 public class Unit {
     protected Team team; // Unit's team
@@ -13,44 +13,44 @@ public class Unit {
     protected int health; // Unit's health stat
     protected int attack; // Unit's attack stat
     protected int moves; // How far unit can move
-    protected Position pos; // Unit's location
+    protected Tile tile; // Unit's location
     protected Path path; // Path to new position
     protected boolean dead; // Dead?
 
-    public Unit(Team team, int num, Position pos) {
+    public Unit(Team team, int num, Tile tile) {
         this.team = team;
         this.num = num;
         type = Type.DEFAULT;
         this.health = 10;
         this.attack = 5;
         this.moves = 5;
-        this.pos = pos;
+        this.tile = tile;
         path = new Path(this);
         dead = false;
     }
 
     public Unit(Team team, int num, int health, int attack, int moves,
-            Position pos) {
+            Tile tile) {
         this.team = team;
         this.num = num;
         this.type = Type.DEFAULT;
         this.health = health;
         this.attack = attack;
         this.moves = moves;
-        this.pos = pos;
+        this.tile = tile;
         path = new Path(this);
         dead = false;
     }
 
     public Unit(Team team, Type type, int num, int health, int attack,
-            int moves, Position pos) {
+            int moves, Tile tile) {
         this.team = team;
         this.num = num;
         this.type = type;
         this.health = health;
         this.attack = attack;
         this.moves = moves;
-        this.pos = pos;
+        this.tile = tile;
         path = new Path(this);
         dead = false;
     }
@@ -79,7 +79,7 @@ public class Unit {
                 System.out.println("Enter y coordinate: ");
                 y = s.nextInt();
             }
-            path.add(new Position(x, y));
+            path.add(new Tile(x,y));
         }
     }
 
@@ -96,8 +96,8 @@ public class Unit {
         checkDead();
     }
 
-    public void setPos(Position pos) {
-        this.pos = pos;
+    public void setPos(Tile tile) {
+        this.tile = tile;
     }
 
     /** Getter methods below */
@@ -121,8 +121,8 @@ public class Unit {
         return moves;
     }
 
-    public Position getPos() {
-        return pos;
+    public Tile getTile() {
+        return tile;
     }
 
     public Path getPath() {

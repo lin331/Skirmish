@@ -55,6 +55,7 @@ public class Game {
 
     /** Prompt for selecting unit */
     private Unit selectUnit(Team team) {
+        @SuppressWarnings("resource")
         Scanner s = new Scanner(System.in);
         System.out.println("Select unit: 1-" + team.getNumUnits());
         String string = s.next();
@@ -77,7 +78,6 @@ public class Game {
 
     /** Takes move commands and processes them */
     private void getTurn() {
-        Scanner s = new Scanner(System.in);
         for (int i = 0; i < 2; i++) {
             System.out.println(teams[i].toString() + "'s turn:");
             for (int j = 0; j < MAX_COMMANDS; j++) {
@@ -90,7 +90,6 @@ public class Game {
                 unit.addPath(map);
             }
         }
-        // s.close();
     }
 
     /** Processes turn */

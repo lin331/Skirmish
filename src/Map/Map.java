@@ -17,8 +17,7 @@ public class Map {
         tiles = new Tile[HEIGHT][WIDTH];
         for (int i = 0; i < HEIGHT; i++) {
             for (int j = 0; j < WIDTH; j++) {
-                tiles[i][j] = new Tile();
-                tiles[i][j].setPos(new Position(i, j));
+                tiles[i][j] = new Tile(i,j);
             }
         }
     }
@@ -42,8 +41,8 @@ public class Map {
         for (Team t : teams) {
             Unit[] units = t.getUnits();
             for (int i = 0; i < t.getNumUnits(); i++) {
-                Position p = units[i].getPos();
-                tiles[p.getY()][p.getX()].setUnit(units[i]);
+                Tile tile = units[i].getTile();
+                tiles[tile.getY()][tile.getX()].setUnit(units[i]);
             }
         }
     }

@@ -5,51 +5,56 @@ import Player.Unit;
 /** Tiles for map */
 public class Tile {
 
-	private Unit unit;
-    private Position pos;
-	
-	public Tile() {
-		unit = null;
-        pos = null;
-	}
-    
-    public Tile(Position p) {
+    private Unit unit;
+    private int x;
+    private int y;
+
+    public Tile(int x, int y) {
         unit = null;
-        pos = p;
+        this.x = x;
+        this.y = y;
     }
-	
-	/** Check if tile is empty */
-	public boolean isEmpty() {
-		if (unit) {
+
+    /** Check if tile is empty */
+    public boolean isEmpty() {
+        if (unit != null) {
             return false;
         }
-        else {
+        return true;
+    }
+
+    /** Check if tile is adjacent */
+    public boolean isAdjacent(Tile t) {
+        if ((Math.abs(this.x - t.x) == 1) && (Math.abs(this.y - t.y) == 0)) {
+            return true;
+        } else if ((Math.abs(this.y - t.y) == 1)
+                && (Math.abs(this.x - t.x) == 0)) {
             return true;
         }
-	}
-    
-    /** Set position of tile */
-    public void setPos(Position p) {
-        this.pos = p;
+        return false;
+    }
+
+    /** Set unit on tile */
+    public void setUnit(Unit unit) {
+        this.unit = unit;
+    }
+
+    /** Getter methods below */
+    public Unit getUnit() {
+        return unit;
     }
     
-    /** Get position of tile */
-    public Position getPos() {
-        return this.pos;
+    public int getX() {
+        return x;
     }
-	
-	/** Set unit on tile */
-	public void setUnit(Unit unit) {
-		this.unit = unit;
-	}
-	
-	/** Returns unit on tile */
-	public Unit getUnit() {
-		return unit;
-	}
-    
-    @Override
+
+    public int getY() {
+        return y;
+    }
+
+    /** Overrides */
     public String toString() {
-        return "(" + Integer.toString(pos.getX()) + ", " + Integer.toString(pos.getY()) + ")";
+        return "(" + Integer.toString(this.x) + ", " + Integer.toString(this.y)
+                + ")";
     }
 }

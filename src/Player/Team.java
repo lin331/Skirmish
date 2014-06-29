@@ -1,6 +1,6 @@
 package Player;
 
-import Map.Position;
+import Map.Tile;
 import java.util.Scanner;
 
 public class Team {
@@ -37,8 +37,9 @@ public class Team {
             System.out.println("Enter y coordinate: ");
             int y = s.nextInt();
             numUnits += 1;
-            Position pos = new Position(x, y);
-            units[i] = new Unit(Team.this, numUnits, health, attack, moves, pos);
+            Tile tile = new Tile(x, y);
+            units[i] = new Unit(Team.this, numUnits, health, attack, moves,
+                    tile);
         }
         System.out.println(this.toString() + " Total Units: " + numUnits);
 

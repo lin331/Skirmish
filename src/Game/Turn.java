@@ -1,7 +1,6 @@
 package Game;
 
-import Map.Position;
-import Player.Path;
+import Map.Path;
 import Player.Unit;
 
 public class Turn {
@@ -34,12 +33,7 @@ public class Turn {
         return num;
     }
 
-    /**
-     * Add unit to list
-     * 
-     * @param unit
-     *            Unit to be added
-     */
+    /** Add unit to list */
     public void add(Unit unit) {
         head = new Node(unit, head);
         num += 1;
@@ -74,12 +68,7 @@ public class Turn {
         while (node != null) {
             Unit u = node.unit;
             Path p = u.getPath();
-            if (!p.hasNext()) {
-                remove(u);
-            } else {
-                Position pos = p.getNext();
-                u.setPos(pos);
-            }
+            // TODO: Step path and update position
             node = node.next;
         }
     }
