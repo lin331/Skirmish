@@ -36,6 +36,10 @@ public class Tile {
 
     /** Set unit on tile */
     public void setUnit(Unit unit) {
+        if (this.unit != null) {
+            System.out.println("Unit already on tile");
+            return;
+        }
         this.unit = unit;
     }
 

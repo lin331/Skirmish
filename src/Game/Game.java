@@ -15,7 +15,7 @@ public class Game {
     private Turn turn; // Used for list of command
 
     /** Constructor for game */
-    private Game() {
+    Game() {
         initialize();
     }
 
@@ -47,11 +47,7 @@ public class Game {
     private void setUnits() {
         map.setUnits(teams);
     }
-    
-    /** Get the game map */
-    public Map getMap() {
-        return this.map;
-    }
+
 
     /** Prompt for selecting unit */
     private Unit selectUnit(Team team) {
@@ -105,7 +101,7 @@ public class Game {
     }
 
     /** Prints the current game map to screen */
-    private void viewMap() {
+    void viewMap() {
         map.printMap();
     }
 
@@ -114,9 +110,18 @@ public class Game {
         active = true;
     }
 
+    /** Getter methods below */
+    public Map getMap() {
+        return this.map;
+    }
+    
+    public Team[] getTeams() {
+        return teams;
+    }
+
     public static void main(String[] args) {
         Game game = new Game();
-        Gui gui = new Gui(game);
+        /*Gui gui = new Gui(game);
         game.viewMap();
         game.addUnits();
         game.setUnits();
@@ -126,12 +131,10 @@ public class Game {
         game.turn.print();
         game.processTurn();
         gui.renderTiles();
-        /*
         while(game.active) { 
             game.getTurn(); 
             game.processTurn();
             game.viewMap(); 
-        }
-         */
+        }*/
     }
 }

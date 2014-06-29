@@ -1,10 +1,9 @@
 package Player;
 
-import java.util.Scanner;
-
 import Map.Map;
 import Map.Path;
 import Map.Tile;
+import java.util.Scanner;
 
 public class Unit {
     protected Team team; // Unit's team
@@ -29,8 +28,7 @@ public class Unit {
         dead = false;
     }
 
-    public Unit(Team team, int num, int health, int attack, int moves,
-            Tile tile) {
+    public Unit(Team team, int num, int health, int attack, int moves, Tile tile) {
         this.team = team;
         this.num = num;
         this.type = Type.DEFAULT;
@@ -51,6 +49,18 @@ public class Unit {
         this.attack = attack;
         this.moves = moves;
         this.tile = tile;
+        path = new Path(this);
+        dead = false;
+    }
+
+    public Unit(int n) {
+        this.team = new Team("A");
+        this.num = n;
+        this.type = Type.DEFAULT;
+        this.health = 5;
+        this.attack = 5;
+        this.moves = 5;
+        this.tile = new Tile(0, 0);
         path = new Path(this);
         dead = false;
     }
@@ -79,7 +89,7 @@ public class Unit {
                 System.out.println("Enter y coordinate: ");
                 y = s.nextInt();
             }
-            path.add(new Tile(x,y));
+            path.add(new Tile(x, y));
         }
     }
 
@@ -96,7 +106,7 @@ public class Unit {
         checkDead();
     }
 
-    public void setPos(Tile tile) {
+    public void setTile(Tile tile) {
         this.tile = tile;
     }
 
@@ -130,13 +140,25 @@ public class Unit {
     }
 
     /** Overrides */
-    public boolean equals(Unit u) {
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        Unit u = (Unit) obj;
         if (team == u.getTeam()) {
             return num == u.getNum();
         }
         return false;
     }
 
+    @Override
     public String toString() {
         return Integer.toString(num);
     }

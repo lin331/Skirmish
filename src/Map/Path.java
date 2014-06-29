@@ -1,7 +1,6 @@
 package Map;
 
 import Player.Unit;
-
 import java.util.ArrayList;
 
 public class Path {
@@ -24,7 +23,10 @@ public class Path {
 
     /** Step through the next position in path */
     public Tile stepPath() {
-        if (tiles.size() == 0) return null;
+        if (tiles.isEmpty()) {
+            System.out.println("Error: Empty path");
+            return null;
+        }
         Tile t = tiles.get(0);
         tiles.remove(tiles.size()-1);
         return t;
@@ -33,7 +35,7 @@ public class Path {
     /** Check if move is valid */
     public boolean isValid(Tile t) {
         if (tiles.size() == 0) {
-            System.out.println("Valid");
+            // System.out.println("Valid");
             return true;
         }
         if (t.isAdjacent(tiles.get(tiles.size()-1))) {

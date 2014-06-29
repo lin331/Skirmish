@@ -6,20 +6,21 @@ import java.util.Scanner;
 public class Team {
     private final int MAXUNITS = 12;
     private String name;
-    private int numUnits;
+    private int num;
     private Unit units[];
 
     public Team(String name) {
         this.name = name;
-        numUnits = 0;
+        num = 0;
         units = new Unit[MAXUNITS];
     }
-
-    public void processTurn() {
-
+    
+    public void addUnit(Unit unit) {
+        units[num] = unit;
+        num++;        
     }
 
-    /** Add units to team */
+    /** Add units to team (Text input) */
     public void addUnits() {
         @SuppressWarnings("resource")
         Scanner s = new Scanner(System.in);
@@ -36,12 +37,12 @@ public class Team {
             int x = Integer.parseInt(string);
             System.out.println("Enter y coordinate: ");
             int y = s.nextInt();
-            numUnits += 1;
+            num += 1;
             Tile tile = new Tile(x, y);
-            units[i] = new Unit(Team.this, numUnits, health, attack, moves,
+            units[i] = new Unit(Team.this, num, health, attack, moves,
                     tile);
         }
-        System.out.println(this.toString() + " Total Units: " + numUnits);
+        System.out.println(this.toString() + " Total Units: " + num);
 
     }
 
@@ -55,7 +56,7 @@ public class Team {
     }
 
     public int getNumUnits() {
-        return numUnits;
+        return num;
     }
 
     public String getName() {

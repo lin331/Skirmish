@@ -2,84 +2,49 @@ package Game;
 
 import Map.Path;
 import Player.Unit;
+import java.util.ArrayList;
+import java.util.ListIterator;
+
 
 public class Turn {
-    private int num; // number of units in list
-    private Node head; // start of list
+    private ArrayList<Unit> units;
 
     public Turn() {
-        head = null;
-        num = 0;
-    }
-
-    /** Node class to be used in list */
-    private class Node {
-        private Unit unit;
-        private Node next;
-
-        public Node(Unit unit, Node next) {
-            this.unit = unit;
-            this.next = next;
-        }
+        units = new ArrayList<Unit>();
     }
 
     /** Check if list is empty */
     public boolean isEmpty() {
-        return num == 0;
+        return units.isEmpty();
     }
 
     /** Returns size of list */
     public int size() {
-        return num;
+        return units.size();
     }
 
     /** Add unit to list */
     public void add(Unit unit) {
-        head = new Node(unit, head);
-        num += 1;
+        units.add(unit);
     }
 
     /** Removes specified unit */
     public void remove(Unit unit) {
-        if (head.unit.equals(unit)) {
-            head = head.next;
-            return;
-        }
-
-        Node temp = head;
-        Node prev = null;
-
-        while (temp != null && !temp.unit.equals(unit)) {
-            prev = temp;
-            temp = temp.next;
-        }
-
-        if (temp == null) {
-            System.out.println("Unit not found");
-            return;
-        }
-
-        prev.next = temp.next;
-        num -= 1;
+        units.remove(unit);
     }
 
     public void process() {
-        Node node = head;
-        while (node != null) {
-            Unit u = node.unit;
+        ListIterator<Unit> iterator = units.listIterator();
+        while (iterator.hasNext()) {
+            Unit u = iterator.next();
             Path p = u.getPath();
-            // TODO: Step path and update position
-            node = node.next;
+            u.setTile(p.stepPath());
         }
     }
-
+    
     public void print() {
-        Node node = head;
-        while (node != null) {
-            System.out.println(node.unit.getTeam().toString() + " - "
+            /*System.out.println(node.unit.getTeam().toString() + " - "
                     + node.unit.toString() + ": "
-                    + node.unit.getPath().toString());
-            node = node.next;
-        }
+                    + node.unit.getPath().toString());*/
     }
 }
