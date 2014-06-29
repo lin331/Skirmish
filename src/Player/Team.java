@@ -14,19 +14,16 @@ public class Team {
         num = 0;
         units = new Unit[MAXUNITS];
     }
-    
+
     public void addUnit(Unit unit) {
         units[num] = unit;
-        num++;        
+        num++;
     }
 
     /** Add units to team (Text input) */
     public void addUnits() {
         @SuppressWarnings("resource")
         Scanner s = new Scanner(System.in);
-        int health = 10;
-        int attack = 5;
-        int moves = 3;
         for (int i = 0; i < MAXUNITS; i++) {
             System.out.println("Unit #" + (i + 1) + ":");
             System.out.println("Enter x coordinate: ");
@@ -39,8 +36,7 @@ public class Team {
             int y = s.nextInt();
             num += 1;
             Tile tile = new Tile(x, y);
-            units[i] = new Unit(Team.this, num, health, attack, moves,
-                    tile);
+            units[i] = new Unit(Team.this, num, Type.DEFAULT, tile);
         }
         System.out.println(this.toString() + " Total Units: " + num);
 

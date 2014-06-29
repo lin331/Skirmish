@@ -1,5 +1,5 @@
 package Player;
 
 public enum Type {
-    DEFAULT, A, B, C
+    DEFAULT, FOOTMAN, SPEARMAN, ARCHER, CAVALRY, SUICIDAL
 }

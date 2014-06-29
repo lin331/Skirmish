@@ -14,57 +14,74 @@ public class Unit {
     protected int moves; // How far unit can move
     protected Tile tile; // Unit's location
     protected Path path; // Path to new position
-    protected boolean dead; // Dead?
 
     public Unit(Team team, int num, Tile tile) {
         this.team = team;
         this.num = num;
-        type = Type.DEFAULT;
-        this.health = 10;
-        this.attack = 5;
-        this.moves = 5;
-        this.tile = tile;
-        path = new Path(this);
-        dead = false;
-    }
-
-    public Unit(Team team, int num, int health, int attack, int moves, Tile tile) {
-        this.team = team;
-        this.num = num;
         this.type = Type.DEFAULT;
-        this.health = health;
-        this.attack = attack;
-        this.moves = moves;
+        setStats(type);
         this.tile = tile;
         path = new Path(this);
-        dead = false;
     }
-
-    public Unit(Team team, Type type, int num, int health, int attack,
-            int moves, Tile tile) {
+    
+    public Unit(Team team, int num, Type type, Tile tile) {
         this.team = team;
         this.num = num;
         this.type = type;
-        this.health = health;
-        this.attack = attack;
-        this.moves = moves;
+        setStats(type);
         this.tile = tile;
         path = new Path(this);
-        dead = false;
     }
 
     public Unit(int n) {
         this.team = new Team("A");
         this.num = n;
         this.type = Type.DEFAULT;
-        this.health = 5;
-        this.attack = 5;
-        this.moves = 5;
+        setStats(type);
         this.tile = new Tile(0, 0);
         path = new Path(this);
-        dead = false;
     }
 
+    private void setStats(Type type) {
+        switch(type) {
+            case DEFAULT:
+                this.health = 10;
+                this.attack = 5;
+                this.moves = 5;
+                break;
+            case FOOTMAN:
+                this.health = 90;
+                this.attack = 20;
+                this.moves = 5;
+                break;
+            case SPEARMAN:
+                this.health = 70;
+                this.attack = 20;
+                this.moves = 5;
+                break;
+            case ARCHER:
+                this.health = 70;
+                this.attack = 30;
+                this.moves = 3;
+                break;
+            case CAVALRY:
+                this.health = 70;
+                this.attack = 25;
+                this.moves = 10;
+                break;
+            case SUICIDAL:
+                this.health = 50;
+                this.attack = 30;
+                this.moves = 6;
+                break;
+            default:
+                this.health = 10;
+                this.attack = 5;
+                this.moves = 5;
+                break;
+        }
+    }
+    
     /** Add to path */
     public void addPath(Map map) {
         @SuppressWarnings("resource")
@@ -94,18 +111,16 @@ public class Unit {
     }
 
     /** Check method below */
-    public void checkDead() {
-        if (health < 1) {
-            dead = true;
-        }
+    public boolean isDead() {
+        return health < 1;
     }
 
     /** Set method below */
     public void reduceHealth(int damage) {
         health -= damage;
-        checkDead();
     }
 
+    /** Setter methods below */
     public void setTile(Tile tile) {
         this.tile = tile;
     }
