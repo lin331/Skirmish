@@ -4,7 +4,6 @@ import java.util.Scanner;
 
 import Graphics.Gui;
 import Map.Map;
-import Map.Position;
 import Player.Team;
 import Player.Unit;
 
@@ -13,7 +12,7 @@ public class Game {
     private Map map; // Map for game
     private boolean active; // Flag for active
     private Team[] teams; // Array for teams
-    private TurnList turn; // Used for list of command
+    private Turn turn; // Used for list of command
 
     /** Constructor for game */
     private Game() {
@@ -26,7 +25,7 @@ public class Game {
         active = false;
         ;
         makeTeams();
-        turn = new TurnList();
+        turn = new Turn();
     }
 
     /** Initialize teams */

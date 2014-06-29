@@ -4,11 +4,11 @@ import Map.Position;
 import Player.Path;
 import Player.Unit;
 
-public class TurnList {
+public class Turn {
     private int num; // number of units in list
     private Node head; // start of list
 
-    public TurnList() {
+    public Turn() {
         head = null;
         num = 0;
     }
