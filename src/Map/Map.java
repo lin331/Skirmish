@@ -3,6 +3,8 @@ package Map;
 import Player.Team;
 import Player.Unit;
 
+import java.util.ArrayList;
+
 /** Map for game */
 public class Map {
     private Tile[][] tiles;
@@ -17,7 +19,7 @@ public class Map {
         tiles = new Tile[HEIGHT][WIDTH];
         for (int i = 0; i < HEIGHT; i++) {
             for (int j = 0; j < WIDTH; j++) {
-                tiles[i][j] = new Tile(i,j);
+                tiles[i][j] = new Tile(j,i);
             }
         }
     }
@@ -39,10 +41,10 @@ public class Map {
     /** Set units on map */
     public void setUnits(Team teams[]) {
         for (Team t : teams) {
-            Unit[] units = t.getUnits();
-            for (int i = 0; i < t.getNumUnits(); i++) {
-                Tile tile = units[i].getTile();
-                tiles[tile.getY()][tile.getX()].setUnit(units[i]);
+            ArrayList<Unit> units = t.getUnits();
+            for (int i = 0; i < units.size(); i++) {
+                Tile tile = units.get(i).getTile();
+                tiles[tile.getY()][tile.getX()].setUnit(units.get(i));
             }
         }
     }

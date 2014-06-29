@@ -3,9 +3,13 @@ package Game;
 import java.util.Scanner;
 
 import Graphics.Gui;
+import Map.Tile;
 import Map.Map;
 import Player.Team;
+import Player.Type;
 import Player.Unit;
+
+import java.util.Scanner;
 
 public class Game {
     private final int MAX_COMMANDS = 3;
@@ -23,7 +27,6 @@ public class Game {
     private void initialize() {
         map = new Map();
         active = false;
-        ;
         makeTeams();
         turn = new Turn();
     }
@@ -37,9 +40,25 @@ public class Game {
 
     /** Add units to team */
     private void addUnits() {
+        Scanner s = new Scanner(System.in);
+        System.out.println("Enter # of units per team: ");
+        int num = Integer.parseInt(s.next());
         for (Team t : teams) {
             System.out.println(t.toString() + ":");
-            t.addUnits();
+            for (int i = 0; i < num; i++) {
+                System.out.println("Unit #" + (i + 1) + ":");
+                System.out.println("Enter x coordinate: ");
+                String string = s.next();
+                if (string.equals("end")) {
+                    break;
+                }
+                int x = Integer.parseInt(string);
+                System.out.println("Enter y coordinate: ");
+                int y = s.nextInt();
+                Unit u = new Unit(t, num, Type.DEFAULT, map.getTiles()[y][x]);
+                t.addUnit(u);
+            }
+            System.out.println(t.toString() + " Total Units: " + num);
         }
     }
 
@@ -53,15 +72,15 @@ public class Game {
     private Unit selectUnit(Team team) {
         @SuppressWarnings("resource")
         Scanner s = new Scanner(System.in);
-        System.out.println("Select unit: 1-" + team.getNumUnits());
+        System.out.println("Select unit: 1-" + team.getUnits().size());
         String string = s.next();
         if (string.equals("end")) {
             return null;
         }
         int u = Integer.parseInt(string);
-        while (u < 1 || u > team.getNumUnits()) {
+        while (u < 1 || u > team.getUnits().size()) {
             System.out.println("Invalid unit");
-            System.out.println("Select unit: 1-" + team.getNumUnits());
+            System.out.println("Select unit: 1-" + team.getUnits().size());
             string = s.next();
             if (string.equals("end")) {
                 return null;
@@ -106,7 +125,7 @@ public class Game {
     }
 
     /** Begins the game */
-    public void gameStart() {
+    public void start() {
         active = true;
     }
 
@@ -121,20 +140,17 @@ public class Game {
 
     public static void main(String[] args) {
         Game game = new Game();
-        /*Gui gui = new Gui(game);
-        game.viewMap();
+        Gui gui = new Gui(game);
         game.addUnits();
         game.setUnits();
-        gui.renderTiles();
-        game.viewMap();
-        game.getTurn();
-        game.turn.print();
-        game.processTurn();
-        gui.renderTiles();
+
+        game.start();
         while(game.active) { 
+            gui.renderTiles();
             game.getTurn(); 
             game.processTurn();
             game.viewMap(); 
-        }*/
+            gui.renderTiles();
+        }
     }
 }

@@ -47,12 +47,12 @@ public class Gui extends JFrame {
         for (int i = 0; i < map.getHeight(); i++) {
             for(int j = 0; j < map.getWidth(); j++) {
                 TileButton b;
-                System.out.println(map.getTiles()[i][j]);
-                if (map.getTiles()[i][j].isEmpty()) {
-                    b = new TileButton(new Tile(i,j), tileIcon);
+                Tile t = map.getTiles()[i][j];
+                if (t.isEmpty()) {
+                    b = new TileButton(t, tileIcon);
                 }
                 else {
-                    b = new TileButton(map.getTiles()[i][j], unitIcon);
+                    b = new TileButton(t, unitIcon);
                 }
                 b.addMouseListener(pfinder);
                 b.setBorder(null);
