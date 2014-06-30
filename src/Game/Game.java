@@ -149,7 +149,6 @@ public class Game {
             gui.renderTiles();
             game.getTurn(); 
             game.processTurn();
-            game.viewMap(); 
             gui.renderTiles();
         }
     }
