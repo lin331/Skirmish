@@ -1,7 +1,7 @@
 package Graphics;
 
 import Map.Path;
-import Map.Position;
+import Map.Tile;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -11,32 +11,56 @@ import java.util.ArrayList;
 
 public class PathFinder implements MouseListener {
 
-    private ArrayList<Position> path;
+    private ArrayList<Tile> path;
     
     public PathFinder() {
-        this.path = new ArrayList<Position>();
+        this.path = new ArrayList<Tile>();
     }
     
     @Override
     public void mousePressed(MouseEvent e) {
         TileButton b = (TileButton)e.getSource();
-        ImageIcon activeIcon = new ImageIcon("res/activeTile.png");
-        b.setIcon(activeIcon);
+        path.add(b.getTile());
+        
+        ImageIcon unitIcon = new ImageIcon("res/activeUnitTile.png");
+        ImageIcon icon = new ImageIcon("res/pathTile.png");
+        if (b.getTile().isEmpty()) {
+            b.setIcon(icon);        
+        }
+        else {
+            b.setIcon(unitIcon);
+        }
     }
     
     @Override
     public void mouseReleased(MouseEvent e) {
         TileButton b = (TileButton)e.getSource();
-        ImageIcon activeIcon = new ImageIcon("res/pathTile.png");
-        b.setIcon(activeIcon);
+        ImageIcon unitIcon = new ImageIcon("res/activeUnitTile.png");
+        ImageIcon icon = new ImageIcon("res/pathTile.png");
+        if (b.getTile().isEmpty()) {
+            b.setIcon(icon);        
+        }
+        else {
+            b.setIcon(unitIcon);
+        }
+        
+        printPath();
     }
     
     @Override
     public void mouseEntered(MouseEvent e) {
         if (e.getModifiers() == MouseEvent.BUTTON1_MASK) {
             TileButton b = (TileButton)e.getSource();
-            ImageIcon activeIcon = new ImageIcon("res/activeTile.png");
-            b.setIcon(activeIcon); 
+            path.add(b.getTile());
+            
+            ImageIcon unitIcon = new ImageIcon("res/passedUnitTile.png");
+            ImageIcon icon = new ImageIcon("res/pathTile.png");
+            if (b.getTile().isEmpty()) {
+                b.setIcon(icon);        
+            }
+            else {
+                b.setIcon(unitIcon);
+            }
         }
     }
     
@@ -44,8 +68,19 @@ public class PathFinder implements MouseListener {
     public void mouseExited(MouseEvent e) {
         if (e.getModifiers() == MouseEvent.BUTTON1_MASK) {
             TileButton b = (TileButton)e.getSource();
-            ImageIcon activeIcon = new ImageIcon("res/pathTile.png");
-            b.setIcon(activeIcon);  
+            
+            ImageIcon activeUnitIcon = new ImageIcon("res/activeUnitTile.png");
+            ImageIcon passedUnitIcon = new ImageIcon("res/passedUnitTile.png");
+            ImageIcon icon = new ImageIcon("res/pathTile.png");
+            if (b.getTile().isEmpty()) {
+                b.setIcon(icon);        
+            }
+            else if (path.size() == 1) {
+                b.setIcon(activeUnitIcon);
+            }
+            else {
+                b.setIcon(passedUnitIcon);
+            }
         }           
     }
     
@@ -54,7 +89,9 @@ public class PathFinder implements MouseListener {
     
     }
     
-    public ImageIcon nextIcon(TileButton b) {
-        return null;
+    public void printPath() {
+        for (Tile t : path) {
+            System.out.println(t);
+        }
     }
 }
