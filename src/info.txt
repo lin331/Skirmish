@@ -2,11 +2,11 @@ Info
 Specs and Details
 
 Unit Types:
-
-Cavalry/archers [one both or none]
-	{
-	-Cavalry moves fast, archers ranged
-	
+_________________________
+	Cavalry/archers [one both or none]
+		{
+		-Cavalry moves fast, archers ranged
+		
 		Cavalry:
 			(
 			~2x Movement range (10 blocks)
@@ -22,34 +22,35 @@ Cavalry/archers [one both or none]
 			)
 	}
 
-Spear Wield
-	{
-	~medium damage vs foot but less hp
-	~strong vs cavalry
-	~medium damage vs archer
-	}
+	Spear Wield
+		{
+		~medium damage vs foot but less hp
+		~strong vs cavalry
+		~medium damage vs archer
+		}
+	
+	Foot Soldier
+		{
+		~Strong vs Archer
+		~medium damage vs spear, but more hp
+		~Weak vs Cavalry
+		~medium vs suicidal 
+			(
+			footsoldier does same amount of damage as vs spear, but takes more damage
+			)
+		}
 
-Foot Soldier
-	{
-	~Strong vs Archer
-	~medium damage vs spear, but more hp
-	~Weak vs Cavalry
-	~medium vs suicidal 
-		(
-		footsoldier does same amount of damage as vs spear, but takes more damage
-		)
-	}
-
-Glass Cannon Soldier [maybe]
-	{
-	~strong vs footsoldier
-	~strong vs cavalry
-	~Strong vs Archer
-	~Weak vs Spear
-	~Low hp
-	}
-
-Mechanics:
+	Glass Cannon Soldier [maybe]
+		{
+		~strong vs footsoldier
+		~strong vs cavalry
+		~Strong vs Archer
+		~Weak vs Spear
+		~Low hp
+		}
+		
+Game Mechanics:
+____________________________
 	Planning Phase
 		{
 		Get 3 moves per planning phase, 30 seconds to plan <adjustable>
@@ -67,47 +68,49 @@ Mechanics:
 			~will engage if enemy unit
 			~will just stop if friendly unit
 			~archer attack is cancelled if out of range
-		
-		Interruptable Move
-			(
-			Unit move along determined path, if adjacent or blocked by enemy at any point, will stop and engage
-			)
-		Goal move
-			(
-			Will move towards specified point at all costs:
-			 	~if adjacent to enemy, will take standard damage but keep moving
-			 		*interruptable move units stop after attacking, goal move keeps going
-			 	~if blocked by enemy, will move through, taking 2x damage
-			will engage on adjacent or blocking enemies on destination.
-			
-			if 2 units are both using goal move (not safe goal move) and need to cross paths directly (not adjacent)
-				~no damage is dealth to either unit, they pass through each other.
-			)
-		Safe Goal move
-			(
-			Same as goal move, but will engage rather than move through blocking units
-			if both units are using 
-			)
-			
-		Battle mechanics:
-			{
-			if both units moving, they attack each other at the same time (both deal and recieve full damage)
-			if moving unit walks into stationary enemy, moving unit deals damage first, stationary unit retaliate
-			subsequent attackers <flankers> take 50% less damage if 2 opposing units are next to each other
-				~in other words <flankers> take 50% less damage
-				~<flankers> still do full amount of damage and attack first
-				~target enemy retaliates at 50% damage after (retaliation because they are stationary)
-			Archers have melee attack for when they get engaged on (current value 15dmg) in addition to their ranged shot
-			}
 		}
+		
+
+Movement Mechanics:
+___________________________
+	Interruptable Move
+		(
+		Unit move along determined path, if adjacent or blocked by enemy at any point, will stop and engage
+		)
+	Goal move
+		(
+		Will move towards specified point at all costs:
+		 	~if adjacent to enemy, will take standard damage but keep moving
+		 		*interruptable move units stop after attacking, goal move keeps going
+		 	~if blocked by enemy, will move through, taking 2x damage
+		will engage on adjacent or blocking enemies on destination.
+			
+		if 2 units are both using goal move (not safe goal move) and need to cross paths directly (not adjacent)
+			~no damage is dealth to either unit, they pass through each other.
+		)
+	Safe Goal move
+		(
+		Same as goal move, but will engage rather than move through blocking units
+		if both units are using 
+		)
+				
+
+Battle mechanics:
+___________________________
+	{
+	if both units moving, they attack each other at the same time (both deal and recieve full damage)
+	if moving unit walks into stationary enemy, moving unit deals damage first, stationary unit retaliate
+	subsequent attackers <flankers> take 50% less damage if 2 opposing units are next to each other
+		~in other words <flankers> take 50% less damage
+		~<flankers> still do full amount of damage and attack first
+		~target enemy retaliates at 50% damage after (retaliation because they are stationary)
+	Archers have melee attack for when they get engaged on (current value 15dmg) in addition to their ranged shot
+	}
+		
 	Pre-Planning phase
 		{
 		10 seconds to view map and take in the battlefield
 		}
-
-
-
-
 
 	}
 
