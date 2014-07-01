@@ -27,8 +27,8 @@ public class Path {
             System.out.println("Error: Empty path");
             return null;
         }
-        Tile t = tiles.get(0);
-        tiles.remove(tiles.size()-1);
+        Tile t = tiles.remove(0);
+        System.out.println(t);
         return t;
     }
 
@@ -38,18 +38,22 @@ public class Path {
             // System.out.println("Valid");
             return true;
         }
-        if (t.isAdjacent(tiles.get(tiles.size()-1))) {
+        if (t.isAdjacent(tiles.get(tiles.size() - 1))) {
             for (int i = 0; i < tiles.size(); i++) {
                 if (t.equals(tiles.get(i))) {
                     System.out.println("Not valid: Already moving there");
                     return false;
                 }
             }
-            System.out.println("Valid");
+            // System.out.println("Valid");
             return true;
         }
         System.out.println("Not valid: not adjacent");
         return false;
+    }
+
+    public boolean isEmpty() {
+        return tiles.isEmpty();
     }
 
     /** Overrides */

@@ -38,6 +38,57 @@ public class Game {
         teams[1] = new Team("Team B");
     }
 
+    /** Put units on map tiles */
+    void setUnits() {
+        map.setUnits(teams);
+    }
+
+    /** Processes turn */
+    void processTurn() {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        if (!turn.isEmpty()) {
+            turn.process();
+            setUnits();
+        }
+    }
+
+    /** Begins the game */
+    public void start() {
+        active = true;
+    }
+
+    /** Ends the game */
+    public void end() {
+        active = false;
+    }
+
+    /** Prints the current game map to screen */
+    void viewMap() {
+        map.printMap();
+    }
+
+    /** Getter methods below */
+    public Map getMap() {
+        return this.map;
+    }
+
+    public Team[] getTeams() {
+        return teams;
+    }
+
+    public Turn getTurn() {
+        return turn;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    /** For console input: */
     /** Add units to team */
     private void addUnits() {
         Scanner s = new Scanner(System.in);
@@ -61,12 +112,6 @@ public class Game {
             System.out.println(t.toString() + " Total Units: " + num);
         }
     }
-
-    /** Put units on map tiles */
-    private void setUnits() {
-        map.setUnits(teams);
-    }
-
 
     /** Prompt for selecting unit */
     private Unit selectUnit(Team team) {
@@ -92,7 +137,7 @@ public class Game {
     }
 
     /** Takes move commands and processes them */
-    private void getTurn() {
+    private void requestTurn() {
         for (int i = 0; i < 2; i++) {
             System.out.println(teams[i].toString() + "'s turn:");
             for (int j = 0; j < MAX_COMMANDS; j++) {
@@ -107,37 +152,6 @@ public class Game {
         }
     }
 
-    /** Processes turn */
-    private void processTurn() {
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        if (!turn.isEmpty()) {
-            turn.process();
-        }
-    }
-
-    /** Prints the current game map to screen */
-    void viewMap() {
-        map.printMap();
-    }
-
-    /** Begins the game */
-    public void start() {
-        active = true;
-    }
-
-    /** Getter methods below */
-    public Map getMap() {
-        return this.map;
-    }
-    
-    public Team[] getTeams() {
-        return teams;
-    }
-
     public static void main(String[] args) {
         Game game = new Game();
         Gui gui = new Gui(game);
@@ -145,9 +159,9 @@ public class Game {
         game.setUnits();
 
         game.start();
-        while(game.active) { 
+        while (game.active) {
             gui.renderTiles();
-            game.getTurn(); 
+            game.getTurn();
             game.processTurn();
             gui.renderTiles();
         }

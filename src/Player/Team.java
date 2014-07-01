@@ -1,11 +1,9 @@
 package Player;
 
-import Map.Tile;
-
 import java.util.ArrayList;
 
 public class Team {
-    private final int MAXUNITS = 12;
+    // private final int MAXUNITS = 12;
     private String name;
     private ArrayList<Unit> units;
 
@@ -20,7 +18,7 @@ public class Team {
 
     /** Getter methods below */
     public Unit getUnit(int i) {
-        return units.get(i-1); // Return specific unit
+        return units.get(i - 1); // Return specific unit
     }
 
     public ArrayList<Unit> getUnits() {

@@ -36,10 +36,10 @@ public class Tile {
 
     /** Set unit on tile */
     public void setUnit(Unit unit) {
-        if (this.unit != null) {
+        /*if (this.unit != null) {
             System.out.println("Unit already on tile");
             return;
-        }
+        }*/
         this.unit = unit;
     }
 
@@ -57,6 +57,13 @@ public class Tile {
     }
 
     /** Overrides */
+    public boolean equals(Tile t) {
+        if (this.x != t.getX() || this.y != t.getY()) {
+            return false;
+        }
+        return true;
+    }
+
     public String toString() {
         return "(" + Integer.toString(this.x) + ", " + Integer.toString(this.y)
                 + ")";

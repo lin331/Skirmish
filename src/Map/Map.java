@@ -15,31 +15,28 @@ public class Map {
         initialize();
     }
 
+    /** Initializes tile map */
     public void initialize() {
         tiles = new Tile[HEIGHT][WIDTH];
         for (int i = 0; i < HEIGHT; i++) {
             for (int j = 0; j < WIDTH; j++) {
-                tiles[i][j] = new Tile(j,i);
+                tiles[i][j] = new Tile(j, i);
             }
         }
-    }
-    
-    public Tile[][] getTiles() {
-        return this.tiles;
-    }
-
-    /** Get map width */
-    public int getWidth() {
-        return WIDTH;
-    }
-
-    /** Get map height */
-    public int getHeight() {
-        return HEIGHT;
     }
 
     /** Set units on map */
     public void setUnits(Team teams[]) {
+        for (Tile[] tRow : tiles) {
+            for (Tile tile : tRow) {
+                Unit u = tile.getUnit();
+                if (u != null) {
+                    if (!u.getTile().equals(tile)) {
+                        tile.setUnit(null);
+                    }
+                }
+            }
+        }
         for (Team t : teams) {
             ArrayList<Unit> units = t.getUnits();
             for (int i = 0; i < units.size(); i++) {
@@ -47,6 +44,19 @@ public class Map {
                 tiles[tile.getY()][tile.getX()].setUnit(units.get(i));
             }
         }
+    }
+
+    /** Getter methods below */
+    public Tile[][] getTiles() {
+        return this.tiles;
+    }
+
+    public int getWidth() {
+        return WIDTH;
+    }
+
+    public int getHeight() {
+        return HEIGHT;
     }
 
     /** Prints text map */

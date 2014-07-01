@@ -33,18 +33,36 @@ public class Turn {
         units.remove(unit);
     }
 
+    /** Process turn */
     public void process() {
+        System.out.println("Processing");
+        ArrayList<Unit> removed = new ArrayList<Unit>();
         ListIterator<Unit> iterator = units.listIterator();
         while (iterator.hasNext()) {
             Unit u = iterator.next();
             Path p = u.getPath();
-            u.setTile(p.stepPath());
+            if (p.isEmpty()) {
+                System.out.println("Removing " + u);
+                removed.add(u);
+            }
+            else {
+                u.setTile( p.stepPath());
+            }
+        }
+        if (!removed.isEmpty()) {
+            iterator = removed.listIterator();
+            while (iterator.hasNext()) {
+                Unit u = iterator.next();
+                units.remove(u);
+            }
         }
     }
     
+    /** Test printing */
     public void print() {
-            /*System.out.println(node.unit.getTeam().toString() + " - "
-                    + node.unit.toString() + ": "
-                    + node.unit.getPath().toString());*/
+        /*
+         * System.out.println(node.unit.getTeam().toString() + " - " +
+         * node.unit.toString() + ": " + node.unit.getPath().toString());
+         */
     }
 }

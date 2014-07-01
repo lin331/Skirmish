@@ -81,7 +81,7 @@ public class Unit {
                 break;
         }
     }
-    
+
     /** Add to path */
     public void addPath(Map map) {
         @SuppressWarnings("resource")
@@ -175,6 +175,6 @@ public class Unit {
 
     @Override
     public String toString() {
-        return Integer.toString(num);
+        return team + Integer.toString(num);
     }
 }
