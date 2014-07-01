@@ -27,18 +27,31 @@ public class Path {
             System.out.println("Error: Empty path");
             return null;
         }
+<<<<<<< HEAD
         Tile t = tiles.remove(0);
         System.out.println(t);
+=======
+        Tile t = tiles.get(0);
+        tiles.remove(0);
+>>>>>>> d264d814d7d7805cfc120a23904f8989016ef72e
         return t;
     }
 
     /** Check if move is valid */
     public boolean isValid(Tile t) {
         if (tiles.size() == 0) {
-            // System.out.println("Valid");
+            System.out.println("Valid");
             return true;
         }
+<<<<<<< HEAD
         if (t.isAdjacent(tiles.get(tiles.size() - 1))) {
+=======
+        if (maxMoves == tiles.size()) {
+            System.out.println("Not valid: path full");
+            return false;
+        }
+        if (t.isAdjacent(tiles.get(tiles.size()-1))) {
+>>>>>>> d264d814d7d7805cfc120a23904f8989016ef72e
             for (int i = 0; i < tiles.size(); i++) {
                 if (t.equals(tiles.get(i))) {
                     System.out.println("Not valid: Already moving there");
