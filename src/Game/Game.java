@@ -161,7 +161,7 @@ public class Game {
         game.start();
         while (game.active) {
             gui.renderTiles();
-            game.getTurn();
+            game.requestTurn();
             game.processTurn();
             gui.renderTiles();
         }

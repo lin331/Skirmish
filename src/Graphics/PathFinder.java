@@ -13,11 +13,12 @@ public class PathFinder implements MouseListener {
 
     private Path path;
     private boolean listening;
-    private boolean started;
+    private boolean drawingPath;
     
     public PathFinder() {
         this.path = null;
         this.listening = true;
+        this.drawingPath = false;
     }
     
     @Override
@@ -25,7 +26,7 @@ public class PathFinder implements MouseListener {
         if (listening) {
             TileButton b = (TileButton)e.getSource();
             if (!b.getTile().isEmpty()) {   
-                started = true;
+                drawingPath = true;
                 path = new Path(b.getTile().getUnit());
                 ImageIcon unitIcon = new ImageIcon("res/activeUnitTile.png");
                 b.setIcon(unitIcon);
@@ -35,7 +36,7 @@ public class PathFinder implements MouseListener {
     
     @Override
     public void mouseReleased(MouseEvent e) {
-        if (listening && started) {
+        if (listening && drawingPath) {
             listening = false;
         }
         System.out.println(path);
@@ -43,11 +44,15 @@ public class PathFinder implements MouseListener {
     
     @Override
     public void mouseEntered(MouseEvent e) {
-        if (listening && started) {
+        if (listening && drawingPath) {
             if (e.getModifiers() == MouseEvent.BUTTON1_MASK) {
                 TileButton b = (TileButton)e.getSource();
+                if (!path.isValid(b.getTile())) {
+                    drawingPath = false;
+                    listening = false;
+                    return;
+                }
                 path.add(b.getTile());
-                
                 ImageIcon unitIcon = new ImageIcon("res/passedUnitTile.png");
                 ImageIcon icon = new ImageIcon("res/pathTile.png");
                 if (b.getTile().isEmpty()) {
@@ -62,7 +67,7 @@ public class PathFinder implements MouseListener {
     
     @Override
     public void mouseExited(MouseEvent e) {
-        if (listening && started) {
+        if (listening && drawingPath) {
             if (e.getModifiers() == MouseEvent.BUTTON1_MASK) {
                 TileButton b = (TileButton)e.getSource();
                 
