@@ -15,9 +15,17 @@ public class Gui extends JFrame {
 
     private Map map;
 	private JPanel background;
+    
+    private JPanel infoPanel;
+    private JLabel units;
+    private JLabel turn;
+    private JLabel health;
+    
 	private JPanel mainPanel;
+    private JPanel tilePanel;
     private ArrayList<TileButton> tileButtons;
     private PathFinder pfinder;
+    private JLabel miscLabel;
 	
     public Gui(Game g) {
         initialize(g);      
@@ -28,8 +36,18 @@ public class Gui extends JFrame {
         
         background = new JPanel();
         
+        infoPanel = new JPanel();
+        units = new JLabel("Units");
+        turn = new JLabel("Turn");
+        health = new JLabel("Health");
+        infoPanel.add(units);
+        infoPanel.add(turn);
+        infoPanel.add(health);
+        
+        mainPanel = new JPanel(new BorderLayout());
+
         GridLayout grid = new GridLayout(map.getHeight(), map.getWidth());
-        mainPanel = new JPanel(grid);
+        tilePanel = new JPanel(grid);
         
         pfinder = new PathFinder();
         tileButtons = new ArrayList<TileButton>();
@@ -39,15 +57,20 @@ public class Gui extends JFrame {
                 TileButton b = new TileButton(t, new ImageIcon("res/tile.png"));
                 b.addMouseListener(pfinder);
                 b.setBorder(null);
-                mainPanel.add(b);   
+                tilePanel.add(b);   
                 tileButtons.add(b);                
             }
-        }        
+        }
+        mainPanel.add(tilePanel, BorderLayout.NORTH);
+
+        miscLabel = new JLabel("Miscellaneous Label");
+        mainPanel.add(miscLabel, BorderLayout.SOUTH);
 		
-        getContentPane().add(background);		
+        getContentPane().add(background);	
+        background.add(infoPanel);
         background.add(mainPanel);
 
-        //initialize GUI frame
+
         setTitle("Skirmish");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	
         setSize(600,300);
