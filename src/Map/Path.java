@@ -28,15 +28,19 @@ public class Path {
             return null;
         }
         Tile t = tiles.get(0);
-        tiles.remove(tiles.size()-1);
+        tiles.remove(0);
         return t;
     }
 
     /** Check if move is valid */
     public boolean isValid(Tile t) {
         if (tiles.size() == 0) {
-            // System.out.println("Valid");
+            System.out.println("Valid");
             return true;
+        }
+        if (maxMoves == tiles.size()) {
+            System.out.println("Not valid: path full");
+            return false;
         }
         if (t.isAdjacent(tiles.get(tiles.size()-1))) {
             for (int i = 0; i < tiles.size(); i++) {
