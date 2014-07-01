@@ -98,6 +98,21 @@ ________________________________________________________________________________
 					)
 				-if opposing units and one of them takes tile, standard battle mechanics apply (see battle mechanics)
 				)
+			If goal move ends on a tile adjacent to unit they just moved through
+				(
+				Check if any other enemies adjacent
+				(
+				if true,
+					(
+					goal move units attack the new adjacent enemy unit 
+						(if more than one, will prioritize being <flanker>, RNG if no possibility of being <flanker>)
+					)
+				else
+					(
+					-original 2x damage to them, plus standard engage (so goal move net 3x damage, enemy unit 1x damage)
+					-this should also take into consideration multipliers <see excel sheet and battle mechanics> 
+					-all battle calculations apply, both units will count as stationary units for the 2nd exchange
+					)
 		}
 		
 		
@@ -119,9 +134,86 @@ ________________________________________________________________________________
 	Safe Goal movement:
 		(
 		Same as goal move, but will engage rather than move through blocking units
-		if both units are using 
+		if both units are using no damage taken by either
 		)
 				
+	Movement interactions: (opposing team units)
+		{
+		-Standard Vs Standard:
+			(
+			Check for units in adjacent tiles, if true, 
+				then both stop and engage
+			Diagonals do not count, and there is no interaction
+			See exceptions if coincide on same tile at the same time
+			)
+		-Standard Vs Safe Goal
+			(
+			Check for units in adjacent tiles, if true,
+				(
+				Check if next turn any path blockages
+					(
+					if true, both units stop and engage <See battle mechanics>
+					)
+					else
+					(
+					standard movement unit stop and engage, safe goal unit takes damage and continues moving
+					standard movement unit takes no damage, but does not move after engaging
+					)
+			)
+		-Standard Vs Goal move
+			(
+			Check for units in adjacent tiles, if true
+				(
+				Standard move unit stops (no damage dealt yet until next checks made)
+				Check for blockages on next move cycle
+					(
+					if true,
+						(
+						goal move 2x damage and keep moving to destination
+						)
+					else
+						(
+						goal move takes 1x damage, keep moving to destination
+						)
+				standard move unit takes no damage
+				if goal move destination is adjacent to enemy they just passed through, see exceptions
+		
+		-Safe Goal Vs Safe Goal move
+			(
+			-Check if adjacent units, if true
+				(
+				check if next move cycle will cause path blockage, if true
+					(
+					both units stop and engage, standard battle mechanics apply
+					)
+				else
+					(
+					both units keep moving, no damage to either unit
+					)
+			)
+			
+		-Safe Goal Vs Goal move
+			(
+			-Check if adjacent units, if true
+				(
+				check if next move cycle will cause path blockage, if true
+					(
+					Safe Goal units stop and engage, Goal units move through, take 2x damage
+					)
+				else
+					(
+					both units keep moving, no damage to either unit
+					)
+			)
+		
+		-Goal move vs Goal move
+			(
+			No damage is dealt to either unit at any point except at destination when units change from moving to stationary
+			Goal move units do not need to check for surrounding units, other movement types checking should cover it
+			)
+		}	
+		
+
 
 Battle mechanics:
 __________________________________________________________________________________
@@ -130,7 +222,7 @@ ________________________________________________________________________________
 		{
 		if both units moving, they attack each other at the same time (both deal and recieve full damage)
 		if moving unit walks into stationary enemy, moving unit deals damage first, stationary unit retaliate
-		subsequent attackers <flankers> take 50% less damage if 2 opposing units are next to each other
+		subsequent attackers <flankers> take 50% less damage from original unit <flanked>
 			~in other words <flankers> take 50% less damage
 			~<flankers> still do full amount of damage and attack first
 			~target enemy retaliates at 50% damage after (retaliation because they are stationary)
