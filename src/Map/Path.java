@@ -6,14 +6,23 @@ import java.util.ArrayList;
 public class Path {
     private ArrayList<Tile> tiles; // Positions in path
     int maxMoves; // Total moves in path
+    Pathtype type;
 
     /** Creates position big enough for unit move */
     public Path(Unit unit) {
         tiles = new ArrayList<Tile>();
         tiles.add(unit.getTile());
         maxMoves = unit.getMove();
+        this.type = Pathtype.STANDARD;
     }
 
+    public Path(Unit unit, Pathtype type) {
+        tiles = new ArrayList<Tile>();
+        tiles.add(unit.getTile());
+        maxMoves = unit.getMove();
+        this.type = type;
+    }
+    
     /** Add position to path */
     public void add(Tile t) {
         if (isValid(t)) {
