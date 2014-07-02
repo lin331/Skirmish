@@ -17,6 +17,16 @@ public class Battle {
         b.reduceHealth(a.getAttack());
     }
 
+    public boolean has(Unit ally, Unit enemy) {
+        if (this.a.equals(ally) && this.b.equals(enemy)) {
+            return true;
+        }
+        else if (this.a.equals(enemy) && this.b.equals(ally)) {
+            return true;
+        }
+        return false;
+    }
+
     /** Getter methods */
     public Unit getA() {
         return this.a;

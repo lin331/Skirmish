@@ -1,15 +1,18 @@
 package Map;
 
+import Game.Battle;
 import Player.Team;
 import Player.Unit;
 
 import java.util.ArrayList;
+import java.util.ListIterator;
 
 /** Map for game */
 public class Map {
     private Tile[][] tiles;
     private final int WIDTH = 9;
     private final int HEIGHT = 6;
+    ArrayList<Battle> battles = new ArrayList<Battle>();
 
     public Map() {
         initialize();
@@ -27,16 +30,7 @@ public class Map {
 
     /** Set units on map */
     public void setUnits(Team teams[]) {
-        for (Tile[] tRow : tiles) {
-            for (Tile tile : tRow) {
-                Unit u = tile.getUnit();
-                if (u != null) {
-                    if (!u.getTile().equals(tile)) {
-                        tile.setUnit(null);
-                    }
-                }
-            }
-        }
+        System.out.println("Map: settings units");
         for (Team t : teams) {
             ArrayList<Unit> units = t.getUnits();
             for (int i = 0; i < units.size(); i++) {
@@ -44,6 +38,99 @@ public class Map {
                 tiles[tile.getY()][tile.getX()].setUnit(units.get(i));
             }
         }
+    }
+
+    /** Check for enemy on adjacent tiles */
+    public Unit checkAdjacent(Tile tile) {
+        Tile temp;
+        Unit unit;
+        temp = getN(tile);
+        if (temp != null) {
+            unit = temp.getUnit();
+            if (unit != null) {
+                return unit;
+            }
+        }
+        temp = getE(tile);
+        if (temp != null) {
+            unit = temp.getUnit();
+            if (unit != null) {
+                return unit;
+            }
+        }
+        temp = getS(tile);
+        if (temp != null) {
+            unit = temp.getUnit();
+            if (unit != null) {
+                return unit;
+            }
+        }
+        temp = getW(tile);
+        if (temp != null) {
+            unit = temp.getUnit();
+            if (unit != null) {
+                return unit;
+            }
+        }
+        return null;
+    }
+
+    /** Check battle conditions */
+    public void checkBattle(Team team) {
+        System.out.println("Checking");
+        ArrayList<Unit> units = team.getUnits();
+        for (int i = 0; i < units.size(); i++) {
+            Unit ally = units.get(i);
+            Tile tile = ally.getTile();
+            Unit enemy = checkAdjacent(tile);
+            boolean flag = false;
+            if (enemy != null) {
+                ListIterator<Battle> iterator = battles.listIterator();
+                while (iterator.hasNext()) {
+                    Battle b = iterator.next();
+                    if (b.has(ally, enemy)) {
+                        flag = true;
+                        break;
+                    }
+                }
+                if (!flag) {
+                    Battle b = new Battle(ally,enemy);
+                    ally.clearPath();
+                    enemy.clearPath();
+                    battles.add(b);
+                    b.attack();
+                }
+            }
+        }
+    }
+
+    /** Getter methods for adjacent tiles */
+    public Tile getN(Tile tile) {
+        if (tile.getY() == 0) {
+            return null;
+        }
+        return tiles[tile.getY() - 1][tile.getX()];
+    }
+
+    public Tile getE(Tile tile) {
+        if (tile.getX() == WIDTH - 1) {
+            return null;
+        }
+        return tiles[tile.getY()][tile.getX() + 1];
+    }
+
+    public Tile getS(Tile tile) {
+        if (tile.getY() == HEIGHT - 1) {
+            return null;
+        }
+        return tiles[tile.getY() + 1][tile.getX()];
+    }
+
+    public Tile getW(Tile tile) {
+        if (tile.getX() == 0) {
+            return null;
+        }
+        return tiles[tile.getY()][tile.getX() - 1];
     }
 
     /** Getter methods below */
@@ -73,7 +160,8 @@ public class Map {
                 System.out.print("|");
                 if (tiles[i][j].isEmpty()) {
                     System.out.print(" ");
-                } else {
+                }
+                else {
                     System.out.print(tiles[i][j].getUnit().getNum());
                 }
             }

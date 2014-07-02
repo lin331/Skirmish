@@ -5,7 +5,6 @@ import Player.Unit;
 import java.util.ArrayList;
 import java.util.ListIterator;
 
-
 public class Turn {
     private ArrayList<Unit> units;
 
@@ -46,7 +45,7 @@ public class Turn {
                 removed.add(u);
             }
             else {
-                u.setTile( p.stepPath());
+                u.setTile(p.stepPath());
             }
         }
         if (!removed.isEmpty()) {
@@ -57,12 +56,22 @@ public class Turn {
             }
         }
     }
-    
+
     /** Test printing */
     public void print() {
-        /*
-         * System.out.println(node.unit.getTeam().toString() + " - " +
-         * node.unit.toString() + ": " + node.unit.getPath().toString());
-         */
+        ListIterator<Unit> iterator = units.listIterator();
+        while (iterator.hasNext()) {
+            Unit u = iterator.next();
+            System.out.println(u.getTeam() + " - " + u + ": " + u.getPath());
+        }
+    }
+
+    /** Override */
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < units.size(); i++) {
+            sb.append(units.get(i) + ": " + units.get(i).getPath() + "\n");
+        }
+        return sb.toString();
     }
 }

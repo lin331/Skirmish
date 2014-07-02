@@ -33,15 +33,6 @@ public class Unit {
         path = new Path(this);
     }
 
-    public Unit(int n) {
-        this.team = new Team("A");
-        this.num = n;
-        this.type = Type.DEFAULT;
-        setStats(type);
-        this.tile = new Tile(0, 0);
-        path = new Path(this);
-    }
-
     private void setStats(Type type) {
         switch(type) {
             case DEFAULT:
@@ -120,9 +111,14 @@ public class Unit {
         health -= damage;
     }
 
+    public void clearPath() {
+        this.path.clear();
+    }
     /** Setter methods below */
     public void setTile(Tile tile) {
+        this.tile.setUnit(null);
         this.tile = tile;
+        this.tile.setUnit(this);
     }
 
     /** Getter methods below */

@@ -28,7 +28,7 @@ public class Path {
             return null;
         }
         Tile t = tiles.remove(0);
-        System.out.println(t);
+        // System.out.println(t);
         return t;
     }
 
@@ -38,11 +38,11 @@ public class Path {
             System.out.println("Valid");
             return true;
         }
-        if (maxMoves == tiles.size()) {
+        if (maxMoves == tiles.size() - 1) {
             System.out.println("Not valid: path full");
             return false;
         }
-        if (t.isAdjacent(tiles.get(tiles.size()-1))) {
+        if (t.isAdjacent(tiles.get(tiles.size() - 1))) {
             for (int i = 0; i < tiles.size(); i++) {
                 if (t.equals(tiles.get(i))) {
                     System.out.println("Not valid: Already moving there");
@@ -56,6 +56,12 @@ public class Path {
         return false;
     }
 
+    /** Clear path */
+    public void clear() {
+        tiles.clear();
+    }
+
+    /** Check if path is empty */
     public boolean isEmpty() {
         return tiles.isEmpty();
     }
