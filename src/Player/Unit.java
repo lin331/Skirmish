@@ -149,6 +149,10 @@ public class Unit {
     public Path getPath() {
         return path;
     }
+	
+	public void setPath(Path p) {
+		this.path = p;
+	}
 
     /** Overrides */
     @Override

@@ -36,10 +36,14 @@ public class PathFinder implements MouseListener {
     
     @Override
     public void mouseReleased(MouseEvent e) {
-        if (listening && drawingPath) {
-            listening = false;
-        }
-        System.out.println(path);
+		if (listening) {
+			TileButton b = (TileButton)e.getSource();
+			if (path != null) {
+				b.getTile().getUnit().setPath(path);
+				System.out.println(b.getTile().getUnit().getPath());
+				listening = false;
+			}
+		}
     }
     
     @Override
@@ -49,7 +53,6 @@ public class PathFinder implements MouseListener {
                 TileButton b = (TileButton)e.getSource();
                 if (!path.isValid(b.getTile())) {
                     drawingPath = false;
-                    listening = false;
                     return;
                 }
                 path.add(b.getTile());
