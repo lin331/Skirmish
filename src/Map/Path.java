@@ -8,7 +8,7 @@ public class Path {
     int maxMoves; // Total moves in path
     Pathtype type;
 
-    /** Creates position big enough for unit move */
+    /* Creates position big enough for unit move */
     public Path(Unit unit) {
         tiles = new ArrayList<Tile>();
         tiles.add(unit.getTile());
@@ -23,25 +23,30 @@ public class Path {
         this.type = type;
     }
     
-    /** Add position to path */
+    /* Add position to path */
     public void add(Tile t) {
         if (isValid(t)) {
             tiles.add(t);
         }
     }
 
-    /** Step through the next position in path */
-    public Tile stepPath() {
+    /* Get next tile in path */
+    public Tile getNext() {
         if (tiles.isEmpty()) {
             System.out.println("Error: Empty path");
             return null;
         }
-        Tile t = tiles.remove(0);
+        Tile t = tiles.get(0);
         // System.out.println(t);
         return t;
     }
 
-    /** Check if move is valid */
+    /* Delete next tile in path */
+    public Tile remove() {
+        return tiles.remove(0);
+    }
+    
+    /* Check if move is valid */
     public boolean isValid(Tile t) {
         if (tiles.size() == 0) {
             System.out.println("Valid");
@@ -65,17 +70,21 @@ public class Path {
         return false;
     }
 
-    /** Clear path */
+    /* Clear path */
     public void clear() {
         tiles.clear();
     }
 
-    /** Check if path is empty */
+    /* Check if path is empty */
     public boolean isEmpty() {
         return tiles.isEmpty();
     }
 
-    /** Overrides */
+    public Pathtype getType() {
+        return this.type;
+    }
+    
+    /* Overrides */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

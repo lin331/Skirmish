@@ -3,13 +3,10 @@ package Game;
 import java.util.Scanner;
 
 import Graphics.Gui;
-import Map.Tile;
 import Map.Map;
 import Player.Team;
 import Player.Type;
 import Player.Unit;
-
-import java.util.Scanner;
 
 public class Game {
     private final int MAX_COMMANDS = 3;
@@ -18,12 +15,12 @@ public class Game {
     private Team[] teams; // Array for teams
     private Turn turn; // Used for list of command
 
-    /** Constructor for game */
+    /* Constructor for game */
     Game() {
         initialize();
     }
 
-    /** Initialize game map and create teams */
+    /* Initialize game map and create teams */
     private void initialize() {
         map = new Map();
         active = false;
@@ -31,19 +28,19 @@ public class Game {
         turn = new Turn();
     }
 
-    /** Initialize teams */
+    /* Initialize teams */
     private void makeTeams() {
         teams = new Team[2];
         teams[0] = new Team("Team A");
         teams[1] = new Team("Team B");
     }
 
-    /** Put units on map tiles */
+    /* Put units on map tiles */
     void setUnits() {
         map.setUnits(teams);
     }
 
-    /** Processes turn */
+    /* Processes turn */
     void processTurn() {
         try {
             Thread.sleep(1000);
@@ -52,26 +49,26 @@ public class Game {
         }
         if (!turn.isEmpty()) {
             turn.process();
-            setUnits();
+            map.checkBattle(teams[0]);
         }
     }
 
-    /** Begins the game */
+    /* Begins the game */
     public void start() {
         active = true;
     }
 
-    /** Ends the game */
+    /* Ends the game */
     public void end() {
         active = false;
     }
 
-    /** Prints the current game map to screen */
+    /* Prints the current game map to screen */
     void viewMap() {
         map.printMap();
     }
 
-    /** Getter methods below */
+    /* Getter methods below */
     public Map getMap() {
         return this.map;
     }
@@ -88,9 +85,10 @@ public class Game {
         return active;
     }
 
-    /** For console input: */
-    /** Add units to team */
+    /* For console input: */
+    /* Add units to team */
     private void addUnits() {
+        @SuppressWarnings("resource")
         Scanner s = new Scanner(System.in);
         System.out.println("Enter # of units per team: ");
         int num = Integer.parseInt(s.next());
@@ -113,7 +111,7 @@ public class Game {
         }
     }
 
-    /** Prompt for selecting unit */
+    /* Prompt for selecting unit */
     private Unit selectUnit(Team team) {
         @SuppressWarnings("resource")
         Scanner s = new Scanner(System.in);
@@ -136,7 +134,7 @@ public class Game {
         return unit;
     }
 
-    /** Takes move commands and processes them */
+    /* Takes move commands and processes them */
     private void requestTurn() {
         for (int i = 0; i < 2; i++) {
             System.out.println(teams[i].toString() + "'s turn:");

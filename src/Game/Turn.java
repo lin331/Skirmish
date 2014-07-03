@@ -12,27 +12,27 @@ public class Turn {
         units = new ArrayList<Unit>();
     }
 
-    /** Check if list is empty */
+    /* Check if list is empty */
     public boolean isEmpty() {
         return units.isEmpty();
     }
 
-    /** Returns size of list */
+    /* Returns size of list */
     public int size() {
         return units.size();
     }
 
-    /** Add unit to list */
+    /* Add unit to list */
     public void add(Unit unit) {
         units.add(unit);
     }
 
-    /** Removes specified unit */
+    /* Removes specified unit */
     public void remove(Unit unit) {
         units.remove(unit);
     }
 
-    /** Process turn */
+    /* Process turn */
     public void process() {
         System.out.println("Processing");
         ArrayList<Unit> removed = new ArrayList<Unit>();
@@ -45,7 +45,7 @@ public class Turn {
                 removed.add(u);
             }
             else {
-                u.setTile(p.stepPath());
+                u.setTile(p.remove());
             }
         }
         if (!removed.isEmpty()) {
@@ -57,7 +57,7 @@ public class Turn {
         }
     }
 
-    /** Test printing */
+    /* Test printing */
     public void print() {
         ListIterator<Unit> iterator = units.listIterator();
         while (iterator.hasNext()) {
@@ -66,7 +66,7 @@ public class Turn {
         }
     }
 
-    /** Override */
+    /* Override */
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < units.size(); i++) {

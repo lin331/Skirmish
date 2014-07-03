@@ -2,7 +2,7 @@ package Map;
 
 import Player.Unit;
 
-/** Tiles for map */
+/* Tiles for map */
 public class Tile {
 
     private Unit unit;
@@ -15,7 +15,7 @@ public class Tile {
         this.y = y;
     }
 
-    /** Check if tile is empty */
+    /* Check if tile is empty */
     public boolean isEmpty() {
         if (unit != null) {
             return false;
@@ -23,7 +23,7 @@ public class Tile {
         return true;
     }
 
-    /** Check if tile is adjacent */
+    /* Check if tile is adjacent */
     public boolean isAdjacent(Tile t) {
         if ((Math.abs(this.x - t.x) == 1) && (Math.abs(this.y - t.y) == 0)) {
             return true;
@@ -34,7 +34,7 @@ public class Tile {
         return false;
     }
 
-    /** Set unit on tile */
+    /* Set unit on tile */
     public void setUnit(Unit unit) {
         /*if (this.unit != null) {
             System.out.println("Unit already on tile");
@@ -43,7 +43,7 @@ public class Tile {
         this.unit = unit;
     }
 
-    /** Getter methods below */
+    /* Getter methods below */
     public Unit getUnit() {
         return unit;
     }
@@ -56,7 +56,7 @@ public class Tile {
         return y;
     }
 
-    /** Overrides */
+    /* Overrides */
     public boolean equals(Tile t) {
         if (this.x != t.getX() || this.y != t.getY()) {
             return false;

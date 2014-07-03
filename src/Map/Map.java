@@ -7,7 +7,7 @@ import Player.Unit;
 import java.util.ArrayList;
 import java.util.ListIterator;
 
-/** Map for game */
+/* Map for game */
 public class Map {
     private Tile[][] tiles;
     private final int WIDTH = 9;
@@ -18,7 +18,7 @@ public class Map {
         initialize();
     }
 
-    /** Initializes tile map */
+    /* Initializes tile map */
     public void initialize() {
         tiles = new Tile[HEIGHT][WIDTH];
         for (int i = 0; i < HEIGHT; i++) {
@@ -28,7 +28,7 @@ public class Map {
         }
     }
 
-    /** Set units on map */
+    /* Set units on map */
     public void setUnits(Team teams[]) {
         System.out.println("Map: settings units");
         for (Team t : teams) {
@@ -40,7 +40,7 @@ public class Map {
         }
     }
 
-    /** Check for enemy on adjacent tiles */
+    /* Check for enemy on adjacent tiles */
     public Unit checkAdjacent(Tile tile) {
         Tile temp;
         Unit unit;
@@ -75,7 +75,12 @@ public class Map {
         return null;
     }
 
-    /** Check battle conditions */
+    /* Check if unit is blocked */
+    public boolean checkBlocked(Unit unit) {
+        return false;
+    }
+    
+    /* Check battle conditions */
     public void checkBattle(Team team) {
         System.out.println("Checking");
         ArrayList<Unit> units = team.getUnits();
@@ -83,8 +88,23 @@ public class Map {
             Unit ally = units.get(i);
             Tile tile = ally.getTile();
             Unit enemy = checkAdjacent(tile);
-            boolean flag = false;
+            boolean flag = false; // Flag for already battled
             if (enemy != null) {
+                // Get types to check battle mechanics and movement
+                Pathtype aType = ally.getPath().getType();
+                Pathtype eType = enemy.getPath().getType();
+                // If goal movement
+                if (aType == Pathtype.GOAL || aType == Pathtype.SAFEGOAL) {
+                    switch (eType) {
+                        case GOAL:
+                        case SAFEGOAL:
+                            System.out.println("Battle does not occurs");
+                            continue;
+                        default:
+                            System.out.println("Battle occurs");
+                    }
+                }
+                // Iterator for battles that already happened
                 ListIterator<Battle> iterator = battles.listIterator();
                 while (iterator.hasNext()) {
                     Battle b = iterator.next();
@@ -94,9 +114,14 @@ public class Map {
                     }
                 }
                 if (!flag) {
-                    Battle b = new Battle(ally,enemy);
-                    ally.clearPath();
-                    enemy.clearPath();
+                    // Battle occurs
+                    Battle b = new Battle(ally, enemy);
+                    if (aType == Pathtype.STANDARD) {
+                        ally.getPath().clear();
+                    }
+                    if (eType == Pathtype.STANDARD) {
+                        enemy.getPath().clear();
+                    }
                     battles.add(b);
                     b.attack();
                 }
@@ -104,7 +129,7 @@ public class Map {
         }
     }
 
-    /** Getter methods for adjacent tiles */
+    /* Getter methods for adjacent tiles */
     public Tile getN(Tile tile) {
         if (tile.getY() == 0) {
             return null;
@@ -133,7 +158,7 @@ public class Map {
         return tiles[tile.getY()][tile.getX() - 1];
     }
 
-    /** Getter methods below */
+    /* Getter methods below */
     public Tile[][] getTiles() {
         return this.tiles;
     }
@@ -146,7 +171,7 @@ public class Map {
         return HEIGHT;
     }
 
-    /** Prints text map */
+    /* Prints text map */
     public void printMap() {
         System.out.println("  0 1 2 3 4 5 6 7 8 ");
         for (int i = 0; i < HEIGHT; i++) {

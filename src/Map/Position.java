@@ -14,7 +14,7 @@ public class Position {
         this.y = y;
     }
 
-    /** Check if valid position on map */
+    /* Check if valid position on map */
     public boolean isValid(int width, int height) {
         if (x >= 0 && y >= 0 && x < width && y < height) {
             return true;
@@ -22,7 +22,7 @@ public class Position {
         return false;
     }
 
-    /** Check if position is adjacent */
+    /* Check if position is adjacent */
     public boolean isAdjacent(Position p) {
         if ((Math.abs(this.x - p.x) == 1) && (Math.abs(this.y - p.y) == 0)) {
             return true;
@@ -33,7 +33,7 @@ public class Position {
         return false;
     }
 
-    /** Getter methods below */
+    /* Getter methods below */
     public int getX() {
         return x;
     }
@@ -42,7 +42,7 @@ public class Position {
         return y;
     }
 
-    /** Overrides */
+    /* Overrides */
     public boolean equals(Position p) {
         if (this.x == p.x && this.y == p.y) {
             return true;

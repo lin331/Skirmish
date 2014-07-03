@@ -73,7 +73,7 @@ public class Unit {
         }
     }
 
-    /** Add to path */
+    /* Add to path */
     public void addPath(Map map) {
         @SuppressWarnings("resource")
         Scanner s = new Scanner(System.in);
@@ -101,12 +101,12 @@ public class Unit {
         }
     }
 
-    /** Check method below */
+    /* Check method below */
     public boolean isDead() {
         return health < 1;
     }
 
-    /** Set method below */
+    /* Set method below */
     public void reduceHealth(int damage) {
         health -= damage;
     }
@@ -114,14 +114,14 @@ public class Unit {
     public void clearPath() {
         this.path.clear();
     }
-    /** Setter methods below */
+    /* Setter methods below */
     public void setTile(Tile tile) {
         this.tile.setUnit(null);
         this.tile = tile;
         this.tile.setUnit(this);
     }
 
-    /** Getter methods below */
+    /* Getter methods below */
     public Team getTeam() {
         return team;
     }
@@ -154,7 +154,7 @@ public class Unit {
 		this.path = p;
 	}
 
-    /** Overrides */
+    /* Overrides */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {

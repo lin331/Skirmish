@@ -16,7 +16,7 @@ public class Team {
         units.add(unit);
     }
 
-    /** Getter methods below */
+    /* Getter methods below */
     public Unit getUnit(int i) {
         return units.get(i - 1); // Return specific unit
     }
@@ -29,7 +29,7 @@ public class Team {
         return name;
     }
 
-    /** Overrides */
+    /* Overrides */
     public String toString() {
         return name;
     }

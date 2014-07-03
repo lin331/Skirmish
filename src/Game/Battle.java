@@ -27,7 +27,7 @@ public class Battle {
         return false;
     }
 
-    /** Getter methods */
+    /* Getter methods */
     public Unit getA() {
         return this.a;
     }
@@ -36,7 +36,7 @@ public class Battle {
         return this.b;
     }
 
-    /** Overrides */
+    /* Overrides */
     public boolean equals(Battle b) {
         if (this.a.equals(b.getA()) && this.b.equals(b.getB())) {
             return true;
