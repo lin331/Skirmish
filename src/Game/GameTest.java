@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import Map.Pathtype;
 import Map.Tile;
 import Player.Team;
 import Player.Unit;
@@ -25,19 +26,23 @@ public class GameTest {
         game.viewMap();
 
         game.getTurn().add(teams[0].getUnit(1));
+        teams[0].getUnit(1).getPath().setType(Pathtype.STANDARD);
         teams[0].getUnit(1).getPath().add(tiles[0][1]);
         teams[0].getUnit(1).getPath().add(tiles[0][2]);
         teams[0].getUnit(1).getPath().add(tiles[0][3]);
         game.getTurn().add(teams[0].getUnit(2));
+        teams[0].getUnit(2).getPath().setType(Pathtype.STANDARD);
         teams[0].getUnit(2).getPath().add(tiles[2][1]);
         teams[0].getUnit(2).getPath().add(tiles[2][2]);
         game.getTurn().add(teams[1].getUnit(1));
+        teams[1].getUnit(1).getPath().setType(Pathtype.GOAL);
         teams[1].getUnit(1).getPath().add(tiles[0][7]);
         teams[1].getUnit(1).getPath().add(tiles[0][6]);
         teams[1].getUnit(1).getPath().add(tiles[0][5]);
         teams[1].getUnit(1).getPath().add(tiles[0][4]);
         teams[1].getUnit(1).getPath().add(tiles[0][3]);
         game.getTurn().add(teams[1].getUnit(2));
+        teams[1].getUnit(2).getPath().setType(Pathtype.STANDARD);
         teams[1].getUnit(2).getPath().add(tiles[2][7]);
 
         game.start();

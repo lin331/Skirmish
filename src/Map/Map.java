@@ -77,6 +77,9 @@ public class Map {
 
     /* Check if unit is blocked */
     public boolean checkBlocked(Unit unit) {
+        if (unit.getPath().getType() == Pathtype.STATIONARY) {
+            return true;
+        }
         return false;
     }
     
@@ -93,7 +96,7 @@ public class Map {
                 // Get types to check battle mechanics and movement
                 Pathtype aType = ally.getPath().getType();
                 Pathtype eType = enemy.getPath().getType();
-                // If goal movement
+                // Check goal movement for battle
                 if (aType == Pathtype.GOAL || aType == Pathtype.SAFEGOAL) {
                     switch (eType) {
                         case GOAL:
@@ -116,11 +119,27 @@ public class Map {
                 if (!flag) {
                     // Battle occurs
                     Battle b = new Battle(ally, enemy);
+                    // Stop moving if standard
                     if (aType == Pathtype.STANDARD) {
                         ally.getPath().clear();
                     }
+                    // Check goal movement conditions
+                    else if (aType == Pathtype.GOAL || aType == Pathtype.SAFEGOAL){
+                        if (checkBlocked(enemy)) {
+                            System.out.println("Blocked");
+                            ally.getPath().clear(); // TODO: Temperary function
+                        }
+                    }
+                    // Stop moving if standard
                     if (eType == Pathtype.STANDARD) {
                         enemy.getPath().clear();
+                    }
+                    // Check goal movement conditions
+                    else if (eType == Pathtype.GOAL || eType == Pathtype.SAFEGOAL){
+                        if (checkBlocked(ally)) {
+                            System.out.println("Blocked");
+                            enemy.getPath().clear(); // TODO: Temperary function
+                        }
                     }
                     battles.add(b);
                     b.attack();
@@ -173,28 +192,29 @@ public class Map {
 
     /* Prints text map */
     public void printMap() {
-        System.out.println("  0 1 2 3 4 5 6 7 8 ");
+        System.out.println("  0  1  2  3  4  5  6  7  8 ");
         for (int i = 0; i < HEIGHT; i++) {
-            System.out.print(" ");
-            for (int k = 0; k < WIDTH * 2; k++) {
-                System.out.print("-");
+            System.out.print("-");
+            for (int k = 0; k < WIDTH; k++) {
+                System.out.print("---");
             }
-            System.out.println("-");
+            System.out.println();
             System.out.print(i);
             for (int j = 0; j < WIDTH; j++) {
                 System.out.print("|");
                 if (tiles[i][j].isEmpty()) {
-                    System.out.print(" ");
+                    System.out.print("  ");
                 }
                 else {
-                    System.out.print(tiles[i][j].getUnit().getNum());
+                    System.out.print(tiles[i][j].getUnit());
                 }
             }
             System.out.println("|");
         }
-        for (int k = 0; k < WIDTH * 2; k++) {
-            System.out.print("-");
+        System.out.print("-");
+        for (int k = 0; k < WIDTH; k++) {
+            System.out.print("---");
         }
-        System.out.println("-");
+        System.out.println();
     }
 }

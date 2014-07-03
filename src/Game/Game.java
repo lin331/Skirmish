@@ -31,8 +31,8 @@ public class Game {
     /* Initialize teams */
     private void makeTeams() {
         teams = new Team[2];
-        teams[0] = new Team("Team A");
-        teams[1] = new Team("Team B");
+        teams[0] = new Team("A");
+        teams[1] = new Team("B");
     }
 
     /* Put units on map tiles */

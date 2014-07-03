@@ -8,19 +8,11 @@ public class Path {
     int maxMoves; // Total moves in path
     Pathtype type;
 
-    /* Creates position big enough for unit move */
     public Path(Unit unit) {
-        tiles = new ArrayList<Tile>();
-        tiles.add(unit.getTile());
-        maxMoves = unit.getMove();
-        this.type = Pathtype.STANDARD;
-    }
-
-    public Path(Unit unit, Pathtype type) {
-        tiles = new ArrayList<Tile>();
-        tiles.add(unit.getTile());
-        maxMoves = unit.getMove();
-        this.type = type;
+        this.tiles = new ArrayList<Tile>();
+        this.tiles.add(unit.getTile());
+        this.maxMoves = unit.getMove();
+        this.type = Pathtype.STATIONARY;
     }
     
     /* Add position to path */
@@ -43,7 +35,7 @@ public class Path {
 
     /* Delete next tile in path */
     public Tile remove() {
-        return tiles.remove(0);
+        return this.tiles.remove(0);
     }
     
     /* Check if move is valid */
@@ -72,16 +64,23 @@ public class Path {
 
     /* Clear path */
     public void clear() {
-        tiles.clear();
+        this.tiles.clear();
+        this.type = Pathtype.STATIONARY;
+    }
+    
+    /* Setter methods below */
+    public void setType(Pathtype type) {
+        this.type = type;
+    }
+    
+    /* Getter methods below */
+    public Pathtype getType() {
+        return this.type;
     }
 
     /* Check if path is empty */
     public boolean isEmpty() {
-        return tiles.isEmpty();
-    }
-
-    public Pathtype getType() {
-        return this.type;
+        return this.tiles.isEmpty();
     }
     
     /* Overrides */
