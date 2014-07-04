@@ -41,34 +41,35 @@ public class Map {
     }
 
     /* Check for enemy on adjacent tiles */
-    public Unit checkAdjacent(Tile tile) {
+    public Unit checkAdjacent(Unit u, Tile tile) {
+        Team t = u.getTeam();
         Tile temp;
         Unit unit;
         temp = getN(tile);
         if (temp != null) {
             unit = temp.getUnit();
-            if (unit != null) {
+            if (unit != null && unit.getTeam() != t) {
                 return unit;
             }
         }
         temp = getE(tile);
         if (temp != null) {
             unit = temp.getUnit();
-            if (unit != null) {
+            if (unit != null && unit.getTeam() != t) {
                 return unit;
             }
         }
         temp = getS(tile);
         if (temp != null) {
             unit = temp.getUnit();
-            if (unit != null) {
+            if (unit != null && unit.getTeam() != t) {
                 return unit;
             }
         }
         temp = getW(tile);
         if (temp != null) {
             unit = temp.getUnit();
-            if (unit != null) {
+            if (unit != null && unit.getTeam() != t) {
                 return unit;
             }
         }
@@ -82,7 +83,7 @@ public class Map {
         }
         return false;
     }
-    
+
     /* Check battle conditions */
     public void checkBattle(Team team) {
         System.out.println("Checking");
@@ -90,7 +91,7 @@ public class Map {
         for (int i = 0; i < units.size(); i++) {
             Unit ally = units.get(i);
             Tile tile = ally.getTile();
-            Unit enemy = checkAdjacent(tile);
+            Unit enemy = checkAdjacent(ally, tile);
             boolean flag = false; // Flag for already battled
             if (enemy != null) {
                 // Get types to check battle mechanics and movement
@@ -124,22 +125,36 @@ public class Map {
                         ally.getPath().clear();
                     }
                     // Check goal movement conditions
-                    else if (aType == Pathtype.GOAL || aType == Pathtype.SAFEGOAL){
+                    else if (aType == Pathtype.GOAL) {
                         if (checkBlocked(enemy)) {
                             System.out.println("Blocked");
                             ally.getPath().clear(); // TODO: Temperary function
                         }
+                    }
+                    else if (eType == Pathtype.SAFEGOAL) {
+                        if (checkBlocked(enemy)) {
+                            System.out.println("Blocked");
+                            ally.getPath().clear(); // TODO: Temperary function
+                        }
+
                     }
                     // Stop moving if standard
                     if (eType == Pathtype.STANDARD) {
                         enemy.getPath().clear();
                     }
                     // Check goal movement conditions
-                    else if (eType == Pathtype.GOAL || eType == Pathtype.SAFEGOAL){
+                    else if (eType == Pathtype.GOAL) {
                         if (checkBlocked(ally)) {
                             System.out.println("Blocked");
                             enemy.getPath().clear(); // TODO: Temperary function
                         }
+                    }
+                    else if (eType == Pathtype.SAFEGOAL) {
+                        if (checkBlocked(ally)) {
+                            System.out.println("Blocked");
+                            enemy.getPath().clear(); // TODO: Temperary function
+                        }
+
                     }
                     battles.add(b);
                     b.attack();
