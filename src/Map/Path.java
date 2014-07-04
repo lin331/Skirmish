@@ -35,7 +35,11 @@ public class Path {
 
     /* Delete next tile in path */
     public Tile remove() {
-        return this.tiles.remove(0);
+        Tile t = tiles.remove(0);
+        if (tiles.isEmpty()) {
+            type = Pathtype.STATIONARY;
+        }
+        return t;
     }
     
     /* Check if move is valid */

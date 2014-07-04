@@ -129,6 +129,10 @@ public class Unit {
     public int getNum() {
         return num;
     }
+    
+    public Type getType() {
+        return type;
+    }
 
     public int getHealth() {
         return health;

@@ -97,18 +97,23 @@ public class Map {
                 // Get types to check battle mechanics and movement
                 Pathtype aType = ally.getPath().getType();
                 Pathtype eType = enemy.getPath().getType();
-                // Check goal movement for battle
+                // Check if both units using goal move
                 if (aType == Pathtype.GOAL || aType == Pathtype.SAFEGOAL) {
                     switch (eType) {
                         case GOAL:
                         case SAFEGOAL:
+                            if (checkBlocked(ally)) {
+                                System.out.println(ally + " blocking " + enemy);
+                                // TODO: Temperary function
+                                enemy.getPath().clear();
+                            }
                             System.out.println("Battle does not occurs");
                             continue;
                         default:
                             System.out.println("Battle occurs");
                     }
                 }
-                // Iterator for battles that already happened
+                // Check if battle has occured already
                 ListIterator<Battle> iterator = battles.listIterator();
                 while (iterator.hasNext()) {
                     Battle b = iterator.next();
@@ -126,14 +131,16 @@ public class Map {
                             break;
                         case GOAL:
                             if (checkBlocked(enemy)) {
-                                System.out.println("Blocked");
-                                ally.getPath().clear(); // TODO: Temperary function
+                                System.out.println(enemy + " blocking " + ally);
+                                // TODO: Temperary function
+                                ally.getPath().clear();
                             }
                             break;
                         case SAFEGOAL:
                             if (checkBlocked(enemy)) {
-                                System.out.println("Blocked");
-                                ally.getPath().clear(); // TODO: Temperary function
+                                System.out.println(enemy + " blocking " + ally);
+                                // TODO: Temperary function
+                                ally.getPath().clear();
                             }
                             break;
                         default:
@@ -145,14 +152,16 @@ public class Map {
                             break;
                         case GOAL:
                             if (checkBlocked(ally)) {
-                                System.out.println("Blocked");
-                                enemy.getPath().clear(); // TODO: Temperary function
+                                System.out.println(ally + " blocking " + enemy);
+                                // TODO: Temperary function
+                                enemy.getPath().clear();
                             }
                             break;
                         case SAFEGOAL:
                             if (checkBlocked(ally)) {
-                                System.out.println("Blocked");
-                                enemy.getPath().clear(); // TODO: Temperary function
+                                System.out.println(ally + " blocking " + enemy);
+                                // TODO: Temperary function
+                                enemy.getPath().clear();
                             }
                             break;
                         default:
