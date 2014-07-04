@@ -42,34 +42,25 @@ public class Turn {
     /* Process turn */
     public void process() {
         System.out.println("Processing");
-        while (!units.isEmpty()) {
-            map.printMap();
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        ArrayList<Unit> removed = new ArrayList<Unit>();
+        ListIterator<Unit> iterator = units.listIterator();
+        while (iterator.hasNext()) {
+            Unit u = iterator.next();
+            Path p = u.getPath();
+            if (p.isEmpty()) {
+                System.out.println("Removing " + u);
+                removed.add(u);
             }
-            ArrayList<Unit> removed = new ArrayList<Unit>();
-            ListIterator<Unit> iterator = units.listIterator();
+            else {
+                u.setTile(p.remove());
+            }
+        }
+        if (!removed.isEmpty()) {
+            iterator = removed.listIterator();
             while (iterator.hasNext()) {
                 Unit u = iterator.next();
-                Path p = u.getPath();
-                if (p.isEmpty()) {
-                    System.out.println("Removing " + u);
-                    removed.add(u);
-                }
-                else {
-                    u.setTile(p.remove());
-                }
+                units.remove(u);
             }
-            if (!removed.isEmpty()) {
-                iterator = removed.listIterator();
-                while (iterator.hasNext()) {
-                    Unit u = iterator.next();
-                    units.remove(u);
-                }
-            }
-            map.checkBattle(teams[0]);
         }
     }
 

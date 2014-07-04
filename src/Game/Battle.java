@@ -12,11 +12,13 @@ public class Battle {
         System.out.println("Battle engaged\n\t" + a + " vs. " + b);
     }
 
+    /* Both sides attack simultaneously */
     public void attack() {
         a.reduceHealth(b.getAttack());
         b.reduceHealth(a.getAttack());
     }
 
+    /* Check if battle exists */
     public boolean has(Unit ally, Unit enemy) {
         if (this.a.equals(ally) && this.b.equals(enemy)) {
             return true;

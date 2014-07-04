@@ -42,7 +42,13 @@ public class Game {
 
     /* Processes turn */
     void processTurn() {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         turn.process();
+        map.checkBattle(teams[0]);
     }
 
     /* Begins the game */
@@ -150,7 +156,9 @@ public class Game {
         game.start();
         gui.renderTiles();
         while (game.active) {
-            game.requestTurn();
+            if (game.turn.isEmpty()) {
+                game.requestTurn();
+            }
             game.processTurn();
             gui.renderTiles();
         }
