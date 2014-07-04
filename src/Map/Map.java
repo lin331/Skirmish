@@ -120,44 +120,46 @@ public class Map {
                 if (!flag) {
                     // Battle occurs
                     Battle b = new Battle(ally, enemy);
-                    // Stop moving if standard
-                    if (aType == Pathtype.STANDARD) {
-                        ally.getPath().clear();
+                    switch (aType) {
+                        case STANDARD:
+                            ally.getPath().clear();
+                            break;
+                        case GOAL:
+                            if (checkBlocked(enemy)) {
+                                System.out.println("Blocked");
+                                ally.getPath().clear(); // TODO: Temperary function
+                            }
+                            break;
+                        case SAFEGOAL:
+                            if (checkBlocked(enemy)) {
+                                System.out.println("Blocked");
+                                ally.getPath().clear(); // TODO: Temperary function
+                            }
+                            break;
+                        default:
+                            break;
                     }
-                    // Check goal movement conditions
-                    else if (aType == Pathtype.GOAL) {
-                        if (checkBlocked(enemy)) {
-                            System.out.println("Blocked");
-                            ally.getPath().clear(); // TODO: Temperary function
-                        }
-                    }
-                    else if (eType == Pathtype.SAFEGOAL) {
-                        if (checkBlocked(enemy)) {
-                            System.out.println("Blocked");
-                            ally.getPath().clear(); // TODO: Temperary function
-                        }
-
-                    }
-                    // Stop moving if standard
-                    if (eType == Pathtype.STANDARD) {
-                        enemy.getPath().clear();
-                    }
-                    // Check goal movement conditions
-                    else if (eType == Pathtype.GOAL) {
-                        if (checkBlocked(ally)) {
-                            System.out.println("Blocked");
-                            enemy.getPath().clear(); // TODO: Temperary function
-                        }
-                    }
-                    else if (eType == Pathtype.SAFEGOAL) {
-                        if (checkBlocked(ally)) {
-                            System.out.println("Blocked");
-                            enemy.getPath().clear(); // TODO: Temperary function
-                        }
-
+                    switch (eType) {
+                        case STANDARD:
+                            enemy.getPath().clear();
+                            break;
+                        case GOAL:
+                            if (checkBlocked(ally)) {
+                                System.out.println("Blocked");
+                                enemy.getPath().clear(); // TODO: Temperary function
+                            }
+                            break;
+                        case SAFEGOAL:
+                            if (checkBlocked(ally)) {
+                                System.out.println("Blocked");
+                                enemy.getPath().clear(); // TODO: Temperary function
+                            }
+                            break;
+                        default:
+                            break;
                     }
                     battles.add(b);
-                    b.attack();
+                    b.doBattle();
                 }
             }
         }

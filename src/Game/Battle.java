@@ -13,9 +13,68 @@ public class Battle {
     }
 
     /* Both sides attack simultaneously */
-    public void attack() {
-        a.reduceHealth(b.getAttack());
-        b.reduceHealth(a.getAttack());
+    public void doBattle() {
+        switch (a.getPath().getType()) {
+            case STATIONARY:
+                switch (b.getPath().getType()) {
+                    case STANDARD:
+                        b.reduceHealth(a.getAttack());
+                        if (!a.isDead()) {
+                            a.reduceHealth(b.getAttack());
+                        }
+                        break;
+                    case GOAL:
+                    case SAFEGOAL:
+                    default:
+                        break;
+                }
+                break;
+            case STANDARD:
+                switch (b.getPath().getType()) {
+                    case STANDARD:
+                        b.reduceHealth(a.getAttack());
+                        if (!a.isDead()) {
+                            a.reduceHealth(b.getAttack());
+                        }
+                        break;
+                    case GOAL:
+                    case SAFEGOAL:
+                    default:
+                        break;
+                }
+                break;
+            case GOAL:
+                switch (b.getPath().getType()) {
+                    case STANDARD:
+                        b.reduceHealth(a.getAttack());
+                        if (!a.isDead()) {
+                            a.reduceHealth(b.getAttack());
+                        }
+                        break;
+                    case GOAL:
+                    case SAFEGOAL:
+                    default:
+                        break;
+                }
+                break;
+            case SAFEGOAL:
+                switch (b.getPath().getType()) {
+                    case STANDARD:
+                        b.reduceHealth(a.getAttack());
+                        if (!a.isDead()) {
+                            a.reduceHealth(b.getAttack());
+                        }
+                        break;
+                    case GOAL:
+                    case SAFEGOAL:
+                    default:
+                        break;
+                }
+                break;
+            default:
+                System.out.println("Battle derped");
+                break;
+        }
     }
 
     /* Check if battle exists */
