@@ -25,7 +25,7 @@ public class Game {
         map = new Map();
         active = false;
         makeTeams();
-        turn = new Turn();
+        turn = new Turn(map, teams);
     }
 
     /* Initialize teams */
@@ -42,15 +42,7 @@ public class Game {
 
     /* Processes turn */
     void processTurn() {
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        if (!turn.isEmpty()) {
-            turn.process();
-            map.checkBattle(teams[0]);
-        }
+        turn.process();
     }
 
     /* Begins the game */
@@ -70,7 +62,7 @@ public class Game {
 
     /* Getter methods below */
     public Map getMap() {
-        return this.map;
+        return map;
     }
 
     public Team[] getTeams() {
@@ -155,10 +147,9 @@ public class Game {
         Gui gui = new Gui(game);
         game.addUnits();
         game.setUnits();
-
         game.start();
+        gui.renderTiles();
         while (game.active) {
-            gui.renderTiles();
             game.requestTurn();
             game.processTurn();
             gui.renderTiles();

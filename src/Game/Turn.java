@@ -1,15 +1,22 @@
 package Game;
 
+import Map.Map;
 import Map.Path;
+import Player.Team;
 import Player.Unit;
+
 import java.util.ArrayList;
 import java.util.ListIterator;
 
 public class Turn {
     private ArrayList<Unit> units;
+    Map map;
+    Team[] teams;
 
-    public Turn() {
+    public Turn(Map map, Team[] teams) {
         units = new ArrayList<Unit>();
+        this.map = map;
+        this.teams = teams;
     }
 
     /* Check if list is empty */
@@ -35,25 +42,34 @@ public class Turn {
     /* Process turn */
     public void process() {
         System.out.println("Processing");
-        ArrayList<Unit> removed = new ArrayList<Unit>();
-        ListIterator<Unit> iterator = units.listIterator();
-        while (iterator.hasNext()) {
-            Unit u = iterator.next();
-            Path p = u.getPath();
-            if (p.isEmpty()) {
-                System.out.println("Removing " + u);
-                removed.add(u);
+        while (!units.isEmpty()) {
+            map.printMap();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-            else {
-                u.setTile(p.remove());
-            }
-        }
-        if (!removed.isEmpty()) {
-            iterator = removed.listIterator();
+            ArrayList<Unit> removed = new ArrayList<Unit>();
+            ListIterator<Unit> iterator = units.listIterator();
             while (iterator.hasNext()) {
                 Unit u = iterator.next();
-                units.remove(u);
+                Path p = u.getPath();
+                if (p.isEmpty()) {
+                    System.out.println("Removing " + u);
+                    removed.add(u);
+                }
+                else {
+                    u.setTile(p.remove());
+                }
             }
+            if (!removed.isEmpty()) {
+                iterator = removed.listIterator();
+                while (iterator.hasNext()) {
+                    Unit u = iterator.next();
+                    units.remove(u);
+                }
+            }
+            map.checkBattle(teams[0]);
         }
     }
 

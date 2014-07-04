@@ -9,6 +9,7 @@ import Map.Tile;
 import Player.Team;
 import Player.Unit;
 
+@SuppressWarnings("unused")
 public class GameTest {
 
     @Test
@@ -20,7 +21,7 @@ public class GameTest {
         teams[0].addUnit(new Unit(teams[0], 2, tiles[2][0]));
         teams[0].addUnit(new Unit(teams[0], 3, tiles[4][0]));
         teams[1].addUnit(new Unit(teams[1], 1, tiles[0][8]));
-        teams[1].addUnit(new Unit(teams[1], 2, tiles[2][8]));
+        teams[1].addUnit(new Unit(teams[1], 2, tiles[1][8]));
         teams[1].addUnit(new Unit(teams[1], 3, tiles[5][8]));
         game.setUnits();
         game.viewMap();
@@ -43,13 +44,14 @@ public class GameTest {
         teams[1].getUnit(1).getPath().add(tiles[0][3]);
         game.getTurn().add(teams[1].getUnit(2));
         teams[1].getUnit(2).getPath().setType(Pathtype.STANDARD);
-        teams[1].getUnit(2).getPath().add(tiles[2][7]);
+        teams[1].getUnit(2).getPath().add(tiles[1][7]);
 
         game.start();
         while (game.isActive()) {
             game.processTurn();
             game.viewMap();
             if (game.getTurn().isEmpty()) {
+                System.out.println("Game finished");
                 game.end();
             }
         }
