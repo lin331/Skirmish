@@ -10,7 +10,7 @@ public class Path {
 
     public Path(Unit unit) {
         this.tiles = new ArrayList<Tile>();
-        this.tiles.add(unit.getTile());
+        // this.tiles.add(unit.getTile());
         this.maxMoves = unit.getMove();
         this.type = Pathtype.STATIONARY;
     }
@@ -45,10 +45,10 @@ public class Path {
     /* Check if move is valid */
     public boolean isValid(Tile t) {
         if (tiles.size() == 0) {
-            System.out.println("Valid");
+            // System.out.println("Valid");
             return true;
         }
-        if (maxMoves == tiles.size() - 1) {
+        if (maxMoves == tiles.size()) {
             System.out.println("Not valid: path full");
             return false;
         }
@@ -84,7 +84,7 @@ public class Path {
 
     /* Check if path is empty */
     public boolean isEmpty() {
-        return this.tiles.isEmpty();
+        return tiles.isEmpty();
     }
     
     /* Overrides */

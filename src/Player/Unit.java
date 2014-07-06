@@ -2,10 +2,12 @@ package Player;
 
 import Map.Map;
 import Map.Path;
+import Map.Pathtype;
 import Map.Tile;
+
 import java.util.Scanner;
 
-public class Unit {
+public class Unit implements Comparable<Unit> {
     protected Team team; // Unit's team
     protected int num; // Unit's number
     protected Type type; // Unit type
@@ -13,6 +15,7 @@ public class Unit {
     protected int attack; // Unit's attack stat
     protected int moves; // How far unit can move
     protected Tile tile; // Unit's location
+    protected Tile next;
     protected Path path; // Path to new position
 
     public Unit(Team team, int num, Tile tile) {
@@ -21,6 +24,7 @@ public class Unit {
         this.type = Type.DEFAULT;
         setStats(type);
         this.tile = tile;
+        this.next = null;
         path = new Path(this);
     }
     
@@ -30,6 +34,7 @@ public class Unit {
         this.type = type;
         setStats(type);
         this.tile = tile;
+        this.next = null;
         path = new Path(this);
     }
 
@@ -111,16 +116,26 @@ public class Unit {
         health -= damage;
     }
 
-    public void clearPath() {
-        this.path.clear();
-    }
     /* Setter methods below */
     public void setTile(Tile tile) {
+        // Normal tile update
         this.tile.setUnit(null);
         this.tile = tile;
         this.tile.setUnit(this);
+    }    
+    
+    public void setNext(Tile tile) {
+        this.next = tile;
     }
-
+    
+    public void setPath(Path p) {
+        this.path = p;
+    }
+    
+    public void clearPath() {
+        this.path.clear();
+    }
+    
     /* Getter methods below */
     public Team getTeam() {
         return team;
@@ -153,11 +168,11 @@ public class Unit {
     public Path getPath() {
         return path;
     }
-	
-	public void setPath(Path p) {
-		this.path = p;
-	}
 
+    public Pathtype getPathtype() {
+        return path.getType();
+    }
+    
     /* Overrides */
     @Override
     public boolean equals(Object obj) {
@@ -180,5 +195,39 @@ public class Unit {
     @Override
     public String toString() {
         return team + Integer.toString(num);
+    }
+
+    @Override
+    public int compareTo(Unit u) {
+        Pathtype pType = this.path.getType();
+        Pathtype uType = u.path.getType();
+        switch (pType) {
+            case GOAL:
+                if (uType == Pathtype.GOAL){
+                    return 0;
+                }
+                else {
+                    return -1;
+                }
+            case SAFEGOAL:
+                if (uType == Pathtype.SAFEGOAL){
+                    return 0;
+                }
+                else if (uType == Pathtype.GOAL){
+                    return 1;
+                }
+                else {
+                    return -1;
+                }
+            case STANDARD:
+                if (uType == Pathtype.STANDARD) {
+                    return 0;
+                }
+                else {
+                    return 1;
+                }
+            default:
+                return 0;
+        }
     }
 }

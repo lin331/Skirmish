@@ -40,21 +40,21 @@ public class GameTest {
                 teams[0].getUnit(1).getPath().add(tiles[0][2]);
                 teams[0].getUnit(1).getPath().add(tiles[0][3]);
                 teams[0].getUnit(1).getPath().add(tiles[0][4]);
-                teams[0].getUnit(1).getPath().add(tiles[0][5]);
                 game.getTurn().add(teams[0].getUnit(2));
                 teams[0].getUnit(2).getPath().setType(Pathtype.STANDARD);
                 teams[0].getUnit(2).getPath().add(tiles[2][1]);
                 teams[0].getUnit(2).getPath().add(tiles[2][2]);
                 game.getTurn().add(teams[1].getUnit(1));
-                teams[1].getUnit(1).getPath().setType(Pathtype.STANDARD);
+                teams[1].getUnit(1).getPath().setType(Pathtype.GOAL);
                 teams[1].getUnit(1).getPath().add(tiles[0][7]);
                 teams[1].getUnit(1).getPath().add(tiles[0][6]);
                 teams[1].getUnit(1).getPath().add(tiles[0][5]);
-                // teams[1].getUnit(1).getPath().add(tiles[0][4]);
+                teams[1].getUnit(1).getPath().add(tiles[0][4]);
                 game.getTurn().add(teams[1].getUnit(2));
                 teams[1].getUnit(2).getPath().setType(Pathtype.STANDARD);
                 teams[1].getUnit(2).getPath().add(tiles[1][7]);
             }
+            game.sortTurn();
             game.processTurn();
             game.viewMap();
             gui.renderTiles();
@@ -63,6 +63,12 @@ public class GameTest {
                 game.end();
             }
         }
+        assertTrue(teams[0].getUnit(1).getPathtype() == Pathtype.STATIONARY);
+        assertTrue(teams[0].getUnit(2).getPathtype() == Pathtype.STATIONARY);
+        assertTrue(teams[0].getUnit(3).getPathtype() == Pathtype.STATIONARY);
+        assertTrue(teams[1].getUnit(1).getPathtype() == Pathtype.STATIONARY);
+        assertTrue(teams[1].getUnit(2).getPathtype() == Pathtype.STATIONARY);
+        assertTrue(teams[1].getUnit(3).getPathtype() == Pathtype.STATIONARY);
 
     }
 }

@@ -40,6 +40,11 @@ public class Game {
         map.setUnits(teams);
     }
 
+    /* Sort turn by move priority */
+    void sortTurn() {
+        turn.sort();
+    }
+    
     /* Processes turn */
     void processTurn() {
         try {

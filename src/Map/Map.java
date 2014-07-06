@@ -104,16 +104,16 @@ public class Map {
                         case SAFEGOAL:
                             if (checkBlocked(ally)) {
                                 System.out.println(ally + " blocking " + enemy);
-                                // TODO: Temperary function
+                                // TODO: Temporary function
                                 enemy.getPath().clear();
                             }
-                            System.out.println("Battle does not occurs");
+                            System.out.println("No battle");
                             continue;
                         default:
-                            System.out.println("Battle occurs");
+                            break;
                     }
                 }
-                // Check if battle has occured already
+                // Check if battle has occurred already
                 ListIterator<Battle> iterator = battles.listIterator();
                 while (iterator.hasNext()) {
                     Battle b = iterator.next();
@@ -132,14 +132,14 @@ public class Map {
                         case GOAL:
                             if (checkBlocked(enemy)) {
                                 System.out.println(enemy + " blocking " + ally);
-                                // TODO: Temperary function
+                                // TODO: Temporary function
                                 ally.getPath().clear();
                             }
                             break;
                         case SAFEGOAL:
                             if (checkBlocked(enemy)) {
                                 System.out.println(enemy + " blocking " + ally);
-                                // TODO: Temperary function
+                                // TODO: Temporary function
                                 ally.getPath().clear();
                             }
                             break;
@@ -153,14 +153,14 @@ public class Map {
                         case GOAL:
                             if (checkBlocked(ally)) {
                                 System.out.println(ally + " blocking " + enemy);
-                                // TODO: Temperary function
+                                // TODO: Temporary function
                                 enemy.getPath().clear();
                             }
                             break;
                         case SAFEGOAL:
                             if (checkBlocked(ally)) {
                                 System.out.println(ally + " blocking " + enemy);
-                                // TODO: Temperary function
+                                // TODO: Temporary function
                                 enemy.getPath().clear();
                             }
                             break;

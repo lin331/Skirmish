@@ -2,10 +2,12 @@ package Game;
 
 import Map.Map;
 import Map.Path;
+import Map.Tile;
 import Player.Team;
 import Player.Unit;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.ListIterator;
 
 public class Turn {
@@ -38,28 +40,37 @@ public class Turn {
     public void remove(Unit unit) {
         units.remove(unit);
     }
-
+    
+    /* Sort units by move priority */
+    public void sort() {
+        Collections.sort(units);
+    }
+    
+    /* Ghost cycle */
+    public void ghost() {
+        System.out.println("Ghost");
+        ListIterator<Unit> iterator = units.listIterator();
+        // Update units' next tile
+        while (iterator.hasNext()) {
+            Unit u = iterator.next();
+            Path p = u.getPath();
+            Tile t = p.getNext();
+            u.setNext(t);
+        }
+    }
+    
     /* Process turn */
     public void process() {
         System.out.println("Processing");
-        ArrayList<Unit> removed = new ArrayList<Unit>();
+        // ghost();
         ListIterator<Unit> iterator = units.listIterator();
         while (iterator.hasNext()) {
             Unit u = iterator.next();
             Path p = u.getPath();
+            u.setTile(p.remove());
             if (p.isEmpty()) {
-                System.out.println("Removing " + u);
-                removed.add(u);
-            }
-            else {
-                u.setTile(p.remove());
-            }
-        }
-        if (!removed.isEmpty()) {
-            iterator = removed.listIterator();
-            while (iterator.hasNext()) {
-                Unit u = iterator.next();
-                units.remove(u);
+                System.out.println("Removed " + u);
+                iterator.remove();
             }
         }
     }
