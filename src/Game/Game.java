@@ -9,7 +9,6 @@ import Player.Type;
 import Player.Unit;
 
 public class Game {
-    private final int MAX_COMMANDS = 3;
     private Map map; // Map for game
     private boolean active; // Flag for active
     private Team[] teams; // Array for teams
@@ -107,7 +106,7 @@ public class Game {
                 int x = Integer.parseInt(string);
                 System.out.println("Enter y coordinate: ");
                 int y = s.nextInt();
-                Unit u = new Unit(t, num, Type.DEFAULT, map.getTiles()[y][x]);
+                Unit u = new Unit(t, i + 1, Type.DEFAULT, map.getTiles()[y][x]);
                 t.addUnit(u);
             }
             System.out.println(t.toString() + " Total Units: " + num);
@@ -141,7 +140,7 @@ public class Game {
     private void requestTurn() {
         for (int i = 0; i < 2; i++) {
             System.out.println(teams[i].toString() + "'s turn:");
-            for (int j = 0; j < MAX_COMMANDS; j++) {
+            for (int j = 0; j < turn.getMaxCommands(); j++) {
                 System.out.println("Command #" + (j + 1) + ": ");
                 Unit unit = selectUnit(teams[i]);
                 if (unit == null) {

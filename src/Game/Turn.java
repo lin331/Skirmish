@@ -12,6 +12,8 @@ import java.util.HashSet;
 import java.util.ListIterator;
 
 public class Turn {
+
+    private final int MAX_COMMANDS = 3;
     private ArrayList<Unit> units;
     Map map;
     Team[] teams;
@@ -20,6 +22,10 @@ public class Turn {
         units = new ArrayList<Unit>();
         this.map = map;
         this.teams = teams;
+    }
+    
+    public int getMaxCommands() {
+        return MAX_COMMANDS;
     }
 
     /* Check if list is empty */

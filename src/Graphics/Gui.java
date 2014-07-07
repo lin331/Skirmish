@@ -13,6 +13,8 @@ import java.util.ArrayList;
 
 public class Gui extends JFrame {
 
+    private Game game;
+
     private Map map;
 	private JPanel background;
     
@@ -28,11 +30,12 @@ public class Gui extends JFrame {
     private JLabel miscLabel;
 	
     public Gui(Game g) {
-        initialize(g);      
+        this.game = g;
+        initialize();      
     }
 	
-    private void initialize(Game g) {
-        map = g.getMap();
+    private void initialize() {
+        map = game.getMap();
         
         background = new JPanel();
         
