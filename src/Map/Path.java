@@ -14,7 +14,7 @@ public class Path {
         this.maxMoves = unit.getMove();
         this.type = Pathtype.STATIONARY;
     }
-    
+
     /* Add position to path */
     public void add(Tile t) {
         if (isValid(t)) {
@@ -25,11 +25,9 @@ public class Path {
     /* Get next tile in path */
     public Tile getNext() {
         if (tiles.isEmpty()) {
-            System.out.println("Error: Empty path");
             return null;
         }
         Tile t = tiles.get(0);
-        // System.out.println(t);
         return t;
     }
 
@@ -41,7 +39,7 @@ public class Path {
         }
         return t;
     }
-    
+
     /* Check if move is valid */
     public boolean isValid(Tile t) {
         if (tiles.size() == 0) {
@@ -53,8 +51,8 @@ public class Path {
             return false;
         }
         if (t.isAdjacent(tiles.get(tiles.size() - 1))) {
-            for (int i = 0; i < tiles.size(); i++) {
-                if (t.equals(tiles.get(i))) {
+            for (Tile tile : tiles) {
+                if (t.equals(tile)) {
                     System.out.println("Not valid: Already moving there");
                     return false;
                 }
@@ -71,12 +69,12 @@ public class Path {
         this.tiles.clear();
         this.type = Pathtype.STATIONARY;
     }
-    
+
     /* Setter methods below */
     public void setType(Pathtype type) {
         this.type = type;
     }
-    
+
     /* Getter methods below */
     public Pathtype getType() {
         return this.type;
@@ -86,13 +84,13 @@ public class Path {
     public boolean isEmpty() {
         return tiles.isEmpty();
     }
-    
+
     /* Overrides */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < tiles.size(); i++) {
-            sb.append(tiles.get(i).toString());
+        for (Tile tile : tiles) {
+            sb.append(tile.toString());
         }
         return sb.toString();
     }

@@ -27,7 +27,8 @@ public class Tile {
     public boolean isAdjacent(Tile t) {
         if ((Math.abs(this.x - t.x) == 1) && (Math.abs(this.y - t.y) == 0)) {
             return true;
-        } else if ((Math.abs(this.y - t.y) == 1)
+        }
+        else if ((Math.abs(this.y - t.y) == 1)
                 && (Math.abs(this.x - t.x) == 0)) {
             return true;
         }
@@ -36,10 +37,6 @@ public class Tile {
 
     /* Set unit on tile */
     public void setUnit(Unit unit) {
-        /*if (this.unit != null) {
-            System.out.println("Unit already on tile");
-            return;
-        }*/
         this.unit = unit;
     }
 
@@ -47,7 +44,7 @@ public class Tile {
     public Unit getUnit() {
         return unit;
     }
-    
+
     public int getX() {
         return x;
     }
@@ -58,7 +55,7 @@ public class Tile {
 
     /* Overrides */
     public boolean equals(Tile t) {
-        if (this.x != t.getX() || this.y != t.getY()) {
+        if (t == null || this.x != t.getX() || this.y != t.getY()) {
             return false;
         }
         return true;

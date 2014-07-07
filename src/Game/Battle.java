@@ -17,19 +17,21 @@ public class Battle {
         this.bDmg = b.getAttack();
         System.out.println("Battle engaged\n\t" + a + " vs. " + b);
     }
-    
+
     private class Modifier {
+        /* @formatter:off */
         double[][] modifiers = {
                 { 1, 1, 2, 1 },
                 { 1, 1, 1, 2 },
                 { 1, 2, 1, 2 },
                 { 2, 0.75, 2, 1 }
                 };
-        
+        /* @formatter:on */
+
         public Modifier() {
             // IDK
         }
-        
+
         public double lookup(Unit a, Unit b) {
             int attacker;
             int defender;
@@ -75,7 +77,7 @@ public class Battle {
             return modifiers[attacker][defender];
         }
     }
-    
+
     /* Process battle */
     public void doBattle() {
         // Calculate damage modifiers

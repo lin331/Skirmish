@@ -131,14 +131,16 @@ public class Map {
                             break;
                         case GOAL:
                             if (checkBlocked(enemy)) {
-                                System.out.println(enemy + " blocking " + ally);
+                                System.out.println(enemy + " blocking "
+                                        + ally);
                                 // TODO: Temporary function
                                 ally.getPath().clear();
                             }
                             break;
                         case SAFEGOAL:
                             if (checkBlocked(enemy)) {
-                                System.out.println(enemy + " blocking " + ally);
+                                System.out.println(enemy + " blocking "
+                                        + ally);
                                 // TODO: Temporary function
                                 ally.getPath().clear();
                             }
@@ -152,14 +154,16 @@ public class Map {
                             break;
                         case GOAL:
                             if (checkBlocked(ally)) {
-                                System.out.println(ally + " blocking " + enemy);
+                                System.out.println(ally + " blocking "
+                                         + enemy);
                                 // TODO: Temporary function
                                 enemy.getPath().clear();
                             }
                             break;
                         case SAFEGOAL:
                             if (checkBlocked(ally)) {
-                                System.out.println(ally + " blocking " + enemy);
+                                System.out.println(ally + " blocking "
+                                         + enemy);
                                 // TODO: Temporary function
                                 enemy.getPath().clear();
                             }

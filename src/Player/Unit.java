@@ -27,7 +27,7 @@ public class Unit implements Comparable<Unit> {
         this.next = null;
         path = new Path(this);
     }
-    
+
     public Unit(Team team, int num, Type type, Tile tile) {
         this.team = team;
         this.num = num;
@@ -39,7 +39,7 @@ public class Unit implements Comparable<Unit> {
     }
 
     private void setStats(Type type) {
-        switch(type) {
+        switch (type) {
             case DEFAULT:
                 this.health = 10;
                 this.attack = 5;
@@ -78,6 +78,7 @@ public class Unit implements Comparable<Unit> {
         }
     }
 
+    /* Console input */
     /* Add to path */
     public void addPath(Map map) {
         @SuppressWarnings("resource")
@@ -122,20 +123,20 @@ public class Unit implements Comparable<Unit> {
         this.tile.setUnit(null);
         this.tile = tile;
         this.tile.setUnit(this);
-    }    
-    
+    }
+
     public void setNext(Tile tile) {
         this.next = tile;
     }
-    
+
     public void setPath(Path p) {
         this.path = p;
     }
-    
+
     public void clearPath() {
         this.path.clear();
     }
-    
+
     /* Getter methods below */
     public Team getTeam() {
         return team;
@@ -144,7 +145,7 @@ public class Unit implements Comparable<Unit> {
     public int getNum() {
         return num;
     }
-    
+
     public Type getType() {
         return type;
     }
@@ -165,14 +166,22 @@ public class Unit implements Comparable<Unit> {
         return tile;
     }
 
+    public Tile getNext() {
+        return next;
+    }
+
     public Path getPath() {
         return path;
+    }
+
+    public boolean isPathEmpty() {
+        return path.isEmpty();
     }
 
     public Pathtype getPathtype() {
         return path.getType();
     }
-    
+
     /* Overrides */
     @Override
     public boolean equals(Object obj) {
@@ -203,17 +212,17 @@ public class Unit implements Comparable<Unit> {
         Pathtype uType = u.path.getType();
         switch (pType) {
             case GOAL:
-                if (uType == Pathtype.GOAL){
+                if (uType == Pathtype.GOAL) {
                     return 0;
                 }
                 else {
                     return -1;
                 }
             case SAFEGOAL:
-                if (uType == Pathtype.SAFEGOAL){
+                if (uType == Pathtype.SAFEGOAL) {
                     return 0;
                 }
-                else if (uType == Pathtype.GOAL){
+                else if (uType == Pathtype.GOAL) {
                     return 1;
                 }
                 else {

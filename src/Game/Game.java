@@ -44,7 +44,7 @@ public class Game {
     void sortTurn() {
         turn.sort();
     }
-    
+
     /* Processes turn */
     void processTurn() {
         try {
