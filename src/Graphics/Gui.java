@@ -4,6 +4,7 @@ import Game.Game;
 import Map.Map;
 import Map.Position;
 import Map.Tile;
+import Player.Team;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -13,9 +14,14 @@ import java.util.ArrayList;
 
 public class Gui extends JFrame {
 
+    /* LOGIC */
     private Game game;
-
     private Map map;
+    
+    private Team currentTeam;
+    
+    
+    /* DISPLAY */
 	private JPanel background;
     
     private JPanel infoPanel;
@@ -31,11 +37,12 @@ public class Gui extends JFrame {
 	
     public Gui(Game g) {
         this.game = g;
-        initialize();      
+        this.map = game.getMap();
+        this.currentTeam = null; 
+        initialize();
     }
 	
-    private void initialize() {
-        map = game.getMap();
+    public void initialize() {
         
         background = new JPanel();
         
@@ -52,7 +59,7 @@ public class Gui extends JFrame {
         GridLayout grid = new GridLayout(map.getHeight(), map.getWidth());
         tilePanel = new JPanel(grid);
         
-        pfinder = new PathFinder();
+        pfinder = new PathFinder(this);
         tileButtons = new ArrayList<TileButton>();
         for (int i = 0; i < map.getHeight(); i++) {
             for(int j = 0; j < map.getWidth(); j++) {
@@ -84,16 +91,42 @@ public class Gui extends JFrame {
 	
     public void renderTiles() {
         ImageIcon tileIcon = new ImageIcon("res/tile.png");
-        ImageIcon unitIcon = new ImageIcon("res/unitTile.png");
+        ImageIcon unit1Icon = new ImageIcon("res/unit1Tile.png");
+        ImageIcon unit2Icon = new ImageIcon("res/unit2Tile.png");
+        
         for (TileButton b : tileButtons) {
             if (b.getTile().isEmpty()) {
                 b.setIcon(tileIcon);
             }
             else {
-                b.setIcon(unitIcon);
+                if (b.getTile().getUnit().getTeam().getName() == "A") {
+                    b.setIcon(unit1Icon);
+                }
+                else if (b.getTile().getUnit().getTeam().getName() == "B") {
+                    b.setIcon(unit2Icon);
+                }
             }
         }
 		
         revalidate();
+    }
+    
+    public void requestPath() {
+        pfinder.setListening();
+        while (pfinder.getListening()) {
+            try {
+                Thread.sleep(500);
+            } catch(InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+    
+    public Team getCurrentTeam() {
+        return currentTeam;
+    }
+    
+    public void setCurrentTeam(Team t) {
+        this.currentTeam = t;
     }
 }

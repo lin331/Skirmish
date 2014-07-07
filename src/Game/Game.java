@@ -9,6 +9,7 @@ import Player.Type;
 import Player.Unit;
 
 public class Game {
+    private Gui gui;
     private Map map; // Map for game
     private boolean active; // Flag for active
     private Team[] teams; // Array for teams
@@ -21,6 +22,7 @@ public class Game {
 
     /* Initialize game map and create teams */
     private void initialize() {
+        gui = null;
         map = new Map();
         active = false;
         makeTeams();
@@ -39,6 +41,10 @@ public class Game {
         map.setUnits(teams);
     }
 
+    public void setGui(Gui gui) {
+        this.gui = gui;
+    }
+    
     /* Sort turn by move priority */
     void sortTurn() {
         turn.sort();
@@ -139,8 +145,11 @@ public class Game {
     /* Takes move commands and processes them */
     private void requestTurn() {
         for (int i = 0; i < 2; i++) {
+            gui.setCurrentTeam(teams[i]);
             System.out.println(teams[i].toString() + "'s turn:");
             for (int j = 0; j < turn.getMaxCommands(); j++) {
+                gui.requestPath();
+                /*
                 System.out.println("Command #" + (j + 1) + ": ");
                 Unit unit = selectUnit(teams[i]);
                 if (unit == null) {
@@ -148,6 +157,7 @@ public class Game {
                 }
                 turn.add(unit);
                 unit.addPath(map);
+                */
             }
         }
     }
@@ -155,6 +165,7 @@ public class Game {
     public static void main(String[] args) {
         Game game = new Game();
         Gui gui = new Gui(game);
+        game.setGui(gui);
         game.addUnits();
         game.setUnits();
         game.start();

@@ -2,6 +2,7 @@ package Graphics;
 
 import Map.Path;
 import Map.Tile;
+import Player.Team;
 import Player.Unit;
 
 import java.awt.*;
@@ -12,25 +13,38 @@ import java.util.ArrayList;
 
 public class PathFinder implements MouseListener {
 
+    private Gui gui;
+    
+    private boolean listening;
+    private boolean drawingPath;
+
     private ArrayList<Path> paths;
     private ArrayList<Unit> unitsMoved;
     private int pathNum;
-    private boolean listening;
-    private boolean drawingPath;
     
-    public PathFinder() {
+    public PathFinder(Gui gui) {
+        this.gui = gui;
         this.paths = new ArrayList<Path>();
         this.unitsMoved = new ArrayList<Unit>();
         this.pathNum = 0;
-        this.listening = true;
+        this.listening = false;
         this.drawingPath = false;
+    }
+    
+    public boolean getListening() {
+        return this.listening;
+    }
+    
+    public void setListening() {
+        this.listening = true;
     }
     
     @Override
     public void mousePressed(MouseEvent e) {
         if (listening) {
             TileButton b = (TileButton)e.getSource();
-            if (!b.getTile().isEmpty() && !unitsMoved.contains(b.getTile().getUnit())) {   
+            if (!b.getTile().isEmpty() && !unitsMoved.contains(b.getTile().getUnit()) &&
+                b.getTile().getUnit().getTeam().getName() == gui.getCurrentTeam().getName()) {   
                 drawingPath = true;
                 pathNum++;
                 unitsMoved.add(b.getTile().getUnit());
@@ -47,10 +61,14 @@ public class PathFinder implements MouseListener {
 			b.getTile().getUnit().setPath(paths.get(pathNum - 1));
 			System.out.println(b.getTile().getUnit().getPath());
 			drawingPath = false;
+            listening = false;
             
             // Turn MAX_COMMANDS
             if (pathNum == 3) {
-                listening = false;
+                pathNum = 0;
+                unitsMoved.clear();
+                paths.clear();
+                gui.renderTiles();
             }
 		}
     }
@@ -81,7 +99,7 @@ public class PathFinder implements MouseListener {
     }
     
     public ImageIcon chooseIcon(TileButton b) {
-        ImageIcon icon;
+        ImageIcon icon = null;
         if (b.getTile().isEmpty()) {
             switch (pathNum) {
                 case 1: icon = new ImageIcon ("res/pathTile1.png");
@@ -90,21 +108,32 @@ public class PathFinder implements MouseListener {
                         break;
                 case 3: icon = new ImageIcon ("res/pathTile3.png");
                         break;
-                default: icon = null;
-                         break;
+                default: break;
             }
         }
         else {
-            switch (pathNum) {
-                case 1: icon = new ImageIcon ("res/passedUnitTile1.png");
-                        break;
-                case 2: icon = new ImageIcon ("res/passedUnitTile2.png");
-                        break;
-                case 3: icon = new ImageIcon ("res/passedUnitTile3.png");
-                        break;
-                default: icon = null;
-                        break;
+            if (b.getTile().getUnit().getTeam().getName() == "A") {
+                switch (pathNum) {
+                    case 1: icon = new ImageIcon ("res/passedUnit1Tile1.png");
+                            break;
+                    case 2: icon = new ImageIcon ("res/passedUnit1Tile2.png");
+                            break;
+                    case 3: icon = new ImageIcon ("res/passedUnit1Tile3.png");
+                            break;
+                    default: break;
+                }
             }
+            else if (b.getTile().getUnit().getTeam().getName() == "B") {
+                switch (pathNum) {
+                    case 1: icon = new ImageIcon ("res/passedUnit2Tile1.png");
+                            break;
+                    case 2: icon = new ImageIcon ("res/passedUnit2Tile2.png");
+                            break;
+                    case 3: icon = new ImageIcon ("res/passedUnit2Tile3.png");
+                            break;
+                    default: break;
+                }
+            }            
         }
         return icon;
     }
