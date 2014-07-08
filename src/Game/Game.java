@@ -175,6 +175,7 @@ public class Game {
         while (game.active) {
             if (game.turn.isEmpty()) {
                 game.requestTurn();
+                game.turn.setUnits();
                 game.turn.setNextTiles();
             }
             game.processTurn();
