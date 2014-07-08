@@ -114,7 +114,7 @@ public class PathFinder implements MouseListener {
         unitsMoved.clear();
         paths.clear();
         lastPath.clear();
-        gui.renderTiles();
+        gui.render();
         listening = false;
         finished = true;
     }

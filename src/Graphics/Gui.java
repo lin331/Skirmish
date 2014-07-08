@@ -14,27 +14,31 @@ import java.util.ArrayList;
 
 public class Gui extends JFrame {
 
-    /* LOGIC */
     private Game game;
     private Map map;
-    
     private Team currentTeam;
     
-    
-    /* DISPLAY */
 	private JPanel background;
     
+    // left side of gui
     private JPanel infoPanel;
+    private JPanel unitPanel;
+    private JPanel turnPanel;
+    private JPanel healthPanel;
     private JLabel units;
     private JLabel turn;
     private JLabel health;
+    private ArrayList<JLabel> unitDisplay;
+    private ArrayList<JLabel> turnDisplay;
+    private ArrayList<JLabel> healthDisplay;
     
+    // right side of gui
 	private JPanel mainPanel;
     private JPanel tilePanel;
     private ArrayList<TileButton> tileButtons;
     private PathFinder pfinder;
-    private JPanel turnPanel;
-    private JLabel turnLabel;
+    private JPanel commandPanel;
+    private JLabel commandLabel;
     private JPanel pathButtons;
     private JButton undo;
     private JButton endTurn;
@@ -50,10 +54,20 @@ public class Gui extends JFrame {
         
         background = new JPanel();
         
+        // set up info panel
         infoPanel = new JPanel();
+        unitPanel = new JPanel();
+        unitPanel.setLayout(new BoxLayout(unitPanel, BoxLayout.Y_AXIS));
+        turnPanel = new JPanel();
+        turnPanel.setLayout(new BoxLayout(turnPanel, BoxLayout.Y_AXIS));
+        healthPanel = new JPanel();
+        healthPanel.setLayout(new BoxLayout(healthPanel, BoxLayout.Y_AXIS));
         units = new JLabel("Units");
         turn = new JLabel("Turn");
         health = new JLabel("Health");
+        unitDisplay = new ArrayList<JLabel>();
+        turnDisplay = new ArrayList<JLabel>();
+        healthDisplay = new ArrayList<JLabel>();
         infoPanel.add(units);
         infoPanel.add(turn);
         infoPanel.add(health);
@@ -63,6 +77,7 @@ public class Gui extends JFrame {
         GridLayout grid = new GridLayout(map.getHeight(), map.getWidth());
         tilePanel = new JPanel(grid);
         
+        // set up tile grid
         pfinder = new PathFinder(this);
         tileButtons = new ArrayList<TileButton>();
         for (int i = 0; i < map.getHeight(); i++) {
@@ -77,9 +92,10 @@ public class Gui extends JFrame {
         }
         mainPanel.add(tilePanel, BorderLayout.NORTH);
 
-        turnPanel = new JPanel();
-        turnPanel.setLayout(new BoxLayout(turnPanel, BoxLayout.Y_AXIS));
-        turnLabel = new JLabel();
+        // set up turn panel under tiles
+        commandPanel = new JPanel();
+        commandPanel.setLayout(new BoxLayout(commandPanel, BoxLayout.Y_AXIS));
+        commandLabel = new JLabel();
         undo = new JButton("Undo");
         undo.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -95,14 +111,14 @@ public class Gui extends JFrame {
         pathButtons = new JPanel();
         pathButtons.add(undo);
         pathButtons.add(endTurn);
-        turnPanel.add(turnLabel);
-        turnPanel.add(pathButtons);
-        mainPanel.add(turnPanel, BorderLayout.SOUTH);
+        commandPanel.add(commandLabel);
+        commandPanel.add(pathButtons);
+        mainPanel.add(commandPanel, BorderLayout.SOUTH);
 		
+        // set up the frame and background panel
         getContentPane().add(background);	
         background.add(infoPanel);
         background.add(mainPanel);
-
 
         setTitle("Skirmish");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	
@@ -112,10 +128,16 @@ public class Gui extends JFrame {
         revalidate();
     }
 	
-    public void renderTiles() {
+    public void render() {
+        // render info
+        ImageIcon unit1 = new ImageIcon("res/unit1.png");
+        ImageIcon unit2 = new ImageIcon("res/unit2.png");
+        ImageIcon deadUnit = new ImageIcon("res/deadUnit.png");
+    
+        // render tiles
         ImageIcon tileIcon = new ImageIcon("res/tile.png");
-        ImageIcon unit1Icon = new ImageIcon("res/unit1Tile.png");
-        ImageIcon unit2Icon = new ImageIcon("res/unit2Tile.png");
+        ImageIcon unit1Tile = new ImageIcon("res/unit1Tile.png");
+        ImageIcon unit2Tile = new ImageIcon("res/unit2Tile.png");
         
         for (TileButton b : tileButtons) {
             if (b.getTile().isEmpty()) {
@@ -123,11 +145,11 @@ public class Gui extends JFrame {
             }
             else {
                 if (b.getTile().getUnit().getTeam().getName() == game.getTeams()[0].getName()) {
-                    b.setIcon(unit1Icon);
+                    b.setIcon(unit1Tile);
                 }
                 else if (b.getTile().getUnit().getTeam().getName() == 
                          game.getTeams()[1].getName()) {
-                    b.setIcon(unit2Icon);
+                    b.setIcon(unit2Tile);
                 }
             }
         }
@@ -139,14 +161,15 @@ public class Gui extends JFrame {
         pfinder.start();
         while (!pfinder.getFinished()) {
             int commandsLeft = game.getTurn().getMaxCommands() - pfinder.getPathNum();
-            turnLabel.setText(currentTeam + "'s Turn: " + commandsLeft + " commands remaining");
+            commandLabel.setText(currentTeam + "'s Turn: " + commandsLeft + 
+                                 " commands remaining");
             try {
                 Thread.sleep(500);
             } catch(InterruptedException ex) {
                 Thread.currentThread().interrupt();
             }
         }
-        turnLabel.setText("");
+        commandLabel.setText("");
     }
     
     public Team getCurrentTeam() {

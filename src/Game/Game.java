@@ -171,14 +171,14 @@ public class Game {
         game.addUnits();
         game.setUnits();
         game.start();
-        gui.renderTiles();
+        gui.render();
         while (game.active) {
             if (game.turn.isEmpty()) {
                 game.requestTurn();
                 game.turn.setNextTiles();
             }
             game.processTurn();
-            gui.renderTiles();
+            gui.render();
         }
     }
 }
