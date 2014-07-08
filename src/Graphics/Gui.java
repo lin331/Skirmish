@@ -5,6 +5,7 @@ import Map.Map;
 import Map.Position;
 import Map.Tile;
 import Player.Team;
+import Player.Unit;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -62,15 +63,12 @@ public class Gui extends JFrame {
         turnPanel.setLayout(new BoxLayout(turnPanel, BoxLayout.Y_AXIS));
         healthPanel = new JPanel();
         healthPanel.setLayout(new BoxLayout(healthPanel, BoxLayout.Y_AXIS));
-        units = new JLabel("Units");
-        turn = new JLabel("Turn");
-        health = new JLabel("Health");
         unitDisplay = new ArrayList<JLabel>();
         turnDisplay = new ArrayList<JLabel>();
         healthDisplay = new ArrayList<JLabel>();
-        infoPanel.add(units);
-        infoPanel.add(turn);
-        infoPanel.add(health);
+        infoPanel.add(unitPanel);
+        infoPanel.add(turnPanel);
+        infoPanel.add(healthPanel);
         
         mainPanel = new JPanel(new BorderLayout());
 
@@ -127,12 +125,49 @@ public class Gui extends JFrame {
 
         revalidate();
     }
+    
+    public void setInfoPanel() {
+        JLabel unitHeader = new JLabel("Unit");
+        JLabel turnHeader = new JLabel("Turn Delay");
+        JLabel healthHeader = new JLabel("Health");
+        unitHeader.setVisible(true);
+        turnHeader.setVisible(true);
+        healthHeader.setVisible(true);
+        unitPanel.add(unitHeader);
+        turnPanel.add(turnHeader);
+        healthPanel.add(healthHeader);
+        for (Team t : game.getTeams()) {
+            for (Unit u : t.getUnits()) {
+                JLabel unitLabel = new JLabel(Integer.toString(u.getNum()));
+                JLabel turnLabel = new JLabel(Integer.toString(u.getPath().getDelay()));
+                JLabel healthLabel = new JLabel(Integer.toString(u.getHealth()));
+                unitLabel.setVisible(true);
+                turnLabel.setVisible(true);
+                healthLabel.setVisible(true);
+                unitDisplay.add(unitLabel);
+                turnDisplay.add(turnLabel);
+                healthDisplay.add(healthLabel);                
+                unitPanel.add(unitDisplay.get(unitDisplay.size() - 1));
+                turnPanel.add(turnDisplay.get(turnDisplay.size() - 1));
+                healthPanel.add(healthDisplay.get(healthDisplay.size() - 1));
+            }
+        }
+        repaint();
+    }
 	
     public void render() {
         // render info
         ImageIcon unit1 = new ImageIcon("res/unit1.png");
         ImageIcon unit2 = new ImageIcon("res/unit2.png");
         ImageIcon deadUnit = new ImageIcon("res/deadUnit.png");
+
+        for (Team t : game.getTeams()) {
+            for (Unit u : t.getUnits()) {
+            unitDisplay.get(u.getNum() - 1).setText(Integer.toString(u.getNum()));
+            turnDisplay.get(u.getNum() - 1).setText(Integer.toString(u.getPath().getDelay()));
+            healthDisplay.get(u.getNum() - 1).setText(Integer.toString(u.getHealth()));
+            }
+        }
     
         // render tiles
         ImageIcon tileIcon = new ImageIcon("res/tile.png");

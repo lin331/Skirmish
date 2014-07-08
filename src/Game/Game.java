@@ -170,6 +170,7 @@ public class Game {
         game.setGui(gui);
         game.addUnits();
         game.setUnits();
+        gui.setInfoPanel();
         game.start();
         gui.render();
         while (game.active) {
