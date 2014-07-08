@@ -58,6 +58,8 @@ public class Game {
             e.printStackTrace();
         }
         turn.process();
+        turn.setNextTiles();
+        map.checkBattleChanges(teams);
         map.checkBattle(teams[0]);
     }
 
@@ -173,6 +175,7 @@ public class Game {
         while (game.active) {
             if (game.turn.isEmpty()) {
                 game.requestTurn();
+                game.turn.setNextTiles();
             }
             game.processTurn();
             gui.renderTiles();

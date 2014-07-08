@@ -106,6 +106,16 @@ public class Unit implements Comparable<Unit> {
             path.add(new Tile(x, y));
         }
     }
+    
+    /* Check if unit is blocking this */
+    public boolean isBlockedBy(Unit u) {
+        if (u.getNext() == this.next) {
+            if (u.getPathtype() == Pathtype.STATIONARY){ 
+                return true;
+            }
+        }
+        return false;
+    }
 
     /* Check method below */
     public boolean isDead() {

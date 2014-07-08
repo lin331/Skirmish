@@ -81,15 +81,19 @@ public class Turn {
         }
     }
 
-    /* Ghost cycle */
-    public void ghost() {
-        System.out.println("Ghost cycle");
-        // Update units' next tile
+    public void setNextTiles() {
         for (Unit u : units) {
             Path p = u.getPath();
             Tile t = p.getNext();
             u.setNext(t);
-        }
+        }        
+    }
+    
+    /* Ghost cycle */
+    public void ghost() {
+        System.out.println("Ghost cycle");
+        // Update units' next tile
+        // setNextTiles();
         HashSet<ArrayList<Unit>> set = new HashSet<ArrayList<Unit>>();
         for (Unit u1 : units) {
             ArrayList<Unit> conflicts = new ArrayList<Unit>();
@@ -131,6 +135,7 @@ public class Turn {
                 u.setTile(p.remove());
             }
         }
+        setNextTiles();
     }
 
     /* Test printing */

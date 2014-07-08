@@ -76,12 +76,64 @@ public class Map {
         return null;
     }
 
+    /* Check if two units are adjacent */
+    public boolean isAdjacent(Unit u1, Unit u2) {
+        Tile tile = u1.getTile();
+        Tile temp = getN(tile);
+        if (temp != null) {
+            if (u2.equals(temp.getUnit())) {
+                return true;
+            }            
+        }
+        temp = getE(tile);
+        if (temp != null) {
+            if (u2.equals(temp.getUnit())) {
+                return true;
+            }            
+        }
+        temp = getS(tile);
+        if (temp != null) {
+            if (u2.equals(temp.getUnit())) {
+                return true;
+            }            
+        }
+        temp = getW(tile);
+        if (temp != null) {
+            if (u2.equals(temp.getUnit())) {
+                return true;
+            }            
+        } 
+        return false;
+    }
+    
     /* Check if unit is blocked */
+    /* Problably useless now */
     public boolean checkBlocked(Unit unit) {
         if (unit.getPath().getType() == Pathtype.STATIONARY) {
             return true;
         }
         return false;
+    }
+    
+    /* Check if battle removal is needed */
+    public void checkBattleChanges(Team[] teams) {
+        if (battles.isEmpty()) {
+            return;
+        }
+        ArrayList<Unit> aUnits = teams[0].getUnits();
+        ArrayList<Unit> bUnits = teams[1].getUnits();
+        ListIterator<Battle> iterator = battles.listIterator();
+        while (iterator.hasNext()) {
+            Battle b = iterator.next();
+            for (Unit u1 : aUnits) {
+                for (Unit u2 : bUnits) {
+                    if (b.has(u1, u2) && !isAdjacent(u1,u2)) {
+                        // If battle has occured and units not adjacent anymore
+                        iterator.remove();                        
+                    }
+                }
+            }
+        }
     }
 
     /* Check battle conditions */
@@ -99,6 +151,7 @@ public class Map {
                 Pathtype eType = enemy.getPath().getType();
                 // Check if both units using goal move
                 if (aType == Pathtype.GOAL || aType == Pathtype.SAFEGOAL) {
+                    System.out.println("Goal type");
                     switch (eType) {
                         case GOAL:
                         case SAFEGOAL:
@@ -130,7 +183,7 @@ public class Map {
                             ally.getPath().clear();
                             break;
                         case GOAL:
-                            if (checkBlocked(enemy)) {
+                            if (ally.isBlockedBy(enemy)) {
                                 System.out.println(enemy + " blocking "
                                         + ally);
                                 // TODO: Temporary function
@@ -138,7 +191,7 @@ public class Map {
                             }
                             break;
                         case SAFEGOAL:
-                            if (checkBlocked(enemy)) {
+                            if (ally.isBlockedBy(enemy)) {
                                 System.out.println(enemy + " blocking "
                                         + ally);
                                 // TODO: Temporary function
@@ -153,7 +206,7 @@ public class Map {
                             enemy.getPath().clear();
                             break;
                         case GOAL:
-                            if (checkBlocked(ally)) {
+                            if (enemy.isBlockedBy(ally)) {
                                 System.out.println(ally + " blocking "
                                          + enemy);
                                 // TODO: Temporary function
@@ -161,7 +214,7 @@ public class Map {
                             }
                             break;
                         case SAFEGOAL:
-                            if (checkBlocked(ally)) {
+                            if (enemy.isBlockedBy(ally)) {
                                 System.out.println(ally + " blocking "
                                          + enemy);
                                 // TODO: Temporary function

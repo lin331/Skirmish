@@ -2,6 +2,8 @@ package Game;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+
 import org.junit.Test;
 
 import Graphics.Gui;
@@ -49,27 +51,44 @@ public class GameTest {
         teams[1].getUnit(2).getPath().add(tiles[1][7]);        
     }
     
+    public void add2() {
+        teams[0].addUnit(new Unit(teams[0], 1, tiles[1][2]));
+        teams[1].addUnit(new Unit(teams[1], 1, tiles[1][4]));
+    }
+    
+    public void turn2() {
+        game.getTurn().add(teams[1].getUnit(1));
+        teams[1].getUnit(1).getPath().setType(Pathtype.GOAL);
+        teams[1].getUnit(1).getPath().add(tiles[1][3]);
+        teams[1].getUnit(1).getPath().add(tiles[0][3]);
+        teams[1].getUnit(1).getPath().add(tiles[0][2]);
+        teams[1].getUnit(1).getPath().add(tiles[0][1]);              
+    }
+    
     @Test
     public void test() {
-        flag = false;
+        /* Game setup */
+        flag = false; // Whether or not to use gui
         if (flag) {
             gui = new Gui(game);
         }
         teams = game.getTeams();
         tiles = game.getMap().getTiles();
-        add1();
+        add2();
         game.setUnits();
         game.viewMap();
         if (flag) {
             gui.renderTiles();
         }
 
+        /* Game activity */
         game.start();
         while (game.isActive()) {
             if (game.getTurn().isEmpty()) {
                 // game.requestTurn();
                 System.out.println("Getting turn");
-                turn1();
+                turn2();
+                game.getTurn().setNextTiles();
             }
             game.sortTurn();
             game.processTurn();
@@ -82,18 +101,14 @@ public class GameTest {
                 game.end();
             }
         }
-        assertTrue(teams[0].getUnit(1).getNext() == null);
-        assertTrue(teams[0].getUnit(2).getNext() == null);
-        assertTrue(teams[0].getUnit(3).getNext() == null);
-        assertTrue(teams[1].getUnit(1).getNext() == null);
-        assertTrue(teams[1].getUnit(2).getNext() == null);
-        assertTrue(teams[1].getUnit(3).getNext() == null);
-        assertTrue(teams[0].getUnit(1).getPathtype() == Pathtype.STATIONARY);
-        assertTrue(teams[0].getUnit(2).getPathtype() == Pathtype.STATIONARY);
-        assertTrue(teams[0].getUnit(3).getPathtype() == Pathtype.STATIONARY);
-        assertTrue(teams[1].getUnit(1).getPathtype() == Pathtype.STATIONARY);
-        assertTrue(teams[1].getUnit(2).getPathtype() == Pathtype.STATIONARY);
-        assertTrue(teams[1].getUnit(3).getPathtype() == Pathtype.STATIONARY);
+        
+        /* Assertion checks */
+        for (Team t : teams) {
+            ArrayList<Unit> units = t.getUnits();
+            for (Unit u : units) {
+                assertTrue(u.getPathtype() == Pathtype.STATIONARY);
+            }
+        }
 
     }
 }
