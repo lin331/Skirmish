@@ -33,7 +33,8 @@ public class Gui extends JFrame {
     private JPanel tilePanel;
     private ArrayList<TileButton> tileButtons;
     private PathFinder pfinder;
-    private JLabel miscLabel;
+    private JPanel turnPanel;
+    private JLabel turnLabel;
 	
     public Gui(Game g) {
         this.game = g;
@@ -73,8 +74,10 @@ public class Gui extends JFrame {
         }
         mainPanel.add(tilePanel, BorderLayout.NORTH);
 
-        miscLabel = new JLabel("Miscellaneous Label");
-        mainPanel.add(miscLabel, BorderLayout.SOUTH);
+        turnPanel = new JPanel();
+        turnLabel = new JLabel();
+        turnPanel.add(turnLabel);
+        mainPanel.add(turnPanel, BorderLayout.SOUTH);
 		
         getContentPane().add(background);	
         background.add(infoPanel);
@@ -83,7 +86,7 @@ public class Gui extends JFrame {
 
         setTitle("Skirmish");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	
-        setSize(600,300);
+        setSize(650,400);
         setVisible(true);	
 
         revalidate();
@@ -99,10 +102,11 @@ public class Gui extends JFrame {
                 b.setIcon(tileIcon);
             }
             else {
-                if (b.getTile().getUnit().getTeam().getName() == "A") {
+                if (b.getTile().getUnit().getTeam().getName() == game.getTeams()[0].getName()) {
                     b.setIcon(unit1Icon);
                 }
-                else if (b.getTile().getUnit().getTeam().getName() == "B") {
+                else if (b.getTile().getUnit().getTeam().getName() == 
+                         game.getTeams()[1].getName()) {
                     b.setIcon(unit2Icon);
                 }
             }
@@ -112,6 +116,8 @@ public class Gui extends JFrame {
     }
     
     public void requestPath() {
+        int commandsLeft = game.getTurn().getMaxCommands() - pfinder.getPathNum();
+        turnLabel.setText(currentTeam + "'s Turn: " + commandsLeft + " commands remaining");
         pfinder.setListening();
         while (pfinder.getListening()) {
             try {
