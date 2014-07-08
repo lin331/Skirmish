@@ -52,6 +52,16 @@ public class Turn {
     public void sort() {
         Collections.sort(units);
     }
+    
+    public void setUnits() {
+        for (Team t : teams) {
+            for (Unit u : t.getUnits()) {
+                if (!u.isPathEmpty()) {
+                    units.add(u);
+                }
+            }
+        }
+    }
 
     public void processConflicts(HashSet<ArrayList<Unit>> set)
             throws Exception {
