@@ -78,7 +78,7 @@ public class Game {
         map.printMap();
     }
 
-    /* Getter methods below */
+    /* Getters below */
     public Map getMap() {
         return map;
     }

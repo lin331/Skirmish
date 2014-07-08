@@ -231,7 +231,7 @@ public class Map {
         }
     }
 
-    /* Getter methods for adjacent tiles */
+    /* Getters for adjacent tiles */
     public Tile getN(Tile tile) {
         if (tile.getY() == 0) {
             return null;
@@ -260,7 +260,7 @@ public class Map {
         return tiles[tile.getY()][tile.getX() - 1];
     }
 
-    /* Getter methods below */
+    /* Getters below */
     public Tile[][] getTiles() {
         return this.tiles;
     }

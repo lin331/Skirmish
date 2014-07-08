@@ -53,16 +53,14 @@ public class GameTest {
     
     public void add2() {
         teams[0].addUnit(new Unit(teams[0], 1, tiles[1][2]));
+        teams[0].getUnit(1).setAttack(10);
         teams[1].addUnit(new Unit(teams[1], 1, tiles[1][4]));
     }
     
     public void turn2() {
         game.getTurn().add(teams[1].getUnit(1));
-        teams[1].getUnit(1).getPath().setType(Pathtype.GOAL);
-        teams[1].getUnit(1).getPath().add(tiles[1][3]);
-        teams[1].getUnit(1).getPath().add(tiles[0][3]);
-        teams[1].getUnit(1).getPath().add(tiles[0][2]);
-        teams[1].getUnit(1).getPath().add(tiles[0][1]);              
+        teams[1].getUnit(1).getPath().setType(Pathtype.STANDARD);
+        teams[1].getUnit(1).getPath().add(tiles[1][3]);           
     }
     
     @Test
@@ -78,7 +76,7 @@ public class GameTest {
         game.setUnits();
         game.viewMap();
         if (flag) {
-            gui.renderTiles();
+            // gui.renderTiles();
         }
 
         /* Game activity */
@@ -94,7 +92,7 @@ public class GameTest {
             game.processTurn();
             game.viewMap();
             if (flag) {
-                gui.renderTiles();
+                // gui.renderTiles();
             }
             if (game.getTurn().isEmpty()) {
                 System.out.println("Game finished");
@@ -103,12 +101,12 @@ public class GameTest {
         }
         
         /* Assertion checks */
-        for (Team t : teams) {
+        /*for (Team t : teams) {
             ArrayList<Unit> units = t.getUnits();
             for (Unit u : units) {
                 assertTrue(u.getPathtype() == Pathtype.STATIONARY);
             }
-        }
+        }*/
 
     }
 }

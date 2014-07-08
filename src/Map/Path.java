@@ -4,15 +4,17 @@ import Player.Unit;
 import java.util.ArrayList;
 
 public class Path {
+    private Pathtype type;
     private ArrayList<Tile> tiles; // Positions in path
-    int maxMoves; // Total moves in path
-    Pathtype type;
-
+    private int maxMoves; // Total moves in path
+    private int delay;
+    
     public Path(Unit unit) {
+        this.type = Pathtype.STATIONARY;
         this.tiles = new ArrayList<Tile>();
         // this.tiles.add(unit.getTile());
         this.maxMoves = unit.getMove();
-        this.type = Pathtype.STATIONARY;
+        delay = 0;
     }
 
     /* Add position to path */
@@ -32,7 +34,10 @@ public class Path {
     }
 
     /* Delete next tile in path */
-    public Tile remove() {
+    public Tile remove() throws Exception {
+        if (type == Pathtype.STATIONARY) {
+            throw new Exception("Path statioanry");
+        }
         Tile t = tiles.remove(0);
         if (tiles.isEmpty()) {
             type = Pathtype.STATIONARY;
@@ -70,16 +75,24 @@ public class Path {
         this.type = Pathtype.STATIONARY;
     }
 
-    /* Setter methods below */
+    /* Setters below */
     public void setType(Pathtype type) {
         this.type = type;
     }
 
+    public void decreaseDelay() {
+        this.delay -= 1;
+    }
+    
     /* Getter methods below */
     public Pathtype getType() {
         return this.type;
     }
 
+    public int getDelay() {
+        return this.delay;
+    }
+    
     /* Check if path is empty */
     public boolean isEmpty() {
         return tiles.isEmpty();

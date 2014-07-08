@@ -127,7 +127,7 @@ public class Unit implements Comparable<Unit> {
         health -= damage;
     }
 
-    /* Setter methods below */
+    /* Setters below */
     public void setTile(Tile tile) {
         // Normal tile update
         this.tile.setUnit(null);
@@ -146,8 +146,24 @@ public class Unit implements Comparable<Unit> {
     public void clearPath() {
         this.path.clear();
     }
+    
+    public void setDead() {
+        this.tile.setUnit(null);
+        this.tile = null;
+        this.next = null;
+        this.path = null;
+    }
+    
+    /* Test purpose-only setters */
+    public void setHealth(int health) {
+        this.health = health;
+    }
 
-    /* Getter methods below */
+    public void setAttack(int attack) {
+        this.attack = attack;
+    }
+
+    /* Getters below */
     public Team getTeam() {
         return team;
     }
@@ -240,7 +256,7 @@ public class Unit implements Comparable<Unit> {
                 }
             case STANDARD:
                 if (uType == Pathtype.STANDARD) {
-                    return 0;
+                    return (uType == Pathtype.STANDARD) ? 0 : 1;
                 }
                 else {
                     return 1;

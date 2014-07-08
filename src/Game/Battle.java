@@ -26,11 +26,9 @@ public class Battle {
                 { 1, 2, 1, 2 },
                 { 2, 0.75, 2, 1 }
                 };
-        /* @formatter:on */
 
-        public Modifier() {
-            // IDK
-        }
+        public Modifier() { }
+        /* @formatter:on */
 
         public double lookup(Unit a, Unit b) {
             int attacker;
@@ -86,17 +84,46 @@ public class Battle {
         // A is stationary & B is moving: B then A
         if (a.getPath().getType() == Pathtype.STATIONARY) {
             b.reduceHealth(aDmg);
-            a.reduceHealth(bDmg);
+            if (a.isDead()) {
+                System.out.println(a +" killed by " + b);
+                a.setDead();
+            }
+            else {
+                a.reduceHealth(bDmg);
+                if (b.isDead()) {
+                    System.out.println(b +" killed by " + a);
+                    b.setDead();
+                }
+            }
         }
         // A is moving & B is stationary: A then B
         else if (b.getPath().getType() == Pathtype.STATIONARY) {
             a.reduceHealth(bDmg);
-            b.reduceHealth(aDmg);
+            if (b.isDead()) {
+                System.out.println(b +" killed by " + a);
+                b.setDead();
+                return;
+            }
+            else {
+                b.reduceHealth(aDmg);
+                if (a.isDead()) {
+                    System.out.println(a +" killed by " + b);
+                    a.setDead();
+                }
+            }
         }
         // A and B simultaneously attack
         else {
             a.reduceHealth(bDmg);
             b.reduceHealth(aDmg);
+            if (a.isDead()) {
+                System.out.println(a +" killed by " + b);
+                a.setDead();
+            }
+            if (b.isDead()) {
+                System.out.println(b +" killed by " + a);
+                b.setDead();
+            }
         }
     }
 
@@ -117,7 +144,8 @@ public class Battle {
         return false;
     }
 
-    /* Getter methods */
+    /* Getters */
+    /* Prob not needed.... */
     public Unit getA() {
         return this.a;
     }
@@ -128,10 +156,7 @@ public class Battle {
 
     /* Overrides */
     public boolean equals(Battle b) {
-        if (this.a.equals(b.getA()) && this.b.equals(b.getB())) {
-            return true;
-        }
-        else if (this.a.equals(b.getB()) && this.b.equals(b.getA())) {
+        if (b.has(this.a, this.b)) {
             return true;
         }
         return false;

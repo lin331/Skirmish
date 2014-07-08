@@ -132,7 +132,11 @@ public class Turn {
             }
             else {
                 Path p = u.getPath();
-                u.setTile(p.remove());
+                try {
+                    u.setTile(p.remove());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
         setNextTiles();
