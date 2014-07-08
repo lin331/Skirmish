@@ -35,6 +35,9 @@ public class Gui extends JFrame {
     private PathFinder pfinder;
     private JPanel turnPanel;
     private JLabel turnLabel;
+    private JPanel pathButtons;
+    private JButton undo;
+    private JButton endTurn;
 	
     public Gui(Game g) {
         this.game = g;
@@ -75,8 +78,25 @@ public class Gui extends JFrame {
         mainPanel.add(tilePanel, BorderLayout.NORTH);
 
         turnPanel = new JPanel();
+        turnPanel.setLayout(new BoxLayout(turnPanel, BoxLayout.Y_AXIS));
         turnLabel = new JLabel();
+        undo = new JButton("Undo");
+        undo.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                pfinder.undo();
+            }
+        });
+        endTurn = new JButton("End Turn");    
+        endTurn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                pfinder.endTurn();
+            }
+        });
+        pathButtons = new JPanel();
+        pathButtons.add(undo);
+        pathButtons.add(endTurn);
         turnPanel.add(turnLabel);
+        turnPanel.add(pathButtons);
         mainPanel.add(turnPanel, BorderLayout.SOUTH);
 		
         getContentPane().add(background);	
@@ -116,16 +136,17 @@ public class Gui extends JFrame {
     }
     
     public void requestPath() {
-        int commandsLeft = game.getTurn().getMaxCommands() - pfinder.getPathNum();
-        turnLabel.setText(currentTeam + "'s Turn: " + commandsLeft + " commands remaining");
-        pfinder.setListening();
-        while (pfinder.getListening()) {
+        pfinder.start();
+        while (!pfinder.getFinished()) {
+            int commandsLeft = game.getTurn().getMaxCommands() - pfinder.getPathNum();
+            turnLabel.setText(currentTeam + "'s Turn: " + commandsLeft + " commands remaining");
             try {
                 Thread.sleep(500);
             } catch(InterruptedException ex) {
                 Thread.currentThread().interrupt();
             }
         }
+        turnLabel.setText("");
     }
     
     public Team getCurrentTeam() {

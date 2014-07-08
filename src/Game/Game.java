@@ -147,9 +147,9 @@ public class Game {
         for (int i = 0; i < 2; i++) {
             gui.setCurrentTeam(teams[i]);
             System.out.println(teams[i].toString() + "'s turn:");
+            gui.requestPath();
+            /*
             for (int j = 0; j < turn.getMaxCommands(); j++) {
-                gui.requestPath();
-                /*
                 System.out.println("Command #" + (j + 1) + ": ");
                 Unit unit = selectUnit(teams[i]);
                 if (unit == null) {
@@ -157,8 +157,8 @@ public class Game {
                 }
                 turn.add(unit);
                 unit.addPath(map);
-                */
             }
+            */
         }
     }
 
