@@ -41,7 +41,7 @@ public enum Type {
                 attacker = 2;
                 break;
             case CAVALRY:
-                attacker = 2;
+                attacker = 3;
                 break;
             default:
                 attacker = -1;
@@ -58,7 +58,7 @@ public enum Type {
                 defender = 2;
                 break;
             case CAVALRY:
-                defender = 2;
+                defender = 3;
                 break;
             default:
                 defender = -1;

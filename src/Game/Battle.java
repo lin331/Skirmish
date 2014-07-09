@@ -1,7 +1,6 @@
 package Game;
 
 import Map.Pathtype;
-import Player.Type;
 import Player.Unit;
 
 public class Battle {
@@ -11,87 +10,31 @@ public class Battle {
     int bDmg;
 
     public Battle(Unit a, Unit b) {
+        System.out.println("Battle engaged\n\t" + a + " vs. " + b);
         this.a = a;
         this.b = b;
-        this.aDmg = a.getAttack();
-        this.bDmg = b.getAttack();
-        System.out.println("Battle engaged\n\t" + a + " vs. " + b);
-    }
-
-    private class Modifier {
         /* @formatter:off */
-        double[][] modifiers = {
-                { 1, 1, 2, 1 },
-                { 1, 1, 1, 2 },
-                { 1, 2, 1, 2 },
-                { 2, 0.75, 2, 1 }
-                };
-
-        public Modifier() { }
+        // Calculate modified attack damage
+        this.aDmg = (int) (a.getAttack() * a.getType()
+                .getAttackModifier(b.getType()));
+        this.bDmg = (int) (b.getAttack() * b.getType()
+                .getAttackModifier(a.getType()));
         /* @formatter:on */
-
-        public double lookup(Unit a, Unit b) {
-            int attacker;
-            int defender;
-            Type aType = a.getType();
-            Type bType = b.getType();
-            switch (aType) {
-                case FOOTMAN:
-                    attacker = 0;
-                    break;
-                case SPEARMAN:
-                    attacker = 1;
-                    break;
-                case ARCHER:
-                    attacker = 2;
-                    break;
-                case CAVALRY:
-                    attacker = 2;
-                    break;
-                default:
-                    attacker = -1;
-                    break;
-            }
-            switch (bType) {
-                case FOOTMAN:
-                    defender = 0;
-                    break;
-                case SPEARMAN:
-                    defender = 1;
-                    break;
-                case ARCHER:
-                    defender = 2;
-                    break;
-                case CAVALRY:
-                    defender = 2;
-                    break;
-                default:
-                    defender = -1;
-                    break;
-            }
-            if (attacker == -1 || defender == -1) {
-                return 1;
-            }
-            return modifiers[attacker][defender];
-        }
     }
 
     /* Process battle */
     public void doBattle() {
-        // Calculate damage modifiers
-        this.aDmg = modifyDmg(a, b, aDmg);
-        this.bDmg = modifyDmg(b, a, bDmg);
         // A is stationary & B is moving: B then A
         if (a.getPath().getType() == Pathtype.STATIONARY) {
             b.reduceHealth(aDmg);
             if (a.isDead()) {
-                System.out.println(a +" killed by " + b);
+                System.out.println(a + " killed by " + b);
                 a.setDead();
             }
             else {
                 a.reduceHealth(bDmg);
                 if (b.isDead()) {
-                    System.out.println(b +" killed by " + a);
+                    System.out.println(b + " killed by " + a);
                     b.setDead();
                 }
             }
@@ -100,14 +43,14 @@ public class Battle {
         else if (b.getPath().getType() == Pathtype.STATIONARY) {
             a.reduceHealth(bDmg);
             if (b.isDead()) {
-                System.out.println(b +" killed by " + a);
+                System.out.println(b + " killed by " + a);
                 b.setDead();
                 return;
             }
             else {
                 b.reduceHealth(aDmg);
                 if (a.isDead()) {
-                    System.out.println(a +" killed by " + b);
+                    System.out.println(a + " killed by " + b);
                     a.setDead();
                 }
             }
@@ -117,20 +60,14 @@ public class Battle {
             a.reduceHealth(bDmg);
             b.reduceHealth(aDmg);
             if (a.isDead()) {
-                System.out.println(a +" killed by " + b);
+                System.out.println(a + " killed by " + b);
                 a.setDead();
             }
             if (b.isDead()) {
-                System.out.println(b +" killed by " + a);
+                System.out.println(b + " killed by " + a);
                 b.setDead();
             }
         }
-    }
-
-    /* Calculates unit damage modifiers */
-    public int modifyDmg(Unit atk, Unit def, int attack) {
-        attack = (int) (attack * new Modifier().lookup(atk, def));
-        return attack;
     }
 
     /* Check if battle exists */
