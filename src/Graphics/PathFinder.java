@@ -1,6 +1,7 @@
 package Graphics;
 
 import Map.Path;
+import Map.Pathtype;
 import Map.Tile;
 import Player.Team;
 import Player.Unit;
@@ -49,6 +50,10 @@ public class PathFinder implements MouseListener {
         return this.pathNum;
     }
     
+    public void setPathtype(Pathtype type) {
+        paths.get(paths.size() - 1).setType(type);
+    }
+    
     public void start() {
         this.listening = true;
         this.finished = false;
@@ -86,7 +91,10 @@ public class PathFinder implements MouseListener {
             // Vertical container padding = 37p            
             int chooseBoxX = (b.getTile().getX() * 32) + 73 + e.getX();
             int chooseBoxY = (b.getTile().getY() * 32) + 37 + e.getY();
-            choosePathtype(chooseBoxX, chooseBoxY);
+            gui.pathOptions.setBounds(chooseBoxX, chooseBoxY, 32 * 3, 32 * 2);
+            gui.pathOptions.setVisible(true);
+        
+            gui.revalidate();
             
             // Turn MAX_COMMANDS
             if (pathNum == 3) {
@@ -121,13 +129,15 @@ public class PathFinder implements MouseListener {
     }
     
     public void endTurn() {
-        pathNum = 0;
-        unitsMoved.clear();
-        paths.clear();
-        lastPath.clear();
-        gui.render();
-        listening = false;
-        finished = true;
+        if (!choosingPathtype) {
+            pathNum = 0;
+            unitsMoved.clear();
+            paths.clear();
+            lastPath.clear();
+            gui.render();
+            listening = false;
+            finished = true;
+        }
     }
     
     public void undo() {
@@ -141,33 +151,15 @@ public class PathFinder implements MouseListener {
                 b.setIcon(chooseIcon(b));
             }
         }
+        choosingPathtype = false;
+        gui.pathOptions.setVisible(false);
     }
     
-    public void choosePathtype(int x, int y) {
-        JPanel pathOptions = new JPanel(new BorderLayout());
-        //pathOptions.setLayout(new BoxLayout(pathOptions, BoxLayout.Y_AXIS));
-        
-        // Tile height/width = 32
-        pathOptions.setBounds(x, y, 32 * 3, 32 * 2);
-        gui.getMapPane().add(pathOptions, new Integer(1), 0);
-        
-        JButton safeGoal = new JButton ("Safe Goal Move");
-        safeGoal.setPreferredSize(new Dimension(32 * 3, 32 * 2 / 3));
-        safeGoal.setFont(new Font("Arial", Font.PLAIN, 8));
-        JButton goal = new JButton("Goal Move");
-        goal.setPreferredSize(new Dimension(32 * 3, 32 * 2 / 3));    
-        goal.setFont(new Font("Arial", Font.PLAIN, 8));        
-        JButton standard = new JButton("Standard Move");
-        standard.setPreferredSize(new Dimension(32 * 3, 32 * 2 / 3));  
-        standard.setFont(new Font("Arial", Font.PLAIN, 8));
-        
-        pathOptions.add(safeGoal, BorderLayout.NORTH);
-        pathOptions.add(goal, BorderLayout.CENTER);
-        pathOptions.add(standard, BorderLayout.SOUTH);
-        pathOptions.setVisible(true);
-        
-        gui.revalidate();
+    public void choosePathtype(Pathtype type) {
+        setPathtype(type);
         choosingPathtype = false;
+        gui.pathOptions.setVisible(false);
+        System.out.println("Chose " + paths.get(paths.size() - 1).getType() + " move");
     }
     
     public ImageIcon chooseIcon(TileButton b) {

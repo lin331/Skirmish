@@ -2,6 +2,7 @@ package Graphics;
 
 import Game.Game;
 import Map.Map;
+import Map.Pathtype;
 import Map.Position;
 import Map.Tile;
 import Player.Team;
@@ -43,6 +44,7 @@ public class Gui extends JFrame {
 	private JPanel mainPanel;
     private JPanel mainContainer;
     private JLayeredPane mapPane;
+    public JPanel pathOptions;
     private JPanel tilePanel;
     private ArrayList<TileButton> tileButtons;
     private PathFinder pfinder;
@@ -103,8 +105,6 @@ public class Gui extends JFrame {
         tilePanel = new JPanel(grid);
 
         mainContainer.add(tilePanel, new GridBagConstraints());
-        mainContainer.setBackground(Color.RED);
-        mainContainer.setOpaque(true);
         
         // set up tile grid
         pfinder = new PathFinder(this);
@@ -120,6 +120,44 @@ public class Gui extends JFrame {
             }
         }
         mainPanel.add(mapPane, BorderLayout.NORTH);
+        
+        //set up pathtype choice
+        pathOptions = new JPanel(new BorderLayout());
+        
+        pathOptions.setBounds(0, 0, TILE_WIDTH * 3, TILE_HEIGHT * 2);
+        mapPane.add(pathOptions, new Integer(1), 0);
+        
+        JButton safeGoal = new JButton ("Safe Goal Move");
+        safeGoal.setPreferredSize(new Dimension(TILE_WIDTH * 3, TILE_HEIGHT * 2 / 3));
+        safeGoal.setFont(new Font("Arial", Font.PLAIN, 8));
+        safeGoal.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                pfinder.choosePathtype(Pathtype.SAFEGOAL);
+            }
+        });
+        
+        JButton goal = new JButton("Goal Move");
+        goal.setPreferredSize(new Dimension(TILE_WIDTH * 3, TILE_HEIGHT * 2 / 3));    
+        goal.setFont(new Font("Arial", Font.PLAIN, 8));     
+        goal.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                pfinder.choosePathtype(Pathtype.GOAL);
+            }
+        });       
+        
+        JButton standard = new JButton("Standard Move");
+        standard.setPreferredSize(new Dimension(TILE_WIDTH * 3, TILE_HEIGHT * 2 / 3));  
+        standard.setFont(new Font("Arial", Font.PLAIN, 8));
+        standard.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                pfinder.choosePathtype(Pathtype.STANDARD);
+            }
+        });   
+        
+        pathOptions.add(safeGoal, BorderLayout.NORTH);
+        pathOptions.add(goal, BorderLayout.CENTER);
+        pathOptions.add(standard, BorderLayout.SOUTH);
+        pathOptions.setVisible(false);
 
         // set up turn panel under tiles
         commandPanel = new JPanel();
