@@ -19,6 +19,12 @@ public class Gui extends JFrame {
     private Map map;
     private Team currentTeam;
     
+    private final int GUI_WIDTH = 650;
+    private final int GUI_HEIGHT = 400; 
+    
+    private final int TILE_WIDTH = 32;
+    private final int TILE_HEIGHT = 32;
+    
 	private JPanel background;
     
     // left side of gui
@@ -35,6 +41,8 @@ public class Gui extends JFrame {
     
     // right side of gui
 	private JPanel mainPanel;
+    private JPanel mainContainer;
+    private JLayeredPane mapPane;
     private JPanel tilePanel;
     private ArrayList<TileButton> tileButtons;
     private PathFinder pfinder;
@@ -70,10 +78,33 @@ public class Gui extends JFrame {
         infoPanel.add(turnPanel);
         infoPanel.add(healthPanel);
         
+        JLabel unitHeader = new JLabel("Unit");
+        JLabel turnHeader = new JLabel("Turn Delay");
+        JLabel healthHeader = new JLabel("Health");
+        unitHeader.setVisible(true);
+        turnHeader.setVisible(true);
+        healthHeader.setVisible(true);
+        unitPanel.add(unitHeader);
+        turnPanel.add(turnHeader);
+        healthPanel.add(healthHeader);
+        
+        // set up main panel
         mainPanel = new JPanel(new BorderLayout());
+        
+        mapPane = new JLayeredPane();
+        mapPane.setLayout(null);
+        mapPane.setPreferredSize(new Dimension(GUI_WIDTH*2/3, GUI_HEIGHT*2/3));
 
+        mainContainer = new JPanel(new GridBagLayout());
+        mainContainer.setBounds(0, 0, GUI_WIDTH*2/3, GUI_HEIGHT*2/3);
+        mapPane.add(mainContainer, new Integer(-1), 0);
+        
         GridLayout grid = new GridLayout(map.getHeight(), map.getWidth());
         tilePanel = new JPanel(grid);
+
+        mainContainer.add(tilePanel, new GridBagConstraints());
+        mainContainer.setBackground(Color.RED);
+        mainContainer.setOpaque(true);
         
         // set up tile grid
         pfinder = new PathFinder(this);
@@ -88,11 +119,12 @@ public class Gui extends JFrame {
                 tileButtons.add(b);                
             }
         }
-        mainPanel.add(tilePanel, BorderLayout.NORTH);
+        mainPanel.add(mapPane, BorderLayout.NORTH);
 
         // set up turn panel under tiles
         commandPanel = new JPanel();
         commandPanel.setLayout(new BoxLayout(commandPanel, BoxLayout.Y_AXIS));
+        
         commandLabel = new JLabel();
         undo = new JButton("Undo");
         undo.addActionListener(new ActionListener() {
@@ -120,22 +152,13 @@ public class Gui extends JFrame {
 
         setTitle("Skirmish");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	
-        setSize(650,400);
+        setSize(GUI_WIDTH, GUI_HEIGHT);
         setVisible(true);	
 
         revalidate();
     }
     
     public void setInfoPanel() {
-        JLabel unitHeader = new JLabel("Unit");
-        JLabel turnHeader = new JLabel("Turn Delay");
-        JLabel healthHeader = new JLabel("Health");
-        unitHeader.setVisible(true);
-        turnHeader.setVisible(true);
-        healthHeader.setVisible(true);
-        unitPanel.add(unitHeader);
-        turnPanel.add(turnHeader);
-        healthPanel.add(healthHeader);
         for (Team t : game.getTeams()) {
             for (Unit u : t.getUnits()) {
                 JLabel unitLabel = new JLabel(Integer.toString(u.getNum()));
@@ -194,7 +217,7 @@ public class Gui extends JFrame {
     
     public void requestPath() {
         pfinder.start();
-        while (!pfinder.getFinished()) {
+        while (!pfinder.isFinished()) {
             int commandsLeft = game.getTurn().getMaxCommands() - pfinder.getPathNum();
             commandLabel.setText(currentTeam + "'s Turn: " + commandsLeft + 
                                  " commands remaining");
@@ -213,5 +236,9 @@ public class Gui extends JFrame {
     
     public void setCurrentTeam(Team t) {
         this.currentTeam = t;
+    }
+    
+    public JLayeredPane getMapPane() {
+        return this.mapPane;
     }
 }
