@@ -22,7 +22,9 @@ public class Unit implements Comparable<Unit> {
         this.team = team;
         this.num = num;
         this.type = Type.DEFAULT;
-        setStats(type);
+        this.health = type.getHealth();
+        this.attack = type.getAttack();
+        this.moves = type.getMove();
         this.tile = tile;
         this.next = null;
         path = new Path(this);
@@ -32,50 +34,12 @@ public class Unit implements Comparable<Unit> {
         this.team = team;
         this.num = num;
         this.type = type;
-        setStats(type);
+        this.health = type.getHealth();
+        this.attack = type.getAttack();
+        this.moves = type.getMove();
         this.tile = tile;
         this.next = null;
         path = new Path(this);
-    }
-
-    private void setStats(Type type) {
-        switch (type) {
-            case DEFAULT:
-                this.health = 10;
-                this.attack = 5;
-                this.moves = 5;
-                break;
-            case FOOTMAN:
-                this.health = 90;
-                this.attack = 20;
-                this.moves = 5;
-                break;
-            case SPEARMAN:
-                this.health = 70;
-                this.attack = 20;
-                this.moves = 5;
-                break;
-            case ARCHER:
-                this.health = 70;
-                this.attack = 30;
-                this.moves = 3;
-                break;
-            case CAVALRY:
-                this.health = 70;
-                this.attack = 25;
-                this.moves = 10;
-                break;
-            case SUICIDAL:
-                this.health = 50;
-                this.attack = 30;
-                this.moves = 6;
-                break;
-            default:
-                this.health = 10;
-                this.attack = 5;
-                this.moves = 5;
-                break;
-        }
     }
 
     /* Console input */
@@ -108,6 +72,7 @@ public class Unit implements Comparable<Unit> {
     }
     
     /* Check if unit is blocking this */
+    // TODO: Needs testing
     public boolean isBlockedBy(Unit u) {
         if (u.getNext() == this.next) {
             if (u.getPathtype() == Pathtype.STATIONARY){ 
@@ -153,7 +118,7 @@ public class Unit implements Comparable<Unit> {
         this.next = null;
         this.path = null;
     }
-    
+
     /* Test purpose-only setters */
     public void setHealth(int health) {
         this.health = health;
@@ -233,36 +198,7 @@ public class Unit implements Comparable<Unit> {
     }
 
     @Override
-    public int compareTo(Unit u) {
-        Pathtype pType = this.path.getType();
-        Pathtype uType = u.path.getType();
-        switch (pType) {
-            case GOAL:
-                if (uType == Pathtype.GOAL) {
-                    return 0;
-                }
-                else {
-                    return -1;
-                }
-            case SAFEGOAL:
-                if (uType == Pathtype.SAFEGOAL) {
-                    return 0;
-                }
-                else if (uType == Pathtype.GOAL) {
-                    return 1;
-                }
-                else {
-                    return -1;
-                }
-            case STANDARD:
-                if (uType == Pathtype.STANDARD) {
-                    return (uType == Pathtype.STANDARD) ? 0 : 1;
-                }
-                else {
-                    return 1;
-                }
-            default:
-                return 0;
-        }
+    public int compareTo(Unit unit) {
+        return this.getPathtype().compareTo(unit.getPathtype());
     }
 }
