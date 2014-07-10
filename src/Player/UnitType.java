@@ -1,6 +1,6 @@
 package Player;
 
-public enum Type {
+public enum UnitType {
     /* @formatter:off */
     DEFAULT  (10, 5, 5),
     FOOTMAN  (90, 20, 5),
@@ -21,7 +21,7 @@ public enum Type {
         return move;
     }
     
-    public double getAttackModifier(Type t) {
+    public double getAttackModifier(UnitType t) {
         double[][] modifiers = {
                 { 1, 1, 2, 1 },
                 { 1, 1, 1, 2 },
@@ -74,7 +74,7 @@ public enum Type {
     private final int attack;
     private final int move;
 
-    Type(int health, int attack, int move) {
+    UnitType(int health, int attack, int move) {
         this.health = health;
         this.attack = attack;
         this.move = move;
