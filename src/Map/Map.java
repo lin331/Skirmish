@@ -13,7 +13,7 @@ public class Map {
     private final int WIDTH = 9;
     private final int HEIGHT = 6;
     ArrayList<Battle> battles = new ArrayList<Battle>();
-
+    
     public Map() {
         initialize();
     }
@@ -39,7 +39,7 @@ public class Map {
             }
         }
     }
-
+    
     /* Check for enemy on adjacent tiles */
     public Unit checkAdjacent(Unit u, Tile tile) {
         Team t = u.getTeam();
@@ -231,7 +231,35 @@ public class Map {
         }
     }
 
-    /* Getters for adjacent tiles */
+    /* Getters for adjacent tiles */    
+    public Tile getAdjacentTile(int dir, Tile tile) {
+        switch (dir) {
+            case 0:
+                if (tile.getY() == 0) {
+                    return null;
+                }
+                return tiles[tile.getY() - 1][tile.getX()];
+            case 1:
+                if (tile.getX() == WIDTH - 1) {
+                    return null;
+                }
+                return tiles[tile.getY()][tile.getX() + 1];
+            case 2:
+                if (tile.getY() == HEIGHT - 1) {
+                    return null;
+                }
+                return tiles[tile.getY() + 1][tile.getX()];
+            case 3:
+                if (tile.getX() == 0) {
+                    return null;
+                }
+                return tiles[tile.getY()][tile.getX() - 1];
+            default:
+                System.out.println("Invalid direction");
+                return null;
+        }
+    }
+    
     public Tile getN(Tile tile) {
         if (tile.getY() == 0) {
             return null;

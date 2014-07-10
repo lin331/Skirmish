@@ -34,9 +34,9 @@ public class Path {
     }
 
     /* Delete next tile in path */
-    public Tile remove() throws Exception {
+    public Tile remove() {
         if (type == Pathtype.STATIONARY) {
-            throw new Exception("Path statioanry");
+            System.out.println("Wtf man, it's stationary");
         }
         Tile t = tiles.remove(0);
         if (tiles.isEmpty()) {

@@ -5,7 +5,7 @@ import java.util.Scanner;
 import Graphics.Gui;
 import Map.Map;
 import Player.Team;
-import Player.Type;
+import Player.UnitType;
 import Player.Unit;
 
 public class Game {
@@ -14,23 +14,34 @@ public class Game {
     private boolean active; // Flag for active
     private Team[] teams; // Array for teams
     private Turn turn; // Used for list of command
+    private Combat combat;
 
     /* Constructor for game */
-    Game() {
-        initialize();
+    Game() { 
+        gui = null;
+        map = null;
+        active = false;
+        teams = null;
+        turn = null;
+        combat = null;
     }
 
     /* Initialize game map and create teams */
-    private void initialize() {
+    void initialize() {
         gui = null;
         map = new Map();
-        active = false;
         makeTeams();
-        turn = new Turn(map, teams);
     }
-
+    
+    /* Initialize game mechanics */
+    void initialize2() {
+        active = false;
+        turn = new Turn(map, teams);
+        combat = new Combat(turn, teams);
+    }
+    
     /* Initialize teams */
-    private void makeTeams() {
+    void makeTeams() {
         teams = new Team[2];
         teams[0] = new Team("A");
         teams[1] = new Team("B");
@@ -59,8 +70,8 @@ public class Game {
         }
         turn.process();
         turn.setNextTiles();
-        map.checkBattleChanges(teams);
-        map.checkBattle(teams[0]);
+        System.out.println("Game: checking for battles");
+        combat.checkBattle();
     }
 
     /* Begins the game */
@@ -114,7 +125,7 @@ public class Game {
                 int x = Integer.parseInt(string);
                 System.out.println("Enter y coordinate: ");
                 int y = s.nextInt();
-                Unit u = new Unit(t, i + 1, Type.DEFAULT, map.getTiles()[y][x]);
+                Unit u = new Unit(t, i + 1, UnitType.DEFAULT, map.getTiles()[y][x]);
                 t.addUnit(u);
             }
             System.out.println(t.toString() + " Total Units: " + num);
@@ -168,8 +179,10 @@ public class Game {
         Game game = new Game();
         Gui gui = new Gui(game);
         game.setGui(gui);
+        game.initialize();
         game.addUnits();
         game.setUnits();
+        game.initialize2();
         gui.setInfoPanel();
         game.start();
         gui.render();

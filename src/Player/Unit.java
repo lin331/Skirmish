@@ -10,7 +10,7 @@ import java.util.Scanner;
 public class Unit implements Comparable<Unit> {
     protected Team team; // Unit's team
     protected int num; // Unit's number
-    protected Type type; // Unit type
+    protected UnitType type; // Unit type
     protected int health; // Unit's health stat
     protected int attack; // Unit's attack stat
     protected int moves; // How far unit can move
@@ -21,7 +21,7 @@ public class Unit implements Comparable<Unit> {
     public Unit(Team team, int num, Tile tile) {
         this.team = team;
         this.num = num;
-        this.type = Type.DEFAULT;
+        this.type = UnitType.DEFAULT;
         this.health = type.getHealth();
         this.attack = type.getAttack();
         this.moves = type.getMove();
@@ -30,7 +30,7 @@ public class Unit implements Comparable<Unit> {
         path = new Path(this);
     }
 
-    public Unit(Team team, int num, Type type, Tile tile) {
+    public Unit(Team team, int num, UnitType type, Tile tile) {
         this.team = team;
         this.num = num;
         this.type = type;
@@ -137,7 +137,7 @@ public class Unit implements Comparable<Unit> {
         return num;
     }
 
-    public Type getType() {
+    public UnitType getType() {
         return type;
     }
 
@@ -174,6 +174,16 @@ public class Unit implements Comparable<Unit> {
     }
 
     /* Overrides */
+    public boolean equals(Unit unit) {
+        if (unit == null) {
+            return false;
+        }
+        if (team == unit.getTeam()) {
+            return num == unit.getNum();
+        }
+        return false;
+    }
+    
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {

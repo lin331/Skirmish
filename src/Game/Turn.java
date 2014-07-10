@@ -17,17 +17,37 @@ public class Turn {
     private ArrayList<Unit> units;
     Map map;
     Team[] teams;
+    int cycle;
 
     public Turn(Map map, Team[] teams) {
         units = new ArrayList<Unit>();
         this.map = map;
         this.teams = teams;
+        this.cycle = 0;
+    }
+
+    /* Setters below */
+    public void incCycle() {
+        this.cycle++;
     }
     
+    public void resetCycle() {
+        this.cycle = 0;
+    }
+
+    /* Getters below */
     public int getMaxCommands() {
         return MAX_COMMANDS;
     }
 
+    public Map getMap() {
+        return this.map;
+    }
+
+    public int getCycle() {
+        return this.cycle;
+    }
+    
     /* Check if list is empty */
     public boolean isEmpty() {
         return units.isEmpty();
@@ -52,7 +72,7 @@ public class Turn {
     public void sort() {
         Collections.sort(units);
     }
-    
+
     public void setUnits() {
         for (Team t : teams) {
             for (Unit u : t.getUnits()) {
@@ -63,8 +83,10 @@ public class Turn {
         }
     }
 
+    /* @formatter:off */
     public void processConflicts(HashSet<ArrayList<Unit>> set)
             throws Exception {
+    /* @formatter:on */
         for (ArrayList<Unit> list : set) {
             Collections.sort(list);
             /* @formatter:off */
@@ -76,8 +98,10 @@ public class Turn {
                     u.clearPath();
                 }
             }
+            /* @formatter:off */
             else if (list.get(0).getPathtype()
                     .compareTo(list.get(1).getPathtype()) < 0) {
+            /* @formatter:on */
                 list.remove(0);
                 for (Unit u : list) {
                     u.setNext(null);
@@ -96,9 +120,9 @@ public class Turn {
             Path p = u.getPath();
             Tile t = p.getNext();
             u.setNext(t);
-        }        
+        }
     }
-    
+
     /* Ghost cycle */
     public void ghost() {
         System.out.println("Ghost cycle");
@@ -150,6 +174,7 @@ public class Turn {
             }
         }
         setNextTiles();
+        cycle += 1;
     }
 
     /* Test printing */
