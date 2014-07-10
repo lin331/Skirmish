@@ -128,6 +128,10 @@ public class Unit implements Comparable<Unit> {
         this.attack = attack;
     }
 
+    public void decPathDelay() {
+        path.decDelay();
+    }
+    
     /* Getters below */
     public Team getTeam() {
         return team;
@@ -172,18 +176,8 @@ public class Unit implements Comparable<Unit> {
     public Pathtype getPathtype() {
         return path.getType();
     }
-
-    /* Overrides */
-    public boolean equals(Unit unit) {
-        if (unit == null) {
-            return false;
-        }
-        if (team == unit.getTeam()) {
-            return num == unit.getNum();
-        }
-        return false;
-    }
     
+    /* Overrides */    
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {

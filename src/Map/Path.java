@@ -80,7 +80,14 @@ public class Path {
         this.type = type;
     }
 
-    public void decreaseDelay() {
+    public void setDelay(int d) {
+        this.delay = d;
+    }
+    
+    public void decDelay() {
+        if (delay == 0) {
+            return;
+        }
         this.delay -= 1;
     }
     

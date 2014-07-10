@@ -30,26 +30,33 @@ public class GameTest {
         teams[1].addUnit(new Unit(teams[1], 3, tiles[5][8]));        
     }
     
-    public void turn1() {
-        game.getTurn().add(teams[0].getUnit(1));
-        teams[0].getUnit(1).getPath().setType(Pathtype.STANDARD);
-        teams[0].getUnit(1).getPath().add(tiles[0][1]);
-        teams[0].getUnit(1).getPath().add(tiles[0][2]);
-        teams[0].getUnit(1).getPath().add(tiles[0][3]);
-        // teams[0].getUnit(1).getPath().add(tiles[0][4]);
-        game.getTurn().add(teams[0].getUnit(2));
-        teams[0].getUnit(2).getPath().setType(Pathtype.STANDARD);
-        teams[0].getUnit(2).getPath().add(tiles[2][1]);
-        teams[0].getUnit(2).getPath().add(tiles[2][2]);
-        game.getTurn().add(teams[1].getUnit(1));
-        teams[1].getUnit(1).getPath().setType(Pathtype.STANDARD);
-        teams[1].getUnit(1).getPath().add(tiles[0][7]);
-        teams[1].getUnit(1).getPath().add(tiles[0][6]);
-        teams[1].getUnit(1).getPath().add(tiles[0][5]);
-        teams[1].getUnit(1).getPath().add(tiles[0][4]);
-        game.getTurn().add(teams[1].getUnit(2));
-        teams[1].getUnit(2).getPath().setType(Pathtype.STANDARD);
-        teams[1].getUnit(2).getPath().add(tiles[1][7]);        
+    public void turn(int i) {
+        switch (i) {
+            case 1:
+                teams[0].getUnit(1).getPath().setType(Pathtype.STANDARD);
+                teams[0].getUnit(1).getPath().add(tiles[0][1]);
+                teams[0].getUnit(1).getPath().add(tiles[0][2]);
+                teams[0].getUnit(1).getPath().add(tiles[0][3]);
+                // teams[0].getUnit(1).getPath().add(tiles[0][4]);
+                teams[0].getUnit(2).getPath().setType(Pathtype.STANDARD);
+                teams[0].getUnit(2).getPath().add(tiles[2][1]);
+                teams[0].getUnit(2).getPath().add(tiles[2][2]);
+                teams[0].getUnit(2).getPath().setDelay(2);
+                teams[1].getUnit(1).getPath().setType(Pathtype.STANDARD);
+                teams[1].getUnit(1).getPath().add(tiles[0][7]);
+                teams[1].getUnit(1).getPath().add(tiles[0][6]);
+                teams[1].getUnit(1).getPath().add(tiles[0][5]);
+                teams[1].getUnit(1).getPath().add(tiles[0][4]);
+                teams[1].getUnit(2).getPath().setType(Pathtype.STANDARD);
+                teams[1].getUnit(2).getPath().add(tiles[1][7]);
+                teams[1].getUnit(2).getPath().setDelay(1);
+                break;
+            case 2:
+                teams[1].getUnit(3).getPath().add(tiles[5][7]);
+                break;
+            default:
+                break;
+        }     
     }
     
     public void add2() {
@@ -67,32 +74,32 @@ public class GameTest {
     public void run() {
         /* Game activity */
         game.start();
+        int i = 1;
         while (game.isActive()) {
+            System.out.println("Turn: " + i);
             if (game.getTurn().isEmpty()) {
                 // game.requestTurn();
                 System.out.println("Getting turn");
-                turn1();
-                game.getTurn().setNextTiles();
+                turn(i);
             }
-            game.sortTurn();
             game.processTurn();
-            game.viewMap();
-            if (game.getTurn().isEmpty()) {
+            // game.viewMap();
+            if (i == 4) {
                 System.out.println("Game finished");
+                game.viewMap();
                 game.end();
             }
+            i++;
         }
     }
     
     public void initialize() {
         game.initialize();
-        Map map = game.getMap();
-        tiles = map.getTiles();
-        game.makeTeams();
         teams = game.getTeams();
+        tiles = game.getMap().getTiles();
         add1();
+        game.setUnits();
         game.initialize2();
-        game.viewMap();
     }
     
     @Test

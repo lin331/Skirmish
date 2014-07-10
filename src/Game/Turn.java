@@ -73,17 +73,22 @@ public class Turn {
         Collections.sort(units);
     }
 
+    /* Add units to Turn that are moving */
     public void setUnits() {
         for (Team t : teams) {
             for (Unit u : t.getUnits()) {
                 if (!u.isPathEmpty()) {
-                    units.add(u);
+                    Path p = u.getPath();
+                    if (p.getDelay() == 0) {
+                        units.add(u);
+                    }
                 }
             }
         }
     }
 
     /* @formatter:off */
+    /* Process tile conflicts */
     public void processConflicts(HashSet<ArrayList<Unit>> set)
             throws Exception {
     /* @formatter:on */
@@ -114,7 +119,8 @@ public class Turn {
             }
         }
     }
-
+    
+    /* Set all units' next tile */
     public void setNextTiles() {
         for (Unit u : units) {
             Path p = u.getPath();
@@ -177,6 +183,16 @@ public class Turn {
         cycle += 1;
     }
 
+    /* Check unit's turn delay and decrement if needed */
+    public void checkDelay() {
+        for (Team t : teams) {
+            ArrayList<Unit> units = t.getUnits();
+            for (Unit u : units) {
+                u.decPathDelay();
+            }
+        }
+    }
+    
     /* Test printing */
     public void print() {
         for (Unit u : units) {
@@ -185,6 +201,7 @@ public class Turn {
     }
 
     /* Override */
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (Unit u : units) {
