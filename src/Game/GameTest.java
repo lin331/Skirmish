@@ -37,7 +37,7 @@ public class GameTest {
                 teams[0].getUnit(1).getPath().add(tiles[0][1]);
                 teams[0].getUnit(1).getPath().add(tiles[0][2]);
                 teams[0].getUnit(1).getPath().add(tiles[0][3]);
-                // teams[0].getUnit(1).getPath().add(tiles[0][4]);
+                teams[0].getUnit(1).getPath().add(tiles[0][4]);
                 teams[0].getUnit(2).getPath().setType(Pathtype.STANDARD);
                 teams[0].getUnit(2).getPath().add(tiles[2][1]);
                 teams[0].getUnit(2).getPath().add(tiles[2][2]);
@@ -45,13 +45,15 @@ public class GameTest {
                 teams[1].getUnit(1).getPath().setType(Pathtype.STANDARD);
                 teams[1].getUnit(1).getPath().add(tiles[0][7]);
                 teams[1].getUnit(1).getPath().add(tiles[0][6]);
-                teams[1].getUnit(1).getPath().add(tiles[0][5]);
-                teams[1].getUnit(1).getPath().add(tiles[0][4]);
                 teams[1].getUnit(2).getPath().setType(Pathtype.STANDARD);
                 teams[1].getUnit(2).getPath().add(tiles[1][7]);
                 teams[1].getUnit(2).getPath().setDelay(1);
                 break;
             case 2:
+                teams[1].getUnit(1).getPath().setType(Pathtype.STANDARD);
+                teams[1].getUnit(1).getPath().add(tiles[0][5]);
+                teams[1].getUnit(1).getPath().add(tiles[0][4]);
+                teams[1].getUnit(3).getPath().setType(Pathtype.STANDARD);
                 teams[1].getUnit(3).getPath().add(tiles[5][7]);
                 break;
             default:

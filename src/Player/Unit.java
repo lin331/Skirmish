@@ -110,6 +110,7 @@ public class Unit implements Comparable<Unit> {
 
     public void clearPath() {
         this.path.clear();
+        this.next = null;
     }
     
     public void setDead() {
