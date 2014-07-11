@@ -81,25 +81,25 @@ public class Map {
         Tile tile = u1.getTile();
         Tile temp = getN(tile);
         if (temp != null) {
-            if (u2.equals(temp.getUnit())) {
+            if (u2 == temp.getUnit()) {
                 return true;
             }            
         }
         temp = getE(tile);
         if (temp != null) {
-            if (u2.equals(temp.getUnit())) {
+            if (u2 == temp.getUnit()) {
                 return true;
             }            
         }
         temp = getS(tile);
         if (temp != null) {
-            if (u2.equals(temp.getUnit())) {
+            if (u2 == temp.getUnit()) {
                 return true;
             }            
         }
         temp = getW(tile);
         if (temp != null) {
-            if (u2.equals(temp.getUnit())) {
+            if (u2 == temp.getUnit()) {
                 return true;
             }            
         } 

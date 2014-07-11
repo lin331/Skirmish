@@ -48,7 +48,7 @@ public class Combat {
 
         public boolean has(Unit unit) {
             for (Unit u : adj) {
-                if (this.unit.equals(unit)) {
+                if (this.unit == unit) {
                     return true;
                 }
             }
@@ -73,10 +73,10 @@ public class Combat {
             }
             if (obj instanceof Unit) {
                 Unit u = (Unit) obj;
-                return this.unit.equals(u);
+                return this.unit == u;
             }
             AdjNode node = (AdjNode) obj;
-            return this.unit.equals(node.getUnit());
+            return this.unit == node.getUnit();
         }
         
         public void print() {
@@ -112,7 +112,7 @@ public class Combat {
 
     public int findUnit(Unit unit) {
         for (AdjNode node : adj) {
-            if (node.equals(unit)) {
+            if (node.getUnit() == unit) {
                 return adj.indexOf(node);
             }
         }

@@ -89,7 +89,7 @@ public class Unit implements Comparable<Unit> {
 
     /* Set method below */
     public void reduceHealth(int damage) {
-        health -= damage;
+        this.health = this.health - damage;
     }
 
     /* Setters below */
@@ -176,6 +176,12 @@ public class Unit implements Comparable<Unit> {
 
     public Pathtype getPathtype() {
         return path.getType();
+    }
+    
+    /* Test print */
+    public void printStats() {
+        System.out.println(team + " " + num);
+        System.out.println("Health: " + health);
     }
     
     /* Overrides */    

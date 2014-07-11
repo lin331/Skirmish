@@ -26,13 +26,16 @@ public class Battle {
     public void doBattle() {
         // A is stationary & B is moving: B then A
         if (a.getPath().getType() == Pathtype.STATIONARY) {
-            b.reduceHealth(aDmg);
+            System.out.println("B then A");
+            System.out.println("\t" + b + " attacks " + a + " for " + bDmg);
+            a.reduceHealth(bDmg);
             if (a.isDead()) {
                 System.out.println(a + " killed by " + b);
                 a.setDead();
             }
             else {
-                a.reduceHealth(bDmg);
+                System.out.println("\t" + a + " attacks " + b + " for " + aDmg);
+                b.reduceHealth(aDmg);
                 if (b.isDead()) {
                     System.out.println(b + " killed by " + a);
                     b.setDead();
@@ -41,14 +44,15 @@ public class Battle {
         }
         // A is moving & B is stationary: A then B
         else if (b.getPath().getType() == Pathtype.STATIONARY) {
-            a.reduceHealth(bDmg);
+            System.out.println("A then B");
+            b.reduceHealth(aDmg);
             if (b.isDead()) {
                 System.out.println(b + " killed by " + a);
                 b.setDead();
                 return;
             }
             else {
-                b.reduceHealth(aDmg);
+                a.reduceHealth(bDmg);
                 if (a.isDead()) {
                     System.out.println(a + " killed by " + b);
                     a.setDead();
@@ -57,6 +61,7 @@ public class Battle {
         }
         // A and B simultaneously attack
         else {
+            System.out.println("A and B");
             a.reduceHealth(bDmg);
             b.reduceHealth(aDmg);
             if (a.isDead()) {
