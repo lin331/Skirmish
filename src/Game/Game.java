@@ -74,6 +74,7 @@ public class Game {
             }
             turn.process();
             viewMap();
+            gui.render();
             turn.setNextTiles();
             combat.checkBattle();
         }
