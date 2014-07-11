@@ -63,15 +63,21 @@ public class Game {
 
     /* Processes turn */
     void processTurn() {
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        turn.process();
+        turn.setUnits();
+        turn.sort();
         turn.setNextTiles();
-        System.out.println("Game: checking for battles");
-        combat.checkBattle();
+        while (!turn.isEmpty()) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            turn.process();
+            viewMap();
+            turn.setNextTiles();
+            combat.checkBattle();
+        }
+        turn.checkDelay();
     }
 
     /* Begins the game */
@@ -189,8 +195,6 @@ public class Game {
         while (game.active) {
             if (game.turn.isEmpty()) {
                 game.requestTurn();
-                game.turn.setUnits();
-                game.turn.setNextTiles();
             }
             game.processTurn();
             gui.render();

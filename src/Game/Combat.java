@@ -188,14 +188,14 @@ public class Combat {
                 check:
                     for (Unit enemy : enemies) {
                         if (enemy != null) {
-                            System.out.println("Adjacent enemy");
+                            // System.out.println("Adjacent enemy");
                             for (Battle b : battles) {
                                 if (b.has(unit, enemy)) {
-                                   System.out.println("\tHas battled");
+                                   // System.out.println("\tHas battled");
                                    break check;
                                 }
                             }
-                            System.out.println("\tNot battled");
+                            // System.out.println("\tNot battled");
                             Battle battle = new Battle(unit, enemy);
                             battles.add(battle);
                             battle.doBattle();
@@ -205,7 +205,7 @@ public class Combat {
                     }
             }
         }
-        System.out.println("Done");
         turn.incCycle();
+        System.out.println("Combat: Checking Done");
     }
 }
