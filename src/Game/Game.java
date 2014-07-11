@@ -177,9 +177,9 @@ public class Game {
 
     public static void main(String[] args) {
         Game game = new Game();
+        game.initialize();
         Gui gui = new Gui(game);
         game.setGui(gui);
-        game.initialize();
         game.addUnits();
         game.setUnits();
         game.initialize2();

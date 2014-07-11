@@ -26,8 +26,6 @@ public class Gui extends JFrame {
     private final int TILE_WIDTH = 32;
     private final int TILE_HEIGHT = 32;
     
-	private JPanel background;
-    
     // left side of gui
     private JPanel infoPanel;
     private JPanel unitPanel;
@@ -63,22 +61,23 @@ public class Gui extends JFrame {
 	
     public void initialize() {
         
-        background = new JPanel();
-        
-        // set up info panel
+        // set up info panel        
         infoPanel = new JPanel();
+        
         unitPanel = new JPanel();
         unitPanel.setLayout(new BoxLayout(unitPanel, BoxLayout.Y_AXIS));
         turnPanel = new JPanel();
         turnPanel.setLayout(new BoxLayout(turnPanel, BoxLayout.Y_AXIS));
         healthPanel = new JPanel();
         healthPanel.setLayout(new BoxLayout(healthPanel, BoxLayout.Y_AXIS));
+        
         unitDisplay = new ArrayList<JLabel>();
         turnDisplay = new ArrayList<JLabel>();
         healthDisplay = new ArrayList<JLabel>();
         infoPanel.add(unitPanel);
         infoPanel.add(turnPanel);
         infoPanel.add(healthPanel);
+        ((FlowLayout)infoPanel.getLayout()).setHgap(10);
         
         JLabel unitHeader = new JLabel("Unit");
         JLabel turnHeader = new JLabel("Turn Delay");
@@ -100,6 +99,8 @@ public class Gui extends JFrame {
         mainContainer = new JPanel(new GridBagLayout());
         mainContainer.setBounds(0, 0, GUI_WIDTH*2/3, GUI_HEIGHT*2/3);
         mapPane.add(mainContainer, new Integer(-1), 0);
+        mainContainer.setBackground(Color.YELLOW);
+        mainContainer.setOpaque(true);
         
         GridLayout grid = new GridLayout(map.getHeight(), map.getWidth());
         tilePanel = new JPanel(grid);
@@ -183,10 +184,9 @@ public class Gui extends JFrame {
         commandPanel.add(pathButtons);
         mainPanel.add(commandPanel, BorderLayout.SOUTH);
 		
-        // set up the frame and background panel
-        getContentPane().add(background);	
-        background.add(infoPanel);
-        background.add(mainPanel);
+        // set up the frame
+        add(infoPanel, BorderLayout.WEST);
+        add(mainPanel, BorderLayout.EAST);
 
         setTitle("Skirmish");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	
@@ -197,9 +197,17 @@ public class Gui extends JFrame {
     }
     
     public void setInfoPanel() {
-        for (Team t : game.getTeams()) {
+        for (int i = 0; i < 2; i++) {
+            Team t = game.getTeams()[i];
             for (Unit u : t.getUnits()) {
-                JLabel unitLabel = new JLabel(Integer.toString(u.getNum()));
+                ImageIcon unitIcon;
+                if (i == 0) {
+                    unitIcon = new ImageIcon("res/unit1.png");
+                }
+                else {
+                    unitIcon = new ImageIcon("res/unit2.png");
+                }
+                JLabel unitLabel = new JLabel(unitIcon);
                 JLabel turnLabel = new JLabel(Integer.toString(u.getPath().getDelay()));
                 JLabel healthLabel = new JLabel(Integer.toString(u.getHealth()));
                 unitLabel.setVisible(true);
@@ -218,15 +226,14 @@ public class Gui extends JFrame {
 	
     public void render() {
         // render info
-        ImageIcon unit1 = new ImageIcon("res/unit1.png");
-        ImageIcon unit2 = new ImageIcon("res/unit2.png");
-        ImageIcon deadUnit = new ImageIcon("res/deadUnit.png");
-
         for (Team t : game.getTeams()) {
             for (Unit u : t.getUnits()) {
-            unitDisplay.get(u.getNum() - 1).setText(Integer.toString(u.getNum()));
-            turnDisplay.get(u.getNum() - 1).setText(Integer.toString(u.getPath().getDelay()));
-            healthDisplay.get(u.getNum() - 1).setText(Integer.toString(u.getHealth()));
+                if (u.isDead()) {
+                    ImageIcon deadIcon = new ImageIcon("res/deadUnit.png");
+                    unitDisplay.get(u.getNum() - 1).setIcon(deadIcon);
+                }
+                turnDisplay.get(u.getNum() - 1).setText(Integer.toString(u.getPath().getDelay()));
+                healthDisplay.get(u.getNum() - 1).setText(Integer.toString(u.getHealth()));
             }
         }
     
