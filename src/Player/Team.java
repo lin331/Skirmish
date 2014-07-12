@@ -1,10 +1,45 @@
 package Player;
 
+import java.util.ArrayList;
+
 public class Team {
-	protected String name;
-	protected Unit units[];
-	
-	public Team(String name) {
-		this.name = name;
-	}
+    // private final int MAXUNITS = 12;
+    private String name;
+    private ArrayList<Unit> units;
+
+    public Team(String name) {
+        this.name = name;
+        this.units = new ArrayList<Unit>();
+    }
+
+    public void addUnit(Unit unit) {
+        units.add(unit);
+    }
+
+    /* Getter methods below */
+    public Unit getUnit(int i) {
+        return units.get(i - 1); // Return specific unit
+    }
+
+    public ArrayList<Unit> getUnits() {
+        return units; // Return all units
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public boolean hasUnits() {
+        for (Unit u : units) {
+            if (!u.isDead()) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /* Overrides */
+    public String toString() {
+        return name;
+    }
 }

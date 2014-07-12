@@ -1,26 +1,68 @@
 package Map;
+
 import Player.Unit;
 
-/**
- * 
- * @author Wells
- *
- * Tiles for map
- */
+/* Tiles for map */
 public class Tile {
-	private boolean empty;
-	private Unit unit;
-	
-	public Tile() {
-		empty = true;
-		unit = null;
-	}
-	
-	public boolean empty() {
-		return empty;
-	}
-	
-	public Unit getUnit() {
-		return unit;
-	}
+
+    private Unit unit;
+    private int x;
+    private int y;
+
+    public Tile(int x, int y) {
+        unit = null;
+        this.x = x;
+        this.y = y;
+    }
+
+    /* Check if tile is empty */
+    public boolean isEmpty() {
+        if (unit != null) {
+            return false;
+        }
+        return true;
+    }
+
+    /* Check if tile is adjacent */
+    public boolean isAdjacent(Tile t) {
+        if ((Math.abs(this.x - t.x) == 1) && (Math.abs(this.y - t.y) == 0)) {
+            return true;
+        }
+        else if ((Math.abs(this.y - t.y) == 1)
+                && (Math.abs(this.x - t.x) == 0)) {
+            return true;
+        }
+        return false;
+    }
+
+    /* Set unit on tile */
+    public void setUnit(Unit unit) {
+        this.unit = unit;
+    }
+
+    /* Getter methods below */
+    public Unit getUnit() {
+        return unit;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    /* Overrides */
+    public boolean equals(Tile t) {
+        if (t == null || this.x != t.getX() || this.y != t.getY()) {
+            return false;
+        }
+        return true;
+    }
+
+    public String toString() {
+        return "(" + Integer.toString(this.x) + ", " + Integer.toString(this.y)
+                + ")";
+    }
 }
