@@ -117,7 +117,6 @@ public class Unit implements Comparable<Unit> {
         this.tile.setUnit(null);
         this.tile = null;
         this.next = null;
-        this.path = null;
     }
 
     /* Test purpose-only setters */

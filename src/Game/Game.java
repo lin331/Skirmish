@@ -1,5 +1,6 @@
 package Game;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import Graphics.Gui;
@@ -78,7 +79,9 @@ public class Game {
             turn.setNextTiles();
             combat.checkBattle();
         }
+        combat.clearBattles();
         turn.checkDelay();
+        printStats();
     }
 
     /* Begins the game */
@@ -91,11 +94,40 @@ public class Game {
         active = false;
     }
 
-    /* Prints the current game map to screen */
+    /* Check if one team lost */
+    public boolean isOver() {
+        boolean b1 = teams[0].hasUnits();
+        boolean b2 = teams[1].hasUnits();
+        if (!(b1 && b2)) {
+            System.out.println("Tie game");
+            return true;
+        }
+        else if (!b1) {
+            System.out.println(teams[0] + " has lost");
+            return true;
+        }
+        else if (!b2) {
+            System.out.println(teams[1] + " has lost");
+            return true;
+        }
+        return false;
+    }
+    
+    /* Prints the current game map to console */
     void viewMap() {
         map.printMap();
     }
 
+    /* Prints units' stats to console */
+    void printStats() {
+        for (Team t : teams) {
+            ArrayList<Unit> units = t.getUnits();
+            for (Unit u : units) {
+                u.printStats();
+            }
+        }
+    }
+    
     /* Getters below */
     public Map getMap() {
         return map;
@@ -199,6 +231,9 @@ public class Game {
             }
             game.processTurn();
             gui.render();
+            if (game.isOver()) {
+                game.end();
+            }
         }
     }
 }

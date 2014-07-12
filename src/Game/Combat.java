@@ -208,4 +208,8 @@ public class Combat {
         turn.incCycle();
         System.out.println("Combat: Checking Done");
     }
+    
+    public void clearBattles() {
+        this.battles.clear();
+    }
 }

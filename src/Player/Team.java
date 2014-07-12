@@ -29,6 +29,15 @@ public class Team {
         return name;
     }
 
+    public boolean hasUnits() {
+        for (Unit u : units) {
+            if (!u.isDead()) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     /* Overrides */
     public String toString() {
         return name;

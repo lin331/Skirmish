@@ -77,10 +77,10 @@ public class Battle {
 
     /* Check if battle exists */
     public boolean has(Unit ally, Unit enemy) {
-        if (this.a.equals(ally) && this.b.equals(enemy)) {
+        if (this.a == ally && this.b == enemy) {
             return true;
         }
-        else if (this.a.equals(enemy) && this.b.equals(ally)) {
+        else if (this.a == enemy && this.b == ally) {
             return true;
         }
         return false;
