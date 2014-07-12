@@ -7,6 +7,7 @@ public class Team {
     private String name;
     private ArrayList<Unit> units;
 
+    /* Public methods */
     public Team(String name) {
         this.name = name;
         this.units = new ArrayList<Unit>();
@@ -16,7 +17,7 @@ public class Team {
         units.add(unit);
     }
 
-    /* Getter methods below */
+    /* Getters */
     public Unit getUnit(int i) {
         return units.get(i - 1); // Return specific unit
     }
@@ -39,6 +40,7 @@ public class Team {
     }
     
     /* Overrides */
+    @Override
     public String toString() {
         return name;
     }

@@ -8,16 +8,17 @@ import Map.Tile;
 import java.util.Scanner;
 
 public class Unit implements Comparable<Unit> {
-    protected Team team; // Unit's team
-    protected int num; // Unit's number
-    protected UnitType type; // Unit type
-    protected int health; // Unit's health stat
-    protected int attack; // Unit's attack stat
-    protected int moves; // How far unit can move
-    protected Tile tile; // Unit's location
-    protected Tile next;
-    protected Path path; // Path to new position
+    private Team team; // Unit's team
+    private int num; // Unit's number
+    private UnitType type; // Unit type
+    private int health; // Unit's health stat
+    private int attack; // Unit's attack stat
+    private int moves; // How far unit can move
+    private Tile tile; // Unit's current tile
+    private Tile next; // Unit's next tile
+    private Path path; // Path to new tile
 
+    /* Public methods */
     public Unit(Team team, int num, Tile tile) {
         this.team = team;
         this.num = num;
@@ -42,34 +43,6 @@ public class Unit implements Comparable<Unit> {
         path = new Path(this);
     }
 
-    /* Console input */
-    /* Add to path */
-    public void addPath(Map map) {
-        @SuppressWarnings("resource")
-        Scanner s = new Scanner(System.in);
-        for (int i = 0; i < moves; i++) {
-            System.out.println("Moves left: " + (moves - i));
-            System.out.println("Enter x coordinate: ");
-            String string = s.next();
-            if (string.equals("end")) {
-                break;
-            }
-            int x = Integer.parseInt(string);
-            while (x < 0 || x >= map.getWidth()) {
-                System.out.println("x error: Not on map");
-                System.out.println("Enter x coordinate: ");
-                x = s.nextInt();
-            }
-            System.out.println("Enter y coordinate: ");
-            int y = s.nextInt();
-            while (y < 0 || y >= map.getWidth()) {
-                System.out.println("y error: Not on map");
-                System.out.println("Enter y coordinate: ");
-                y = s.nextInt();
-            }
-            path.add(new Tile(x, y));
-        }
-    }
     
     /* Check if unit is blocking this */
     // TODO: Needs testing
@@ -82,19 +55,17 @@ public class Unit implements Comparable<Unit> {
         return false;
     }
 
-    /* Check method below */
+    /* Check if unit is dead */
     public boolean isDead() {
         return health < 1;
     }
 
-    /* Set method below */
+    /* Setters */
     public void reduceHealth(int damage) {
         this.health = this.health - damage;
     }
 
-    /* Setters below */
     public void setTile(Tile tile) {
-        // Normal tile update
         this.tile.setUnit(null);
         this.tile = tile;
         this.tile.setUnit(this);
@@ -108,6 +79,10 @@ public class Unit implements Comparable<Unit> {
         this.path = p;
     }
 
+    public void decPathDelay() {
+        path.decDelay();
+    }
+
     public void clearPath() {
         this.path.clear();
         this.next = null;
@@ -118,7 +93,7 @@ public class Unit implements Comparable<Unit> {
         this.tile = null;
         this.next = null;
     }
-
+    
     /* Test purpose-only setters */
     public void setHealth(int health) {
         this.health = health;
@@ -126,10 +101,6 @@ public class Unit implements Comparable<Unit> {
 
     public void setAttack(int attack) {
         this.attack = attack;
-    }
-
-    public void decPathDelay() {
-        path.decDelay();
     }
     
     /* Getters below */
@@ -179,11 +150,39 @@ public class Unit implements Comparable<Unit> {
     
     /* Test print */
     public void printStats() {
-        System.out.println(team + " " + num);
-        System.out.println("Health: " + health);
+        System.out.println(team + " " + num + " Health: " + health);
     }
-    
-    /* Overrides */    
+
+    /* Console input */
+    /* Add to path */
+    public void addPath(Map map) {
+        @SuppressWarnings("resource")
+        Scanner s = new Scanner(System.in);
+        for (int i = 0; i < moves; i++) {
+            System.out.println("Moves left: " + (moves - i));
+            System.out.println("Enter x coordinate: ");
+            String string = s.next();
+            if (string.equals("end")) {
+                break;
+            }
+            int x = Integer.parseInt(string);
+            while (x < 0 || x >= map.getWidth()) {
+                System.out.println("x error: Not on map");
+                System.out.println("Enter x coordinate: ");
+                x = s.nextInt();
+            }
+            System.out.println("Enter y coordinate: ");
+            int y = s.nextInt();
+            while (y < 0 || y >= map.getWidth()) {
+                System.out.println("y error: Not on map");
+                System.out.println("Enter y coordinate: ");
+                y = s.nextInt();
+            }
+            path.add(new Tile(x, y));
+        }
+    }
+
+    /* Overrides */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {

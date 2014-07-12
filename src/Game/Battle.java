@@ -9,17 +9,29 @@ public class Battle {
     int aDmg;
     int bDmg;
 
+    /* Public methods */
     public Battle(Unit a, Unit b) {
         System.out.println("Battle engaged\n\t" + a + " vs. " + b);
         this.a = a;
         this.b = b;
-        /* @formatter:off */
         // Calculate modified attack damage
+        /* @formatter:off */
         this.aDmg = (int) (a.getAttack() * a.getType()
                 .getAttackModifier(b.getType()));
         this.bDmg = (int) (b.getAttack() * b.getType()
                 .getAttackModifier(a.getType()));
         /* @formatter:on */
+    }
+
+    /* Check if battle exists */
+    public boolean contains(Unit ally, Unit enemy) {
+        if (this.a == ally && this.b == enemy) {
+            return true;
+        }
+        else if (this.a == enemy && this.b == ally) {
+            return true;
+        }
+        return false;
     }
 
     /* Process battle */
@@ -75,17 +87,6 @@ public class Battle {
         }
     }
 
-    /* Check if battle exists */
-    public boolean has(Unit ally, Unit enemy) {
-        if (this.a == ally && this.b == enemy) {
-            return true;
-        }
-        else if (this.a == enemy && this.b == ally) {
-            return true;
-        }
-        return false;
-    }
-
     /* Getters */
     /* Prob not needed.... */
     public Unit getA() {
@@ -97,8 +98,19 @@ public class Battle {
     }
 
     /* Overrides */
-    public boolean equals(Battle b) {
-        if (b.has(this.a, this.b)) {
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        Battle battle = (Battle) obj;
+        if (battle.contains(this.a, this.b)) {
             return true;
         }
         return false;

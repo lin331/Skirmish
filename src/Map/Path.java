@@ -9,6 +9,7 @@ public class Path {
     private int maxMoves; // Total moves in path
     private int delay;
     
+    /* Public methods */
     public Path(Unit unit) {
         this.type = Pathtype.STATIONARY;
         this.tiles = new ArrayList<Tile>();

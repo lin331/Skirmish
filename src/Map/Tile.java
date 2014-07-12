@@ -4,11 +4,11 @@ import Player.Unit;
 
 /* Tiles for map */
 public class Tile {
-
     private Unit unit;
     private int x;
     private int y;
 
+    /* Public methods */
     public Tile(int x, int y) {
         unit = null;
         this.x = x;
@@ -35,12 +35,12 @@ public class Tile {
         return false;
     }
 
-    /* Set unit on tile */
+    /* Setters */
     public void setUnit(Unit unit) {
         this.unit = unit;
     }
 
-    /* Getter methods below */
+    /* Getters */
     public Unit getUnit() {
         return unit;
     }
@@ -54,7 +54,18 @@ public class Tile {
     }
 
     /* Overrides */
-    public boolean equals(Tile t) {
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (this.getClass() != obj.getClass()) {
+            return false;
+        }
+        Tile t = (Tile) obj;
         if (t == null || this.x != t.getX() || this.y != t.getY()) {
             return false;
         }
