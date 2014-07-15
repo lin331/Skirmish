@@ -115,17 +115,17 @@ public class Game {
 
     /* Check if one team lost */
     private boolean isOver() {
-        boolean b1 = teams[0].hasUnits();
-        boolean b2 = teams[1].hasUnits();
-        if (!(b1 && b2)) {
+        boolean b1 = !teams[0].hasUnits();
+        boolean b2 = !teams[1].hasUnits();
+        if (b1 && b2) {
             System.out.println("Tie game");
             return true;
         }
-        else if (!b1) {
+        else if (b1) {
             System.out.println(teams[0] + " has lost");
             return true;
         }
-        else if (!b2) {
+        else if (b2) {
             System.out.println(teams[1] + " has lost");
             return true;
         }

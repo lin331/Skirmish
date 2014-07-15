@@ -144,6 +144,16 @@ public class Combat {
             return this.unit;
         }
 
+        /* Clears adjacency array */
+        private void clear() {
+            for (Unit u : adj) {
+                u = null;
+            }
+            for (int i : cycle) {
+                i = 0;
+            }
+        }
+        
         /* Test print */
         private void print() {
             for (Unit u : adj) {
@@ -200,22 +210,30 @@ public class Combat {
 
     /* Check if two units are adjacent */
     private boolean areAdjacent(Unit u1, Unit u2) {
-        int i = findUnit(u1);
-        AdjNode node = adj.get(i);
+        AdjNode node = adj.get(findUnit(u1));
         return node.contains(u2);
     }
 
     /* Check if there are adjacent enemy units */
     private boolean hasAdjacent(Unit unit) {
-        int i = findUnit(unit);
-        AdjNode node = adj.get(i);
+        AdjNode node = adj.get(findUnit(unit));
         return node.hasAdjacent();
     }
-
+    
+    /* Clear adjacency array for specified unit */
+    private void clearAdj(Unit unit) {
+        AdjNode node = adj.get(findUnit(unit));
+        node.clear();
+    }
+    
     /* Checks for adjacent enemies and */
     /* adds them to adjacent array */
     private void checkAdjacent(Unit unit) {
         Tile tile = unit.getTile();
+        if (tile == null) {
+            clearAdj(unit);
+            return;
+        }
         for (int dir = 0; dir < 4; dir++) {
             Tile t = map.getAdjacentTile(dir, tile);
             if (t != null) {
