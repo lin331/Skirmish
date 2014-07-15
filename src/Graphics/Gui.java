@@ -226,19 +226,20 @@ public class Gui extends JFrame {
 	
     public void render() {
         // render info
+        int teamASize = game.getTeams()[0].getUnits().size();
         for (int i = 0; i < 2; i++) {
             Team t = game.getTeams()[i];
-            int teamIndex = 0;
+            int index = 0;
             if (i == 1) {
-                teamIndex = t.getUnits().size();
+                index = teamASize;
             }
             for (Unit u : t.getUnits()) {
                 if (u.isDead()) {
                     ImageIcon deadIcon = new ImageIcon("res/deadUnit.png");
-                    unitDisplay.get(teamIndex + (u.getNum() - 1)).setIcon(deadIcon);
+                    unitDisplay.get(index + (u.getNum() - 1)).setIcon(deadIcon);
                 }
-                turnDisplay.get(teamIndex + (u.getNum() - 1)).setText(Integer.toString(u.getPath().getDelay()));
-                healthDisplay.get(teamIndex + (u.getNum() - 1)).setText(Integer.toString(u.getHealth()));
+                turnDisplay.get(index + (u.getNum() - 1)).setText(Integer.toString(u.getPath().getDelay()));
+                healthDisplay.get(index + (u.getNum() - 1)).setText(Integer.toString(u.getHealth()));
             }
         }
     
