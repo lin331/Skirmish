@@ -1,0 +1,233 @@
+Info
+Specs and Details
+
+Unit Types:
+____________________________________________________________________________________
+
+	Cavalry/archers [one both or none]
+		{
+		-Cavalry moves fast, archers ranged
+		
+		Cavalry:
+			(
+			~2x Movement range (10 blocks)
+			~Strong vs foot, strong vs archer, weak vs spear
+			)
+
+		Archers:
+			(
+			~Ranged, 2 options
+				-Choose where to fire (small aoe, or just 1 tile) + medium movement (less than spear and footsoldier)
+				-Attack anything in range, but can't attack on movement turn, can choose target priorities beforehand
+			~Strong vs spear, medium damage vs foot, high damage on cavalry unless being attacked
+			)
+	}
+
+	Spear Wield
+		{
+		~medium damage vs foot but less hp
+		~strong vs cavalry
+		~medium damage vs archer
+		}
+	
+	Foot Soldier
+		{
+		~Strong vs Archer
+		~medium damage vs spear, but more hp
+		~Weak vs Cavalry
+		~medium vs suicidal 
+			(
+			footsoldier does same amount of damage as vs spear, but takes more damage
+			)
+		}
+
+	Glass Cannon Soldier [maybe]
+		{
+		~strong vs footsoldier
+		~strong vs cavalry
+		~Strong vs Archer
+		~Weak vs Spear
+		~Low hp
+		}
+		
+Game Mechanics:
+_____________________________________________________________________________________
+
+	Planning Phase
+		{
+		Get 3 moves per planning phase, 30 seconds to plan <adjustable>
+		Moves can be next turn moves, or delayed moves <So more than 2 moves can happen per turn>
+		3 types of movement:
+			(
+			Interruptable vs goal vs safe goal <explained in execution phase>
+			)
+		To plan route either hold mouse down for specific path, or click end tile for shortest path
+		}
+	Execution Phase
+		{
+		Moves made in planning phase are executed
+		If there is a unit at the destination of a movement, moving unit will stop on the last available square
+			~will engage if enemy unit
+			~will just stop if friendly unit
+			~archer attack is cancelled if out of range
+		}
+	Pre-Planning phase
+		{
+		10 seconds to view map and take in the battlefield
+		}
+
+	
+		
+
+Movement Mechanics:
+___________________________________________________________________________________
+
+	General Movement Mechanics:
+		{
+		Special Instances and Exceptions:
+			If two units want to move onto same tile at the same time:
+				(
+				-based on priorities (goal move = 3, safe goal = 2, interruptable = 1)
+				-highest priority movement gets to reach the tile, other unit stops on tile right before
+				-if both units have equal priority, they both stop on the tile right before, and the destination tile is empty
+				-justification:
+					(
+					1) if two armies movement destination is the same they will assess the enemy before commiting
+					2) higher urgency move order wants the end tile more so will ignore the general case
+					3) for allies as well, would have to work out the problem with commander before making final decision
+					)
+				-if opposing units and one of them takes tile, standard battle mechanics apply (see battle mechanics)
+				)
+			If goal move ends on a tile adjacent to unit they just moved through
+				(
+				Check if any other enemies adjacent
+				(
+				if true,
+					(
+					goal move units attack the new adjacent enemy unit 
+						(if more than one, will prioritize being <flanker>, RNG if no possibility of being <flanker>)
+					)
+				else
+					(
+					-original 2x damage to them, plus standard engage (so goal move net 3x damage, enemy unit 1x damage)
+					-this should also take into consideration multipliers <see excel sheet and battle mechanics> 
+					-all battle calculations apply, both units will count as stationary units for the 2nd exchange
+					)
+		}
+		
+		
+	Interruptable (Standard) Movement:
+		(
+		Unit move along determined path, if adjacent or blocked by enemy at any point, will stop and engage
+		)
+	Goal movement:
+		(
+		Will move towards specified point at all costs:
+		 	~if adjacent to enemy, will take standard damage but keep moving
+		 		*interruptable move units stop after attacking, goal move keeps going
+		 	~if blocked by enemy, will move through, taking 2x damage
+		will engage on adjacent or blocking enemies on destination.
+			
+		if 2 units are both using goal move (not safe goal move) and need to cross paths directly (not adjacent)
+			~no damage is dealth to either unit, they pass through each other.
+		)
+	Safe Goal movement:
+		(
+		Same as goal move, but will engage rather than move through blocking units
+		if both units are using no damage taken by either
+		)
+				
+	Movement interactions: (opposing team units)
+		{
+		-Standard Vs Standard:
+			(
+			Check for units in adjacent tiles, if true, 
+				then both stop and engage
+			Diagonals do not count, and there is no interaction
+			See exceptions if coincide on same tile at the same time
+			)
+		-Standard Vs Safe Goal
+			(
+			Check for units in adjacent tiles, if true,
+				(
+				Check if next turn any path blockages
+					(
+					if true, both units stop and engage <See battle mechanics>
+					)
+					else
+					(
+					standard movement unit stop and engage, safe goal unit takes damage and continues moving
+					standard movement unit takes no damage, but does not move after engaging
+					)
+			)
+		-Standard Vs Goal move
+			(
+			Check for units in adjacent tiles, if true
+				(
+				Standard move unit stops (no damage dealt yet until next checks made)
+				Check for blockages on next move cycle
+					(
+					if true,
+						(
+						goal move 2x damage and keep moving to destination
+						)
+					else
+						(
+						goal move takes 1x damage, keep moving to destination
+						)
+				standard move unit takes no damage
+				if goal move destination is adjacent to enemy they just passed through, see exceptions
+		
+		-Safe Goal Vs Safe Goal move
+			(
+			-Check if adjacent units, if true
+				(
+				check if next move cycle will cause path blockage, if true
+					(
+					both units stop and engage, standard battle mechanics apply
+					)
+				else
+					(
+					both units keep moving, no damage to either unit
+					)
+			)
+			
+		-Safe Goal Vs Goal move
+			(
+			-Check if adjacent units, if true
+				(
+				check if next move cycle will cause path blockage, if true
+					(
+					Safe Goal units stop and engage, Goal units move through, take 2x damage
+					)
+				else
+					(
+					both units keep moving, no damage to either unit
+					)
+			)
+		
+		-Goal move vs Goal move
+			(
+			No damage is dealt to either unit at any point except at destination when units change from moving to stationary
+			Goal move units do not need to check for surrounding units, other movement types checking should cover it
+			)
+		}	
+		
+
+
+Battle mechanics:
+__________________________________________________________________________________
+
+	Order of Damage Calculation:	
+		{
+		if both units moving, they attack each other at the same time (both deal and recieve full damage)
+		if moving unit walks into stationary enemy, moving unit deals damage first, stationary unit retaliate
+		subsequent attackers <flankers> take 50% less damage from original unit <flanked>
+			~in other words <flankers> take 50% less damage
+			~<flankers> still do full amount of damage and attack first
+			~target enemy retaliates at 50% damage after (retaliation because they are stationary)
+		Archers have melee attack for when they get engaged on (current value 15dmg) in addition to their ranged shot
+		}
+		
+
+
