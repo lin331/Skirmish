@@ -66,7 +66,9 @@ public class Unit implements Comparable<Unit> {
     }
 
     public void setTile(Tile tile) {
-        this.tile.setUnit(null);
+        if (tile.getUnit() != this) {
+            this.tile.setUnit(null);
+        }
         this.tile = tile;
         this.tile.setUnit(this);
     }
