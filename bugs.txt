@@ -12,3 +12,16 @@
  
 4)Goal move bugs (when the destination is diagonal to enemy unit)
   pics: <http://screencloud.net/v/hGnk> <http://screencloud.net/v/eTak>
+
+
+
+
+
+Things to Implement:
+1) floating damage text
+2) shorten time between cycles
+3) unit types
+4) optimized unit placement (instead of manually imputting coordinates from terminal, should have a visual method ingame)
+5) bigger grid (at least 10x17 for <standard> 10-12 units on each side battle)
+6) make the entire thing bigger (size of grids/units etc)
+7) unit health bars and way of matching up units to their info bar
