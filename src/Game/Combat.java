@@ -47,6 +47,7 @@ public class Combat {
 
     /* Check for battles */
     public void checkBattle() {
+        checkBattleChanges(turn.getTeams());
         System.out.println("Combat: checking for battles");
         for (Unit unit : units) {
             checkAdjacent(unit);

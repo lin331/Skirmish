@@ -40,6 +40,10 @@ public class Turn {
         return MAX_COMMANDS;
     }
 
+    public Team[] getTeams() {
+        return this.teams;
+    }
+    
     public Map getMap() {
         return this.map;
     }

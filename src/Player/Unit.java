@@ -161,7 +161,6 @@ public class Unit implements Comparable<Unit> {
     /* Test print */
     public void printStats() {
         System.out.println(team + " " + num + "\tHealth: " + health + "\tTile: " + tile);
-        System.out.println(tile.getUnit());
     }
 
     /* Console input */
