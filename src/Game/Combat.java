@@ -261,6 +261,9 @@ public class Combat {
                         setAdjacent(unit, dir, u);
                     }
                 }
+                else {
+                    setAdjacent(unit, dir, null);
+                }
             }
         }
     }
