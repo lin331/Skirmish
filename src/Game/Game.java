@@ -114,6 +114,7 @@ public class Game {
         }
         combat.clearBattles();
         turn.checkDelay();
+        turn.resetCycle();
         printStats();
     }
 
