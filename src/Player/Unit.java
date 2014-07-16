@@ -140,12 +140,16 @@ public class Unit implements Comparable<Unit> {
         return path;
     }
 
-    public boolean isPathEmpty() {
-        return path.isEmpty();
+    public void setPathtype(Pathtype type) {
+        this.path.setType(type);
     }
 
     public Pathtype getPathtype() {
         return path.getType();
+    }
+
+    public boolean isPathEmpty() {
+        return path.isEmpty();
     }
     
     /* Test print */

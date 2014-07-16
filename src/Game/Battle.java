@@ -37,38 +37,51 @@ public class Battle {
     /* Process battle */
     public void doBattle() {
         // A is stationary & B is moving: B then A
-        if (a.getPath().getType() == Pathtype.STATIONARY) {
+        if (a.getPathtype() == Pathtype.STATIONARY &&
+                b.getPathtype() != Pathtype.STATIONARY) {
             System.out.println("B then A");
-            System.out.println("\t" + b + " attacks " + a + " for " + bDmg);
-            a.reduceHealth(bDmg);
-            if (a.isDead()) {
-                System.out.println(a + " killed by " + b);
-                a.setDead();
+            if (b.getPathtype() == Pathtype.GOAL ||
+                    b.getPathtype() == Pathtype.SAFEGOAL) {
+                // Unit b does nothing
+                System.out.println(b + " goal move");
             }
             else {
-                System.out.println("\t" + a + " attacks " + b + " for " + aDmg);
-                b.reduceHealth(aDmg);
-                if (b.isDead()) {
-                    System.out.println(b + " killed by " + a);
-                    b.setDead();
-                }
-            }
-        }
-        // A is moving & B is stationary: A then B
-        else if (b.getPath().getType() == Pathtype.STATIONARY) {
-            System.out.println("A then B");
-            b.reduceHealth(aDmg);
-            if (b.isDead()) {
-                System.out.println(b + " killed by " + a);
-                b.setDead();
-                return;
-            }
-            else {
+                System.out.println("\t" + b + " attacks " + a + " for " + bDmg);
                 a.reduceHealth(bDmg);
                 if (a.isDead()) {
                     System.out.println(a + " killed by " + b);
                     a.setDead();
+                    return;
                 }
+            }
+            System.out.println("\t" + a + " attacks " + b + " for " + aDmg);
+            b.reduceHealth(aDmg);
+            if (b.isDead()) {
+                System.out.println(b + " killed by " + a);
+                b.setDead();
+            }
+        }
+        // A is moving & B is stationary: A then B
+        else if (b.getPathtype() == Pathtype.STATIONARY &&
+                a.getPathtype() != Pathtype.STATIONARY) {
+            System.out.println("A then B");   
+            if (a.getPathtype() == Pathtype.GOAL ||
+                    a.getPathtype() == Pathtype.SAFEGOAL) {
+                // Unit a does nothing
+                System.out.println(a + " goal move");
+            }
+            else {
+                b.reduceHealth(aDmg);
+                if (b.isDead()) {
+                    System.out.println(b + " killed by " + a);
+                    b.setDead();
+                    return;
+                }
+            }
+            a.reduceHealth(bDmg);
+            if (a.isDead()) {
+                System.out.println(a + " killed by " + b);
+                a.setDead();
             }
         }
         // A and B simultaneously attack

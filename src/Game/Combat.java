@@ -1,6 +1,7 @@
 package Game;
 
 import Map.Map;
+import Map.Pathtype;
 import Map.Tile;
 import Player.Team;
 import Player.Unit;
@@ -49,36 +50,53 @@ public class Combat {
         System.out.println("Combat: checking for battles");
         for (Unit unit : units) {
             checkAdjacent(unit);
-            if (hasAdjacent(unit)) {
-                Unit[] enemies = getAdjacent(unit);
-                check: for (Unit enemy : enemies) {
-                    if (enemy != null) {
-                        // System.out.println("Adjacent enemy");
-                        for (Battle b : battles) {
-                            if (b.contains(unit, enemy)) {
-                                // System.out.println("\tHas battled");
-                                break check;
+            if (unit.getPathtype() == Pathtype.STATIONARY ||
+                    unit.getPathtype() == Pathtype.STANDARD) {
+                if (hasAdjacent(unit)) {
+                    Unit[] enemies = getAdjacent(unit);
+                    check: 
+                        for (Unit enemy : enemies) {
+                            if (enemy != null) {
+                                for (Battle b : battles) {
+                                    if (b.contains(unit, enemy)) {
+                                        break check;
+                                    }
+                                }
+                                if (unit.getPathtype() == Pathtype.STANDARD) {
+                                    unit.clearPath();
+                                }
+                                if (enemy.getPathtype() == Pathtype.STANDARD) {
+                                    enemy.clearPath();
+                                }
+                                Battle battle = new Battle(unit, enemy);
+                                battles.add(battle);
+                                battle.doBattle();
+                                checkMove(unit, enemy);
                             }
-                        }
-                        // System.out.println("\tNot battled");
-                        Battle battle = new Battle(unit, enemy);
-                        battles.add(battle);
-                        battle.doBattle();
-                        unit.clearPath();
-                        enemy.clearPath();
                     }
                 }
             }
         }
-        turn.incCycle();
         System.out.println("Combat: Checking Done");
     }
 
+    /* Check movement outcome after battle */
+    private void checkMove(Unit u1, Unit u2) { 
+        Pathtype type1 = u1.getPathtype();
+        Pathtype type2 = u2.getPathtype();
+        if (type1 == Pathtype.STANDARD) {
+            u1.clearPath();
+        }
+        if (type2 == Pathtype.STANDARD) {
+            u2.clearPath();
+        }
+    }
+    
     /* Clears battle list */
     public void clearBattles() {
         this.battles.clear();
     }
-
+    
     /* Private methods */
     /* Setters */
     private void setAdjacent(Unit u1, int dir, Unit u2) {

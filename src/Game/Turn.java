@@ -85,7 +85,7 @@ public class Turn {
         }
         // Update units' next tiles
         setNextTiles();
-        cycle += 1;
+        incCycle();
     }
 
     /* Check unit's turn delay and decrement if needed */
@@ -147,6 +147,18 @@ public class Turn {
         }
     }
 
+    /* Set all units' next tile */
+    private void setNextTiles() {
+        for (Unit u : units) {
+            Path p = u.getPath();
+            Tile t = p.getNext();
+            u.setNext(t);
+            if (t == null) {
+                u.setPathtype(Pathtype.STATIONARY);
+            }
+        }
+    }
+    
     /* Process tile conflicts */
     /* @formatter:off */
     private void processConflicts(HashSet<ArrayList<Unit>> set)
@@ -177,15 +189,6 @@ public class Turn {
                 throw new Exception(
                         "Error: Unit list is not sorted by priority");
             }
-        }
-    }
-
-    /* Set all units' next tile */
-    private void setNextTiles() {
-        for (Unit u : units) {
-            Path p = u.getPath();
-            Tile t = p.getNext();
-            u.setNext(t);
         }
     }
 

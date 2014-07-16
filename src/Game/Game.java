@@ -6,6 +6,9 @@ import Player.Team;
 import Player.UnitType;
 import Player.Unit;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -107,6 +110,7 @@ public class Game {
             gui.render();
             // turn.setNextTiles();
             combat.checkBattle();
+            System.out.println("Turn cycle: " + turn.getCycle());
         }
         combat.clearBattles();
         turn.checkDelay();
@@ -234,7 +238,7 @@ public class Game {
                 game.requestTurn();
             }
             game.processTurn();
-            gui.render();
+            // gui.render();
             if (game.isOver()) {
                 game.end();
             }
