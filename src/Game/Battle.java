@@ -42,8 +42,17 @@ public class Battle {
             System.out.println("B then A");
             if (b.getPathtype() == Pathtype.GOAL ||
                     b.getPathtype() == Pathtype.SAFEGOAL) {
-                // Unit b does nothing
                 System.out.println(b + " goal move");
+                // Unit b does nothing
+                // Check if b is blocked by a
+                if (b.getPathSize() > 1) {
+                    
+                }
+                else {
+                    if (checkBlocked(a)) {
+                        b.clearPath();
+                    }
+                }
             }
             else {
                 System.out.println("\t" + b + " attacks " + a + " for " + bDmg);
@@ -67,8 +76,17 @@ public class Battle {
             System.out.println("A then B");   
             if (a.getPathtype() == Pathtype.GOAL ||
                     a.getPathtype() == Pathtype.SAFEGOAL) {
-                // Unit a does nothing
                 System.out.println(a + " goal move");
+                // Unit a does nothing
+                // Check if a is blocked by b
+                if (a.getPathSize() > 1) {
+                    
+                }
+                else {
+                    if (checkBlocked(b)) {
+                        a.clearPath();
+                    }
+                }
             }
             else {
                 b.reduceHealth(aDmg);
@@ -124,6 +142,15 @@ public class Battle {
         }
         Battle battle = (Battle) obj;
         if (battle.contains(this.a, this.b)) {
+            return true;
+        }
+        return false;
+    }
+    
+    /* Private methods */
+    /* Check if u1 is blocked by u2 */
+    private boolean checkBlocked(Unit unit) {
+        if (unit.getPathtype() == Pathtype.STATIONARY) {
             return true;
         }
         return false;

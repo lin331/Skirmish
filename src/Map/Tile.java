@@ -42,15 +42,15 @@ public class Tile {
 
     /* Getters */
     public Unit getUnit() {
-        return unit;
+        return this.unit;
     }
-
+    
     public int getX() {
-        return x;
+        return this.x;
     }
 
     public int getY() {
-        return y;
+        return this.y;
     }
 
     /* Overrides */

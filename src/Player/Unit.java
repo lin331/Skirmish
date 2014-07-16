@@ -140,6 +140,10 @@ public class Unit implements Comparable<Unit> {
         return path;
     }
 
+    public int getPathSize() {
+        return this.path.getSize();
+    }
+
     public void setPathtype(Pathtype type) {
         this.path.setType(type);
     }
@@ -154,7 +158,8 @@ public class Unit implements Comparable<Unit> {
     
     /* Test print */
     public void printStats() {
-        System.out.println(team + " " + num + " Health: " + health);
+        System.out.println(team + " " + num + "\tHealth: " + health + "\tTile: " + tile);
+        System.out.println(tile.getUnit());
     }
 
     /* Console input */

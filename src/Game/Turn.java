@@ -70,7 +70,7 @@ public class Turn {
     /* Process turn */
     public void process() {
         System.out.println("Processing");
-        ghost();
+        ghostCycle();
         ListIterator<Unit> iterator = units.listIterator();
         while (iterator.hasNext()) {
             Unit u = iterator.next();
@@ -160,40 +160,36 @@ public class Turn {
     }
     
     /* Process tile conflicts */
-    /* @formatter:off */
-    private void processConflicts(HashSet<ArrayList<Unit>> set)
-            throws Exception {
-    /* @formatter:on */
-        for (ArrayList<Unit> list : set) {
-            Collections.sort(list);
-            /* @formatter:off */
-            if (list.get(0).getPathtype()
-                    .compareTo(list.get(1).getPathtype()) == 0) {
-            /* @formatter:on */
-                for (Unit u : list) {
-                    u.setNext(null);
-                    u.clearPath();
+    private void processConflicts(HashSet<ArrayList<Unit>> set) {
+        if (!set.isEmpty()) {
+            System.out.println("Conflicts: processing");
+            for (ArrayList<Unit> list : set) {
+                Collections.sort(list);
+                /* @formatter:off */
+                if (list.get(0).getPathtype()
+                        .compareTo(list.get(1).getPathtype()) == 0) {
+                /* @formatter:on */
+                    for (Unit u : list) {
+                        u.setNext(null);
+                        u.clearPath();
+                    }
                 }
-            }
-            /* @formatter:off */
-            else if (list.get(0).getPathtype()
-                    .compareTo(list.get(1).getPathtype()) < 0) {
-            /* @formatter:on */
-                list.remove(0);
-                for (Unit u : list) {
-                    u.setNext(null);
-                    u.clearPath();
+                /* @formatter:off */
+                else if (list.get(0).getPathtype()
+                        .compareTo(list.get(1).getPathtype()) < 0) {
+                /* @formatter:on */
+                    list.remove(0);
+                    for (Unit u : list) {
+                        u.setNext(null);
+                        u.clearPath();
+                    }
                 }
-            }
-            else {
-                throw new Exception(
-                        "Error: Unit list is not sorted by priority");
             }
         }
     }
 
     /* Ghost cycle */
-    private void ghost() {
+    private void ghostCycle() {
         System.out.println("Ghost cycle");
         HashSet<ArrayList<Unit>> set = new HashSet<ArrayList<Unit>>();
         ArrayList<Unit> temp = new ArrayList<Unit>(units);
