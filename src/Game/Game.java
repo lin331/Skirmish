@@ -1,13 +1,16 @@
 package Game;
 
-import java.util.ArrayList;
-import java.util.Scanner;
-
 import Graphics.Gui;
 import Map.Map;
 import Player.Team;
 import Player.UnitType;
 import Player.Unit;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Game {
     private Gui gui;
@@ -17,118 +20,8 @@ public class Game {
     private Turn turn; // Used for list of command
     private Combat combat;
 
-    /* Constructor for game */
-    Game() { 
-        gui = null;
-        map = null;
-        active = false;
-        teams = null;
-        turn = null;
-        combat = null;
-    }
-
-    /* Initialize game map and create teams */
-    void initialize() {
-        gui = null;
-        map = new Map();
-        makeTeams();
-    }
-    
-    /* Initialize game mechanics */
-    void initialize2() {
-        active = false;
-        turn = new Turn(map, teams);
-        combat = new Combat(turn, teams);
-    }
-    
-    /* Initialize teams */
-    void makeTeams() {
-        teams = new Team[2];
-        teams[0] = new Team("A");
-        teams[1] = new Team("B");
-    }
-
-    /* Put units on map tiles */
-    void setUnits() {
-        map.setUnits(teams);
-    }
-
-    public void setGui(Gui gui) {
-        this.gui = gui;
-    }
-    
-    /* Sort turn by move priority */
-    void sortTurn() {
-        turn.sort();
-    }
-
-    /* Processes turn */
-    void processTurn() {
-        turn.setUnits();
-        turn.sort();
-        turn.setNextTiles();
-        while (!turn.isEmpty()) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            turn.process();
-            viewMap();
-            gui.render();
-            turn.setNextTiles();
-            combat.checkBattle();
-        }
-        combat.clearBattles();
-        turn.checkDelay();
-        printStats();
-    }
-
-    /* Begins the game */
-    public void start() {
-        active = true;
-    }
-
-    /* Ends the game */
-    public void end() {
-        active = false;
-    }
-
-    /* Check if one team lost */
-    public boolean isOver() {
-        boolean b1 = teams[0].hasUnits();
-        boolean b2 = teams[1].hasUnits();
-        if (!(b1 && b2)) {
-            System.out.println("Tie game");
-            return true;
-        }
-        else if (!b1) {
-            System.out.println(teams[0] + " has lost");
-            return true;
-        }
-        else if (!b2) {
-            System.out.println(teams[1] + " has lost");
-            return true;
-        }
-        return false;
-    }
-    
-    /* Prints the current game map to console */
-    void viewMap() {
-        map.printMap();
-    }
-
-    /* Prints units' stats to console */
-    void printStats() {
-        for (Team t : teams) {
-            ArrayList<Unit> units = t.getUnits();
-            for (Unit u : units) {
-                u.printStats();
-            }
-        }
-    }
-    
-    /* Getters below */
+    /* Public methods */
+    /* Getters */
     public Map getMap() {
         return map;
     }
@@ -141,8 +34,127 @@ public class Game {
         return turn;
     }
 
-    public boolean isActive() {
+    /* Private methods */
+    /* Constructor for game */
+    private Game() {
+        this.gui = null;
+        this.map = null;
+        this.active = false;
+        this.teams = null;
+        this.turn = null;
+        this.combat = null;
+    }
+
+    /* Setters */
+    /* Begins the game */
+    private void start() {
+        this.active = true;
+    }
+    
+    /* Ends the game */
+    private void end() {
+        this.active = false;
+    }
+
+    /* Getters */
+    private boolean isActive() {
         return active;
+    }
+    
+    /* Check if turn is empty */
+    public boolean isTurnEmpty() {
+        return this.turn.isEmpty();
+    }
+
+    /* Initialize game map and create teams */
+    private void initialize() {
+        this.gui = null;
+        this.map = new Map();
+        makeTeams();
+    }
+
+    /* Initialize teams */
+    private void makeTeams() {
+        this.teams = new Team[2];
+        this.teams[0] = new Team("A");
+        this.teams[1] = new Team("B");
+    }
+
+    /* Initialize game mechanics */
+    private void initialize2() {
+        this.active = false;
+        this.turn = new Turn(map, teams);
+        this.combat = new Combat(turn, teams);
+    }
+
+    /* Put units on map tiles */
+    private void setUnits() {
+        this.map.setUnits(teams);
+    }
+
+    private void setGui(Gui gui) {
+        this.gui = gui;
+    }
+
+    /* Processes turn */
+    private void processTurn() {
+        turn.setup();
+        while (!turn.isEmpty()) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            turn.process();
+            map.printMap();
+            gui.render();
+            // turn.setNextTiles();
+            combat.checkBattle();
+            System.out.println("Turn cycle: " + turn.getCycle());
+        }
+        combat.clearBattles();
+        turn.checkDelay();
+        turn.resetCycle();
+        printStats();
+    }
+
+    /* Check if one team lost */
+    private boolean isOver() {
+        boolean b1 = !teams[0].hasUnits();
+        boolean b2 = !teams[1].hasUnits();
+        if (b1 && b2) {
+            System.out.println("Tie game");
+            return true;
+        }
+        else if (b1) {
+            System.out.println(teams[0] + " has lost");
+            return true;
+        }
+        else if (b2) {
+            System.out.println(teams[1] + " has lost");
+            return true;
+        }
+        return false;
+    }
+
+    /* Prints units' stats to console */
+    private void printStats() {
+        System.out.println("Unit stats:");
+        for (Team t : teams) {
+            ArrayList<Unit> units = t.getUnits();
+            for (Unit u : units) {
+                u.printStats();
+            }
+        }
+    }
+
+    /* Takes move commands and processes them */
+    private void requestTurn() {
+        for (int i = 0; i < 2; i++) {
+            gui.setCurrentTeam(teams[i]);
+            System.out.println(teams[i].toString() + "'s turn:");
+            gui.requestPath();
+        }
     }
 
     /* For console input: */
@@ -164,7 +176,8 @@ public class Game {
                 int x = Integer.parseInt(string);
                 System.out.println("Enter y coordinate: ");
                 int y = s.nextInt();
-                Unit u = new Unit(t, i + 1, UnitType.DEFAULT, map.getTiles()[y][x]);
+                Unit u = new Unit(t, i + 1, UnitType.DEFAULT,
+                        map.getTiles()[y][x]);
                 t.addUnit(u);
             }
             System.out.println(t.toString() + " Total Units: " + num);
@@ -173,7 +186,6 @@ public class Game {
 
     /* Prompt for selecting unit */
     private Unit selectUnit(Team team) {
-        @SuppressWarnings("resource")
         Scanner s = new Scanner(System.in);
         System.out.println("Select unit: 1-" + team.getUnits().size());
         String string = s.next();
@@ -195,22 +207,19 @@ public class Game {
     }
 
     /* Takes move commands and processes them */
-    private void requestTurn() {
+    /* May be broken */
+    private void requestTurnConsole() {
         for (int i = 0; i < 2; i++) {
-            gui.setCurrentTeam(teams[i]);
             System.out.println(teams[i].toString() + "'s turn:");
-            gui.requestPath();
-            /*
             for (int j = 0; j < turn.getMaxCommands(); j++) {
                 System.out.println("Command #" + (j + 1) + ": ");
                 Unit unit = selectUnit(teams[i]);
                 if (unit == null) {
                     break;
                 }
-                turn.add(unit);
+                // turn.add(unit);
                 unit.addPath(map);
             }
-            */
         }
     }
 
@@ -225,12 +234,12 @@ public class Game {
         gui.setInfoPanel();
         game.start();
         gui.render();
-        while (game.active) {
+        while (game.isActive()) {
             if (game.turn.isEmpty()) {
                 game.requestTurn();
             }
             game.processTurn();
-            gui.render();
+            // gui.render();
             if (game.isOver()) {
                 game.end();
             }

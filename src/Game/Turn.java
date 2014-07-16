@@ -20,6 +20,7 @@ public class Turn {
     Team[] teams;
     int cycle;
 
+    /* Public methods */
     public Turn(Map map, Team[] teams) {
         units = new ArrayList<Unit>();
         this.map = map;
@@ -27,16 +28,14 @@ public class Turn {
         this.cycle = 0;
     }
 
-    /* Setters below */
-    public void incCycle() {
-        this.cycle++;
-    }
-    
-    public void resetCycle() {
-        this.cycle = 0;
+    /* Sets up turn for processing */
+    public void setup() {
+        setUnits();
+        sort();
+        setNextTiles();
     }
 
-    /* Getters below */
+    /* Getters */
     public int getMaxCommands() {
         return MAX_COMMANDS;
     }
@@ -48,7 +47,7 @@ public class Turn {
     public int getCycle() {
         return this.cycle;
     }
-    
+
     /* Check if list is empty */
     public boolean isEmpty() {
         return units.isEmpty();
@@ -59,23 +58,83 @@ public class Turn {
         return units.size();
     }
 
+    /* Setters */
+    public void incCycle() {
+        this.cycle++;
+    }
+
+    public void resetCycle() {
+        this.cycle = 0;
+    }
+
+    /* Process turn */
+    public void process() {
+        System.out.println("Processing");
+        ghostCycle();
+        ListIterator<Unit> iterator = units.listIterator();
+        while (iterator.hasNext()) {
+            Unit u = iterator.next();
+            if (u.getNext() == null) {
+                System.out.println("Removed " + u);
+                iterator.remove();
+            }
+            else {
+                Path p = u.getPath();
+                u.setTile(p.remove());
+            }
+        }
+        // Update units' next tiles
+        setNextTiles();
+        incCycle();
+    }
+
+    /* Check unit's turn delay and decrement if needed */
+    public void checkDelay() {
+        for (Team t : teams) {
+            ArrayList<Unit> units = t.getUnits();
+            for (Unit u : units) {
+                u.decPathDelay();
+            }
+        }
+    }
+
+    /* Test printing */
+    public void print() {
+        for (Unit u : units) {
+            System.out.println(u.getTeam() + " - " + u + ": " + u.getPath());
+        }
+    }
+
+    /* Override */
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (Unit u : units) {
+            sb.append(u + ": " + u.getPath() + "\n");
+        }
+        return sb.toString();
+    }
+
+    /* Private methods */
     /* Add unit to list */
-    public void add(Unit unit) {
+    // Not used currently
+    private void add(Unit unit) {
         units.add(unit);
     }
 
     /* Removes specified unit */
-    public void remove(Unit unit) {
+    // Not used currently
+    private void remove(Unit unit) {
         units.remove(unit);
     }
 
     /* Sort units by move priority */
-    public void sort() {
+    private void sort() {
         Collections.sort(units);
     }
 
     /* Add units to Turn that are moving */
-    public void setUnits() {
+    private void setUnits() {
         for (Team t : teams) {
             for (Unit u : t.getUnits()) {
                 if (!u.isPathEmpty()) {
@@ -88,50 +147,49 @@ public class Turn {
         }
     }
 
-    /* @formatter:off */
-    /* Process tile conflicts */
-    public void processConflicts(HashSet<ArrayList<Unit>> set)
-            throws Exception {
-    /* @formatter:on */
-        for (ArrayList<Unit> list : set) {
-            Collections.sort(list);
-            /* @formatter:off */
-            if (list.get(0).getPathtype()
-                    .compareTo(list.get(1).getPathtype()) == 0) {
-            /* @formatter:on */
-                for (Unit u : list) {
-                    u.setNext(null);
-                    u.clearPath();
-                }
-            }
-            /* @formatter:off */
-            else if (list.get(0).getPathtype()
-                    .compareTo(list.get(1).getPathtype()) < 0) {
-            /* @formatter:on */
-                list.remove(0);
-                for (Unit u : list) {
-                    u.setNext(null);
-                    u.clearPath();
-                }
-            }
-            else {
-                throw new Exception(
-                        "Error: Unit list is not sorted by priority");
-            }
-        }
-    }
-    
     /* Set all units' next tile */
-    public void setNextTiles() {
+    private void setNextTiles() {
         for (Unit u : units) {
             Path p = u.getPath();
             Tile t = p.getNext();
             u.setNext(t);
+            if (t == null) {
+                u.setPathtype(Pathtype.STATIONARY);
+            }
+        }
+    }
+    
+    /* Process tile conflicts */
+    private void processConflicts(HashSet<ArrayList<Unit>> set) {
+        if (!set.isEmpty()) {
+            System.out.println("Conflicts: processing");
+            for (ArrayList<Unit> list : set) {
+                Collections.sort(list);
+                /* @formatter:off */
+                if (list.get(0).getPathtype()
+                        .compareTo(list.get(1).getPathtype()) == 0) {
+                /* @formatter:on */
+                    for (Unit u : list) {
+                        u.setNext(null);
+                        u.clearPath();
+                    }
+                }
+                /* @formatter:off */
+                else if (list.get(0).getPathtype()
+                        .compareTo(list.get(1).getPathtype()) < 0) {
+                /* @formatter:on */
+                    list.remove(0);
+                    for (Unit u : list) {
+                        u.setNext(null);
+                        u.clearPath();
+                    }
+                }
+            }
         }
     }
 
     /* Ghost cycle */
-    public void ghost() {
+    private void ghostCycle() {
         System.out.println("Ghost cycle");
         HashSet<ArrayList<Unit>> set = new HashSet<ArrayList<Unit>>();
         ArrayList<Unit> temp = new ArrayList<Unit>(units);
@@ -172,53 +230,5 @@ public class Turn {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    /* Process turn */
-    public void process() {
-        System.out.println("Processing");
-        ghost();
-        ListIterator<Unit> iterator = units.listIterator();
-        while (iterator.hasNext()) {
-            Unit u = iterator.next();
-            if (u.getNext() == null) {
-                System.out.println("Removed " + u);
-                iterator.remove();
-            }
-            else {
-                Path p = u.getPath();
-                u.setTile(p.remove());
-            }
-        }
-        // Update units' next tiles
-        setNextTiles();
-        cycle += 1;
-    }
-
-    /* Check unit's turn delay and decrement if needed */
-    public void checkDelay() {
-        for (Team t : teams) {
-            ArrayList<Unit> units = t.getUnits();
-            for (Unit u : units) {
-                u.decPathDelay();
-            }
-        }
-    }
-    
-    /* Test printing */
-    public void print() {
-        for (Unit u : units) {
-            System.out.println(u.getTeam() + " - " + u + ": " + u.getPath());
-        }
-    }
-
-    /* Override */
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        for (Unit u : units) {
-            sb.append(u + ": " + u.getPath() + "\n");
-        }
-        return sb.toString();
     }
 }

@@ -9,12 +9,13 @@ public class Battle {
     int aDmg;
     int bDmg;
 
+    /* Public methods */
     public Battle(Unit a, Unit b) {
         System.out.println("Battle engaged\n\t" + a + " vs. " + b);
         this.a = a;
         this.b = b;
-        /* @formatter:off */
         // Calculate modified attack damage
+        /* @formatter:off */
         this.aDmg = (int) (a.getAttack() * a.getType()
                 .getAttackModifier(b.getType()));
         this.bDmg = (int) (b.getAttack() * b.getType()
@@ -22,41 +23,83 @@ public class Battle {
         /* @formatter:on */
     }
 
+    /* Check if battle exists */
+    public boolean contains(Unit ally, Unit enemy) {
+        if (this.a == ally && this.b == enemy) {
+            return true;
+        }
+        else if (this.a == enemy && this.b == ally) {
+            return true;
+        }
+        return false;
+    }
+
     /* Process battle */
     public void doBattle() {
         // A is stationary & B is moving: B then A
-        if (a.getPath().getType() == Pathtype.STATIONARY) {
+        if (a.getPathtype() == Pathtype.STATIONARY &&
+                b.getPathtype() != Pathtype.STATIONARY) {
             System.out.println("B then A");
-            System.out.println("\t" + b + " attacks " + a + " for " + bDmg);
-            a.reduceHealth(bDmg);
-            if (a.isDead()) {
-                System.out.println(a + " killed by " + b);
-                a.setDead();
-            }
-            else {
-                System.out.println("\t" + a + " attacks " + b + " for " + aDmg);
-                b.reduceHealth(aDmg);
-                if (b.isDead()) {
-                    System.out.println(b + " killed by " + a);
-                    b.setDead();
+            if (b.getPathtype() == Pathtype.GOAL ||
+                    b.getPathtype() == Pathtype.SAFEGOAL) {
+                System.out.println(b + " goal move");
+                // Unit b does nothing
+                // Check if b is blocked by a
+                if (b.getPathSize() > 1) {
+                    
+                }
+                else {
+                    if (checkBlocked(a)) {
+                        b.clearPath();
+                    }
                 }
             }
-        }
-        // A is moving & B is stationary: A then B
-        else if (b.getPath().getType() == Pathtype.STATIONARY) {
-            System.out.println("A then B");
-            b.reduceHealth(aDmg);
-            if (b.isDead()) {
-                System.out.println(b + " killed by " + a);
-                b.setDead();
-                return;
-            }
             else {
+                System.out.println("\t" + b + " attacks " + a + " for " + bDmg);
                 a.reduceHealth(bDmg);
                 if (a.isDead()) {
                     System.out.println(a + " killed by " + b);
                     a.setDead();
+                    return;
                 }
+            }
+            System.out.println("\t" + a + " attacks " + b + " for " + aDmg);
+            b.reduceHealth(aDmg);
+            if (b.isDead()) {
+                System.out.println(b + " killed by " + a);
+                b.setDead();
+            }
+        }
+        // A is moving & B is stationary: A then B
+        else if (b.getPathtype() == Pathtype.STATIONARY &&
+                a.getPathtype() != Pathtype.STATIONARY) {
+            System.out.println("A then B");   
+            if (a.getPathtype() == Pathtype.GOAL ||
+                    a.getPathtype() == Pathtype.SAFEGOAL) {
+                System.out.println(a + " goal move");
+                // Unit a does nothing
+                // Check if a is blocked by b
+                if (a.getPathSize() > 1) {
+                    
+                }
+                else {
+                    if (checkBlocked(b)) {
+                        a.clearPath();
+                    }
+                }
+            }
+            else {
+                b.reduceHealth(aDmg);
+                if (b.isDead()) {
+                    System.out.println(b + " killed by " + a);
+                    b.setDead();
+                    return;
+                }
+            }
+            a.reduceHealth(bDmg);
+            if (a.isDead()) {
+                System.out.println(a + " killed by " + b);
+                a.setDead();
             }
         }
         // A and B simultaneously attack
@@ -75,17 +118,6 @@ public class Battle {
         }
     }
 
-    /* Check if battle exists */
-    public boolean has(Unit ally, Unit enemy) {
-        if (this.a == ally && this.b == enemy) {
-            return true;
-        }
-        else if (this.a == enemy && this.b == ally) {
-            return true;
-        }
-        return false;
-    }
-
     /* Getters */
     /* Prob not needed.... */
     public Unit getA() {
@@ -97,8 +129,28 @@ public class Battle {
     }
 
     /* Overrides */
-    public boolean equals(Battle b) {
-        if (b.has(this.a, this.b)) {
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        Battle battle = (Battle) obj;
+        if (battle.contains(this.a, this.b)) {
+            return true;
+        }
+        return false;
+    }
+    
+    /* Private methods */
+    /* Check if u1 is blocked by u2 */
+    private boolean checkBlocked(Unit unit) {
+        if (unit.getPathtype() == Pathtype.STATIONARY) {
             return true;
         }
         return false;

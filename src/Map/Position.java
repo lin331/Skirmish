@@ -4,6 +4,8 @@ public class Position {
     private int x;
     private int y;
 
+    /* Public methods */
+    // Not in use
     public Position() {
         x = -1;
         y = -1;
@@ -33,7 +35,7 @@ public class Position {
         return false;
     }
 
-    /* Getter methods below */
+    /* Getter */
     public int getX() {
         return x;
     }
@@ -43,7 +45,18 @@ public class Position {
     }
 
     /* Overrides */
-    public boolean equals(Position p) {
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (this.getClass() != obj.getClass()) {
+            return false;
+        }
+        Position p = (Position) obj;
         if (this.x == p.x && this.y == p.y) {
             return true;
         }

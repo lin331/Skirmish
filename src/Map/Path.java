@@ -9,6 +9,7 @@ public class Path {
     private int maxMoves; // Total moves in path
     private int delay;
     
+    /* Public methods */
     public Path(Unit unit) {
         this.type = Pathtype.STATIONARY;
         this.tiles = new ArrayList<Tile>();
@@ -17,6 +18,11 @@ public class Path {
         delay = 0;
     }
 
+    /* Get path length */
+    public int getSize() {
+        return tiles.size();
+    }
+    
     /* Add position to path */
     public void add(Tile t) {
         if (isValid(t)) {

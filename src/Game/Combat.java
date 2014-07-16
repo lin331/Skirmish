@@ -1,12 +1,13 @@
 package Game;
 
-import java.util.ArrayList;
-import java.util.ListIterator;
-
 import Map.Map;
+import Map.Pathtype;
 import Map.Tile;
 import Player.Team;
 import Player.Unit;
+
+import java.util.ArrayList;
+import java.util.ListIterator;
 
 public class Combat {
     private Turn turn;
@@ -15,6 +16,102 @@ public class Combat {
     private ArrayList<AdjNode> adj = new ArrayList<AdjNode>();
     private ArrayList<Battle> battles = new ArrayList<Battle>();
 
+    /* Public methods */
+    public Combat(Turn turn, Team[] teams) {
+        this.turn = turn;
+        this.map = turn.getMap();
+        initialize(teams);
+    }
+
+    /* Check for change in battle conditions */
+    public void checkBattleChanges(Team[] teams) {
+        if (battles.isEmpty()) {
+            return;
+        }
+        ArrayList<Unit> aUnits = teams[0].getUnits();
+        ArrayList<Unit> bUnits = teams[1].getUnits();
+        ListIterator<Battle> iterator = battles.listIterator();
+        while (iterator.hasNext()) {
+            Battle b = iterator.next();
+            for (Unit u1 : aUnits) {
+                for (Unit u2 : bUnits) {
+                    if (b.contains(u1, u2) && !areAdjacent(u1, u2)) {
+                        // If battle has occurred and
+                        // units not adjacent anymore
+                        iterator.remove();
+                    }
+                }
+            }
+        }
+    }
+
+    /* Check for battles */
+    public void checkBattle() {
+        System.out.println("Combat: checking for battles");
+        for (Unit unit : units) {
+            checkAdjacent(unit);
+            if (unit.getPathtype() == Pathtype.STATIONARY ||
+                    unit.getPathtype() == Pathtype.STANDARD) {
+                if (hasAdjacent(unit)) {
+                    Unit[] enemies = getAdjacent(unit);
+                    check: 
+                        for (Unit enemy : enemies) {
+                            if (enemy != null) {
+                                for (Battle b : battles) {
+                                    if (b.contains(unit, enemy)) {
+                                        break check;
+                                    }
+                                }
+                                if (unit.getPathtype() == Pathtype.STANDARD) {
+                                    unit.clearPath();
+                                }
+                                if (enemy.getPathtype() == Pathtype.STANDARD) {
+                                    enemy.clearPath();
+                                }
+                                Battle battle = new Battle(unit, enemy);
+                                battles.add(battle);
+                                battle.doBattle();
+                                checkMove(unit, enemy);
+                            }
+                    }
+                }
+            }
+        }
+        System.out.println("Combat: Checking Done");
+    }
+
+    /* Check movement outcome after battle */
+    private void checkMove(Unit u1, Unit u2) { 
+        Pathtype type1 = u1.getPathtype();
+        Pathtype type2 = u2.getPathtype();
+        if (type1 == Pathtype.STANDARD) {
+            u1.clearPath();
+        }
+        if (type2 == Pathtype.STANDARD) {
+            u2.clearPath();
+        }
+    }
+    
+    /* Clears battle list */
+    public void clearBattles() {
+        this.battles.clear();
+    }
+    
+    /* Private methods */
+    /* Setters */
+    private void setAdjacent(Unit u1, int dir, Unit u2) {
+        int i = findUnit(u1);
+        AdjNode node = adj.get(i);
+        node.setAdjacent(dir, u2);
+    }
+
+    /* Getters */
+    private Unit[] getAdjacent(Unit unit) {
+        int i = findUnit(unit);
+        AdjNode node = adj.get(i);
+        return node.getAdjacent();
+    }
+
     private class AdjNode {
         Unit unit;
         // Index 0 = N; 1 = W; 2 = S; 3 = E
@@ -22,7 +119,7 @@ public class Combat {
         Unit[] adj = new Unit[4];
         int[] cycle = new int[4];
 
-        public AdjNode(Unit unit) {
+        private AdjNode(Unit unit) {
             this.unit = unit;
             for (Unit u : adj) {
                 u = null;
@@ -32,12 +129,7 @@ public class Combat {
             }
         }
 
-        public void setAdjacent(int dir, Unit unit) {
-            adj[dir] = unit;
-            cycle[dir] = turn.getCycle();
-        }
-
-        public boolean hasAdjacent() {
+        private boolean hasAdjacent() {
             for (Unit u : adj) {
                 if (u != null) {
                     return true;
@@ -46,23 +138,48 @@ public class Combat {
             return false;
         }
 
-        public boolean has(Unit unit) {
+        private boolean contains(Unit unit) {
             for (Unit u : adj) {
-                if (this.unit == unit) {
+                if (unit == u) {
                     return true;
                 }
             }
             return false;
         }
 
-        public Unit[] getAdjacent() {
+        /* Setters */
+        private void setAdjacent(int dir, Unit unit) {
+            adj[dir] = unit;
+            cycle[dir] = turn.getCycle();
+        }
+
+        /* Getters */
+        private Unit[] getAdjacent() {
             return this.adj;
         }
 
-        public Unit getUnit() {
+        private Unit getUnit() {
             return this.unit;
         }
+
+        /* Clears adjacency array */
+        private void clear() {
+            for (Unit u : adj) {
+                u = null;
+            }
+            for (int i : cycle) {
+                i = 0;
+            }
+        }
         
+        /* Test print */
+        private void print() {
+            for (Unit u : adj) {
+                System.out.println(u);
+            }
+        }
+
+        /* Overrides */
         @Override
         public boolean equals(Object obj) {
             if (this == obj) {
@@ -78,28 +195,17 @@ public class Combat {
             AdjNode node = (AdjNode) obj;
             return this.unit == node.getUnit();
         }
-        
-        public void print() {
-            for (Unit u : adj) {
-                System.out.println(u);
-            }
-        }
-        
+
         @Override
         public String toString() {
             StringBuilder sb = new StringBuilder();
-            sb.append(adj.toString()); 
+            sb.append(adj.toString());
             return unit.toString();
         }
     }
 
-    public Combat(Turn turn, Team[] teams) {
-        this.turn = turn;
-        this.map = turn.getMap();
-        initialize(teams);
-    }
-
-    public void initialize(Team[] teams) {
+    /* Initialize combat object */
+    private void initialize(Team[] teams) {
         System.out.println("Initializing combat");
         for (Team t : teams) {
             ArrayList<Unit> units = t.getUnits();
@@ -110,7 +216,8 @@ public class Combat {
         }
     }
 
-    public int findUnit(Unit unit) {
+    /* Find index for specified adjacent unit */
+    private int findUnit(Unit unit) {
         for (AdjNode node : adj) {
             if (node.getUnit() == unit) {
                 return adj.indexOf(node);
@@ -118,33 +225,33 @@ public class Combat {
         }
         return -1;
     }
-    
-    public void setAdjacent(Unit u1, int dir, Unit u2) {
-        int i = findUnit(u1);
-        AdjNode node = adj.get(i);
-        node.setAdjacent(dir, u2);
+
+    /* Check if two units are adjacent */
+    private boolean areAdjacent(Unit u1, Unit u2) {
+        AdjNode node = adj.get(findUnit(u1));
+        return node.contains(u2);
     }
 
-    public boolean hasAdjacent(Unit unit) {
-        int i = findUnit(unit);
-        AdjNode node = adj.get(i);
+    /* Check if there are adjacent enemy units */
+    private boolean hasAdjacent(Unit unit) {
+        AdjNode node = adj.get(findUnit(unit));
         return node.hasAdjacent();
     }
-
-    public Unit[] getAdjacent(Unit unit) {
-        int i = findUnit(unit);
-        AdjNode node = adj.get(i);
-        return node.getAdjacent();
+    
+    /* Clear adjacency array for specified unit */
+    private void clearAdj(Unit unit) {
+        AdjNode node = adj.get(findUnit(unit));
+        node.clear();
     }
-
-    public boolean areAdjacent(Unit u1, Unit u2) {
-        int i = findUnit(u1);
-        AdjNode node = adj.get(i);
-        return node.has(u2);
-    }
-
-    public void checkAdjacent(Unit unit) {
+    
+    /* Checks for adjacent enemies and */
+    /* adds them to adjacent array */
+    private void checkAdjacent(Unit unit) {
         Tile tile = unit.getTile();
+        if (tile == null) {
+            clearAdj(unit);
+            return;
+        }
         for (int dir = 0; dir < 4; dir++) {
             Tile t = map.getAdjacentTile(dir, tile);
             if (t != null) {
@@ -154,62 +261,10 @@ public class Combat {
                         setAdjacent(unit, dir, u);
                     }
                 }
-            }
-        }        
-    }
-    
-    public void checkBattleChanges(Team[] teams) {
-        if (battles.isEmpty()) {
-            return;
-        }
-        ArrayList<Unit> aUnits = teams[0].getUnits();
-        ArrayList<Unit> bUnits = teams[1].getUnits();
-        ListIterator<Battle> iterator = battles.listIterator();
-        while (iterator.hasNext()) {
-            Battle b = iterator.next();
-            for (Unit u1 : aUnits) {
-                for (Unit u2 : bUnits) {
-                    if (b.has(u1, u2) && !areAdjacent(u1, u2)) {
-                        // If battle has occurred and
-                        // units not adjacent anymore
-                        iterator.remove();
-                    }
+                else {
+                    setAdjacent(unit, dir, null);
                 }
             }
         }
-    }
-
-    public void checkBattle() {
-        System.out.println("Combat: checking for battles");
-        for (Unit unit : units) {
-            checkAdjacent(unit);
-            if (hasAdjacent(unit)) {
-                Unit[] enemies = getAdjacent(unit);
-                check:
-                    for (Unit enemy : enemies) {
-                        if (enemy != null) {
-                            // System.out.println("Adjacent enemy");
-                            for (Battle b : battles) {
-                                if (b.has(unit, enemy)) {
-                                   // System.out.println("\tHas battled");
-                                   break check;
-                                }
-                            }
-                            // System.out.println("\tNot battled");
-                            Battle battle = new Battle(unit, enemy);
-                            battles.add(battle);
-                            battle.doBattle();
-                            unit.clearPath();
-                            enemy.clearPath();
-                        }
-                    }
-            }
-        }
-        turn.incCycle();
-        System.out.println("Combat: Checking Done");
-    }
-    
-    public void clearBattles() {
-        this.battles.clear();
     }
 }

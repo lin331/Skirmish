@@ -8,7 +8,18 @@ public enum UnitType {
     ARCHER   (70, 30, 3),
     CAVALRY  (70, 25, 10);
     /* @formatter:on */
-    
+
+    private final int health;
+    private final int attack;
+    private final int move;
+
+    private UnitType(int health, int attack, int move) {
+        this.health = health;
+        this.attack = attack;
+        this.move = move;
+    }
+
+    /* Getters */
     public int getHealth() {
         return health;
     }
@@ -20,14 +31,11 @@ public enum UnitType {
     public int getMove() {
         return move;
     }
-    
+
+    /* Returns damage modifier based on unit type */
     public double getAttackModifier(UnitType t) {
-        double[][] modifiers = {
-                { 1, 1, 2, 1 },
-                { 1, 1, 1, 2 },
-                { 1, 2, 1, 2 },
-                { 2, 0.75, 2, 1 }
-                };
+        double[][] modifiers = { { 1, 1, 2, 1 }, { 1, 1, 1, 2 },
+                { 1, 2, 1, 2 }, { 2, 0.75, 2, 1 } };
         int attacker;
         int defender;
         switch (this) {
@@ -68,16 +76,6 @@ public enum UnitType {
             return 1;
         }
         return modifiers[attacker][defender];
-    }
-    
-    private final int health;
-    private final int attack;
-    private final int move;
-
-    UnitType(int health, int attack, int move) {
-        this.health = health;
-        this.attack = attack;
-        this.move = move;
     }
 }
 
