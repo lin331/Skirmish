@@ -49,7 +49,7 @@ public class Battle {
                     
                 }
                 else {
-                    if (checkBlocked(a)) {
+                    if (b.isBlockedBy(a)) {
                         b.clearPath();
                     }
                 }
@@ -83,7 +83,7 @@ public class Battle {
                     
                 }
                 else {
-                    if (checkBlocked(b)) {
+                    if (a.isBlockedBy(b)) {
                         a.clearPath();
                     }
                 }
@@ -142,15 +142,6 @@ public class Battle {
         }
         Battle battle = (Battle) obj;
         if (battle.contains(this.a, this.b)) {
-            return true;
-        }
-        return false;
-    }
-    
-    /* Private methods */
-    /* Check if u1 is blocked by u2 */
-    private boolean checkBlocked(Unit unit) {
-        if (unit.getPathtype() == Pathtype.STATIONARY) {
             return true;
         }
         return false;
