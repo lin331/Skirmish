@@ -283,7 +283,7 @@ public class Game {
                 game.requestTurn();
             }
             game.processTurn();
-            // gui.render();
+            gui.render();
             if (game.isOver()) {
                 game.end();
             }
