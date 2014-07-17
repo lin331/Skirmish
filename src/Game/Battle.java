@@ -71,9 +71,10 @@ public class Battle {
             }
         }
         // A is moving & B is stationary: A then B
+        // This should not happen
         else if (b.getPathtype() == Pathtype.STATIONARY &&
                 a.getPathtype() != Pathtype.STATIONARY) {
-            System.out.println("A then B");   
+            System.out.println("ERROR: A not stationary\nA then B");   
             if (a.getPathtype() == Pathtype.GOAL ||
                     a.getPathtype() == Pathtype.SAFEGOAL) {
                 System.out.println(a + " goal move");

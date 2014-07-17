@@ -175,9 +175,11 @@ public class Combat {
         
         /* Test print */
         private void print() {
+            System.out.println(unit);
             for (Unit u : adj) {
-                System.out.println(u);
+                System.out.print(u + " ");
             }
+            System.out.println("");
         }
 
         /* Overrides */
@@ -267,5 +269,8 @@ public class Combat {
                 }
             }
         }
+        AdjNode node = adj.get(findUnit(unit));
+        node.print();
+        
     }
 }
