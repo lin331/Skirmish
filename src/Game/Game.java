@@ -99,6 +99,7 @@ public class Game {
     /* Processes turn */
     private void processTurn() {
         turn.setup();
+        int i = 1;
         while (!turn.isEmpty()) {
             try {
                 Thread.sleep(100);
@@ -110,11 +111,11 @@ public class Game {
             gui.render();
             // turn.setNextTiles();
             combat.checkBattle();
-            System.out.println("Turn cycle: " + turn.getCycle());
+            System.out.println("Turn cycle: " + i);
+            i++;
         }
         combat.clearBattles();
         turn.checkDelay();
-        turn.resetCycle();
         printStats();
     }
 

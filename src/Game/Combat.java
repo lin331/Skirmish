@@ -69,7 +69,9 @@ public class Combat {
                                 if (enemy.getPathtype() == Pathtype.STANDARD) {
                                     enemy.clearPath();
                                 }
-                                Battle battle = new Battle(unit, enemy);
+                                boolean flanked = isFlanked(unit, enemy);
+                                Battle battle = new Battle(unit, enemy,
+                                         flanked);
                                 battles.add(battle);
                                 battle.doBattle();
                                 checkMove(unit, enemy);
@@ -118,15 +120,11 @@ public class Combat {
         // Index 0 = N; 1 = W; 2 = S; 3 = E
         // Only adjacent enemies
         Unit[] adj = new Unit[4];
-        int[] cycle = new int[4];
 
         private AdjNode(Unit unit) {
             this.unit = unit;
             for (Unit u : adj) {
                 u = null;
-            }
-            for (int i : cycle) {
-                i = 0;
             }
         }
 
@@ -151,7 +149,6 @@ public class Combat {
         /* Setters */
         private void setAdjacent(int dir, Unit unit) {
             adj[dir] = unit;
-            cycle[dir] = turn.getCycle();
         }
 
         /* Getters */
@@ -168,9 +165,16 @@ public class Combat {
             for (Unit u : adj) {
                 u = null;
             }
-            for (int i : cycle) {
-                i = 0;
+        }
+        
+        /* Check if enemy is flanking */
+        private boolean isFlankedBy(Unit enemy) {
+            for (Unit u : adj) {
+                if (u != null && u != enemy) {
+                    return true;
+                }
             }
+            return false;
         }
         
         /* Test print */
@@ -271,6 +275,11 @@ public class Combat {
         }
         AdjNode node = adj.get(findUnit(unit));
         node.print();
-        
+    }
+    
+    /* Checks if unit is flanked by enemy */
+    private boolean isFlanked(Unit unit, Unit enemy) {
+        AdjNode node = adj.get(findUnit(unit));
+        return node.isFlankedBy(enemy);
     }
 }

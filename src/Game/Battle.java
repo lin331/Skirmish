@@ -10,7 +10,7 @@ public class Battle {
     int bDmg;
 
     /* Public methods */
-    public Battle(Unit a, Unit b) {
+    public Battle(Unit a, Unit b, boolean flanked) {
         System.out.println("Battle engaged\n\t" + a + " vs. " + b);
         this.a = a;
         this.b = b;
@@ -18,9 +18,15 @@ public class Battle {
         /* @formatter:off */
         this.aDmg = (int) (a.getAttack() * a.getType()
                 .getAttackModifier(b.getType()));
+        if (flanked) {
+            System.out.println("Is flanked");
+            aDmg = (int) (aDmg * 0.5);
+        }
         this.bDmg = (int) (b.getAttack() * b.getType()
                 .getAttackModifier(a.getType()));
         /* @formatter:on */
+        System.out.println("\t" + a + ": " + aDmg);
+        System.out.println("\t" + b + ": " + bDmg);
     }
 
     /* Check if battle exists */
