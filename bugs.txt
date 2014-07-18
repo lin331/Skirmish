@@ -6,6 +6,9 @@ Need to fix:
 2)move options get cut off at the bottom of the screen, pic: http://screencloud.net/v/p3DW
   (it currently creates the dialogue box where you let go of your click)
 
+3)Movement mechanics, instead of having to press undo to fix a movement, should be able to just click the unit again and drag
+  should also be click unit first to select it, and then drag path 2nd instead of just drag all in one go
+    -can use mouse hover for pathing instead of drag if its more intuitive that way
 
 Fixed:  
 1)Goal moving around a stationary enemy unit only causes damage once 
