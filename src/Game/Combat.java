@@ -58,6 +58,9 @@ public class Combat {
                     Unit[] enemies = getAdjacent(unit);
                     check:
                     for (Unit enemy : enemies) {
+                        if (unit.isDead()) {
+                            break;
+                        }
                         if (enemy != null) {
                             for (Battle b : battles) {
                                 if (b.contains(unit, enemy)) {
@@ -261,8 +264,8 @@ public class Combat {
                 }
             }
         }
-        AdjNode node = adj.get(findUnit(unit));
-        node.print();
+        /*AdjNode node = adj.get(findUnit(unit));
+        node.print();*/
     }
     
     /* Checks if unit is flanked by enemy */
