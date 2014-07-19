@@ -2,7 +2,7 @@ package Player;
 
 public enum UnitType {
     /* @formatter:off */
-    DEFAULT  (10, 5, 5),
+    DEFAULT  (20, 5, 5),
     FOOTMAN  (90, 20, 5),
     SPEARMAN (70, 20, 5),
     ARCHER   (70, 30, 3),

@@ -8,9 +8,10 @@ public class Battle {
     Unit b;
     int aDmg;
     int bDmg;
-
+    int flanked;
+    
     /* Public methods */
-    public Battle(Unit a, Unit b, boolean flanked) {
+    public Battle(Unit a, Unit b, int flanked) {
         System.out.println("Battle engaged\n\t" + a + " vs. " + b);
         this.a = a;
         this.b = b;
@@ -18,15 +19,10 @@ public class Battle {
         /* @formatter:off */
         this.aDmg = (int) (a.getAttack() * a.getType()
                 .getAttackModifier(b.getType()));
-        if (flanked) {
-            System.out.println("Is flanked");
-            aDmg = (int) (aDmg * 0.5);
-        }
         this.bDmg = (int) (b.getAttack() * b.getType()
                 .getAttackModifier(a.getType()));
+        this.flanked = flanked;
         /* @formatter:on */
-        System.out.println("\t" + a + ": " + aDmg);
-        System.out.println("\t" + b + ": " + bDmg);
     }
 
     /* Check if battle exists */
@@ -42,7 +38,56 @@ public class Battle {
 
     /* Process battle */
     public void doBattle() {
-        // A is stationary & B is moving: B then A
+        if (this.flanked == 0 || this.flanked == 3) {
+            normal();
+        }
+        else {
+            try {
+                flanked();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /* Getters */
+    /* Prob not needed.... */
+    public Unit getA() {
+        return this.a;
+    }
+
+    public Unit getB() {
+        return this.b;
+    }
+
+    /* Overrides */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        Battle battle = (Battle) obj;
+        if (battle.contains(this.a, this.b)) {
+            return true;
+        }
+        return false;
+    }
+    
+    /* Private methods */
+    /* Method to do battle normally or when both units are flanked */
+    private void normal() {
+     // A is stationary & B is moving: B then A
+        if (this.flanked == 3) {
+            System.out.println(a + " & " + b + " are flanked");
+            this.aDmg = (int) (aDmg * 0.5);
+            this.bDmg = (int) (bDmg * 0.5);            
+        }
         if (a.getPathtype() == Pathtype.STATIONARY &&
                 b.getPathtype() != Pathtype.STATIONARY) {
             System.out.println("B then A");
@@ -124,33 +169,78 @@ public class Battle {
             }
         }
     }
-
-    /* Getters */
-    /* Prob not needed.... */
-    public Unit getA() {
-        return this.a;
-    }
-
-    public Unit getB() {
-        return this.b;
-    }
-
-    /* Overrides */
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
+    
+    /* Method to do battle when there is a flank */
+    private void flanked() throws Exception {
+        if (this.flanked == 0 || this.flanked == 3) {
+            throw new Exception("Not flanked/both flanked");
         }
-        if (obj == null) {
-            return false;
+        // B attacks first
+        if (this.flanked == 1) {
+            System.out.println(a + " is flanked");
+            this.aDmg = (int) (aDmg * 0.5);
+            if (b.getPathtype() == Pathtype.GOAL ||
+                    b.getPathtype() == Pathtype.SAFEGOAL) {
+                System.out.println(b + " goal move");
+                // Unit b does nothing
+                // Check if b is blocked by a
+                if (b.getPathSize() > 1) {
+                    
+                }
+                else {
+                    if (b.isBlockedBy(a)) {
+                        b.clearPath();
+                    }
+                }
+            }
+            else {
+                System.out.println("\t" + b + " attacks " + a + " for " + bDmg);
+                a.reduceHealth(bDmg);
+                if (a.isDead()) {
+                    System.out.println(a + " killed by " + b);
+                    a.setDead();
+                    return;
+                }
+            }
+            System.out.println("\t" + a + " attacks " + b + " for " + aDmg);
+            b.reduceHealth(aDmg);
+            if (b.isDead()) {
+                System.out.println(b + " killed by " + a);
+                b.setDead();
+            }
         }
-        if (getClass() != obj.getClass()) {
-            return false;
+        // A attacks first
+        else {
+            System.out.println(b + " is flanked");
+            this.bDmg = (int) (bDmg * 0.5);
+            if (a.getPathtype() == Pathtype.GOAL ||
+                    a.getPathtype() == Pathtype.SAFEGOAL) {
+                System.out.println(a + " goal move");
+                // Unit a does nothing
+                // Check if a is blocked by b
+                if (a.getPathSize() > 1) {
+                    
+                }
+                else {
+                    if (a.isBlockedBy(b)) {
+                        a.clearPath();
+                    }
+                }
+            }
+            else {
+                b.reduceHealth(aDmg);
+                if (b.isDead()) {
+                    System.out.println(b + " killed by " + a);
+                    b.setDead();
+                    return;
+                }
+            }
+            a.reduceHealth(bDmg);
+            if (a.isDead()) {
+                System.out.println(a + " killed by " + b);
+                a.setDead();
+            }
         }
-        Battle battle = (Battle) obj;
-        if (battle.contains(this.a, this.b)) {
-            return true;
-        }
-        return false;
+            
     }
 }

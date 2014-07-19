@@ -5,6 +5,7 @@ import Map.Pathtype;
 import Map.Tile;
 import Player.Team;
 import Player.Unit;
+import Player.UnitType;
 
 import java.util.ArrayList;
 import java.util.ListIterator;
@@ -55,27 +56,25 @@ public class Combat {
                     unit.getPathtype() == Pathtype.STANDARD) {
                 if (hasAdjacent(unit)) {
                     Unit[] enemies = getAdjacent(unit);
-                    check: 
-                        for (Unit enemy : enemies) {
-                            if (enemy != null) {
-                                for (Battle b : battles) {
-                                    if (b.contains(unit, enemy)) {
-                                        break check;
-                                    }
+                    for (Unit enemy : enemies) {
+                        if (enemy != null) {
+                            for (Battle b : battles) {
+                                if (b.contains(unit, enemy)) {
+                                    continue;
                                 }
-                                if (unit.getPathtype() == Pathtype.STANDARD) {
-                                    unit.clearPath();
-                                }
-                                if (enemy.getPathtype() == Pathtype.STANDARD) {
-                                    enemy.clearPath();
-                                }
-                                boolean flanked = isFlanked(unit, enemy);
-                                Battle battle = new Battle(unit, enemy,
-                                         flanked);
-                                battles.add(battle);
-                                battle.doBattle();
-                                checkMove(unit, enemy);
                             }
+                            if (unit.getPathtype() == Pathtype.STANDARD) {
+                                unit.clearPath();
+                            }
+                            if (enemy.getPathtype() == Pathtype.STANDARD) {
+                                enemy.clearPath();
+                            }
+                            int flanked = isFlanked(unit, enemy);
+                            Battle battle = new Battle(unit, enemy,
+                                     flanked);
+                            battles.add(battle);
+                            battle.doBattle();
+                        }
                     }
                 }
             }
@@ -83,18 +82,6 @@ public class Combat {
         System.out.println("Combat: Checking Done");
     }
 
-    /* Check movement outcome after battle */
-    private void checkMove(Unit u1, Unit u2) { 
-        Pathtype type1 = u1.getPathtype();
-        Pathtype type2 = u2.getPathtype();
-        if (type1 == Pathtype.STANDARD) {
-            u1.clearPath();
-        }
-        if (type2 == Pathtype.STANDARD) {
-            u2.clearPath();
-        }
-    }
-    
     /* Clears battle list */
     public void clearBattles() {
         this.battles.clear();
@@ -278,8 +265,20 @@ public class Combat {
     }
     
     /* Checks if unit is flanked by enemy */
-    private boolean isFlanked(Unit unit, Unit enemy) {
-        AdjNode node = adj.get(findUnit(unit));
-        return node.isFlankedBy(enemy);
+    private int isFlanked(Unit unit, Unit enemy) {
+        int n;
+        AdjNode n1 = adj.get(findUnit(unit));
+        AdjNode n2 = adj.get(findUnit(enemy));
+        if (n1.isFlankedBy(enemy)) {
+            n = n2.isFlankedBy(unit) ? 3 : 1;
+        }
+        else {
+            n = n2.isFlankedBy(unit) ? 2 : 0;
+        }
+        // 0 = neither is flanked
+        // 1 = unit is flanked
+        // 2 = enemy is flanked
+        // 3 = both are flanked
+        return n;
     }
 }
