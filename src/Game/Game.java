@@ -100,7 +100,7 @@ public class Game {
     private void processTurn() {
         turn.setup();
         int i = 1;
-        while (!turn.isEmpty()) {
+        do {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
@@ -113,7 +113,7 @@ public class Game {
             combat.checkBattle();
             System.out.println("Turn cycle: " + i);
             i++;
-        }
+        } while (!turn.isEmpty());
         combat.clearBattles();
         turn.checkDelay();
         printStats();
@@ -267,7 +267,7 @@ public class Game {
             }
         }
     }
-
+    
     public static void main(String[] args) {
         Game game = new Game();
         game.initialize();
