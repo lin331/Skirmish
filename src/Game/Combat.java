@@ -60,7 +60,7 @@ public class Combat {
                         if (enemy != null) {
                             for (Battle b : battles) {
                                 if (b.contains(unit, enemy)) {
-                                    continue;
+                                    break;
                                 }
                             }
                             if (unit.getPathtype() == Pathtype.STANDARD) {
