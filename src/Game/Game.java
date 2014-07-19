@@ -99,9 +99,10 @@ public class Game {
     /* Processes turn */
     private void processTurn() {
         turn.setup();
-        while (!turn.isEmpty()) {
+        int i = 1;
+        do {
             try {
-                Thread.sleep(1000);
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -110,11 +111,11 @@ public class Game {
             gui.render();
             // turn.setNextTiles();
             combat.checkBattle();
-            System.out.println("Turn cycle: " + turn.getCycle());
-        }
+            System.out.println("Turn cycle: " + i);
+            i++;
+        } while (!turn.isEmpty());
         combat.clearBattles();
         turn.checkDelay();
-        turn.resetCycle();
         printStats();
     }
 
@@ -183,7 +184,51 @@ public class Game {
             System.out.println(t.toString() + " Total Units: " + num);
         }
     }
-
+    
+    private void addUnits2() {
+        @SuppressWarnings("resource")
+        Scanner s = new Scanner(System.in);
+        System.out.println("Enter # of units per team: ");
+        int num = Integer.parseInt(s.next());
+        for (Team t : teams) {
+            System.out.println(t.toString() + ":");
+            for (int i = 0; i < num; i++) {
+                System.out.println("Unit #" + (i + 1) + ":");
+                System.out.println("Pick unit type: (1 - Footman, 2 - Spearman, 3 - Archer, 4 - Calvary)");
+                int ut = s.nextInt();
+                UnitType type;
+                switch(ut) {
+                    case 1:
+                        type = UnitType.FOOTMAN;
+                        break;
+                    case 2:
+                        type = UnitType.SPEARMAN;
+                        break;
+                    case 3:
+                        type = UnitType.ARCHER;
+                        break;
+                    case 4:
+                        type = UnitType.CAVALRY;
+                        break;
+                    default:
+                        type = UnitType.DEFAULT;
+                }
+                System.out.println("Enter x coordinate: ");
+                String string = s.next();
+                if (string.equals("end")) {
+                    break;
+                }
+                int x = Integer.parseInt(string);
+                System.out.println("Enter y coordinate: ");
+                int y = s.nextInt();
+                Unit u = new Unit(t, i + 1, type,
+                        map.getTiles()[y][x]);
+                t.addUnit(u);
+            }
+            System.out.println(t.toString() + " Total Units: " + num);
+        }
+    }
+    
     /* Prompt for selecting unit */
     private Unit selectUnit(Team team) {
         Scanner s = new Scanner(System.in);
@@ -223,6 +268,20 @@ public class Game {
         }
     }
 
+    /* Testing-purposes */
+    /* Reset game */
+    private void reset() {
+        initialize();
+        Gui gui = new Gui(this);
+        setGui(gui);
+        addUnits();
+        setUnits();
+        initialize2();
+        gui.setInfoPanel();
+        start();
+        gui.render();
+    }
+    
     public static void main(String[] args) {
         Game game = new Game();
         game.initialize();
@@ -239,9 +298,10 @@ public class Game {
                 game.requestTurn();
             }
             game.processTurn();
-            // gui.render();
+            gui.render();
             if (game.isOver()) {
                 game.end();
+                game.reset();
             }
         }
     }

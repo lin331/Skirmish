@@ -94,6 +94,8 @@ public class Unit implements Comparable<Unit> {
         this.tile.setUnit(null);
         this.tile = null;
         this.next = null;
+        this.path.clear();
+        this.path.setType(Pathtype.DEAD);
     }
     
     /* Test purpose-only setters */
@@ -161,7 +163,6 @@ public class Unit implements Comparable<Unit> {
     /* Test print */
     public void printStats() {
         System.out.println(team + " " + num + "\tHealth: " + health + "\tTile: " + tile);
-        System.out.println(tile.getUnit());
     }
 
     /* Console input */

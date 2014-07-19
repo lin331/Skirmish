@@ -8,9 +8,10 @@ public class Battle {
     Unit b;
     int aDmg;
     int bDmg;
-
+    int flanked;
+    
     /* Public methods */
-    public Battle(Unit a, Unit b) {
+    public Battle(Unit a, Unit b, int flanked) {
         System.out.println("Battle engaged\n\t" + a + " vs. " + b);
         this.a = a;
         this.b = b;
@@ -20,6 +21,7 @@ public class Battle {
                 .getAttackModifier(b.getType()));
         this.bDmg = (int) (b.getAttack() * b.getType()
                 .getAttackModifier(a.getType()));
+        this.flanked = flanked;
         /* @formatter:on */
     }
 
@@ -36,84 +38,14 @@ public class Battle {
 
     /* Process battle */
     public void doBattle() {
-        // A is stationary & B is moving: B then A
-        if (a.getPathtype() == Pathtype.STATIONARY &&
-                b.getPathtype() != Pathtype.STATIONARY) {
-            System.out.println("B then A");
-            if (b.getPathtype() == Pathtype.GOAL ||
-                    b.getPathtype() == Pathtype.SAFEGOAL) {
-                System.out.println(b + " goal move");
-                // Unit b does nothing
-                // Check if b is blocked by a
-                if (b.getPathSize() > 1) {
-                    
-                }
-                else {
-                    if (checkBlocked(a)) {
-                        b.clearPath();
-                    }
-                }
-            }
-            else {
-                System.out.println("\t" + b + " attacks " + a + " for " + bDmg);
-                a.reduceHealth(bDmg);
-                if (a.isDead()) {
-                    System.out.println(a + " killed by " + b);
-                    a.setDead();
-                    return;
-                }
-            }
-            System.out.println("\t" + a + " attacks " + b + " for " + aDmg);
-            b.reduceHealth(aDmg);
-            if (b.isDead()) {
-                System.out.println(b + " killed by " + a);
-                b.setDead();
-            }
+        if (this.flanked == 0 || this.flanked == 3) {
+            normal();
         }
-        // A is moving & B is stationary: A then B
-        else if (b.getPathtype() == Pathtype.STATIONARY &&
-                a.getPathtype() != Pathtype.STATIONARY) {
-            System.out.println("A then B");   
-            if (a.getPathtype() == Pathtype.GOAL ||
-                    a.getPathtype() == Pathtype.SAFEGOAL) {
-                System.out.println(a + " goal move");
-                // Unit a does nothing
-                // Check if a is blocked by b
-                if (a.getPathSize() > 1) {
-                    
-                }
-                else {
-                    if (checkBlocked(b)) {
-                        a.clearPath();
-                    }
-                }
-            }
-            else {
-                b.reduceHealth(aDmg);
-                if (b.isDead()) {
-                    System.out.println(b + " killed by " + a);
-                    b.setDead();
-                    return;
-                }
-            }
-            a.reduceHealth(bDmg);
-            if (a.isDead()) {
-                System.out.println(a + " killed by " + b);
-                a.setDead();
-            }
-        }
-        // A and B simultaneously attack
         else {
-            System.out.println("A and B");
-            a.reduceHealth(bDmg);
-            b.reduceHealth(aDmg);
-            if (a.isDead()) {
-                System.out.println(a + " killed by " + b);
-                a.setDead();
-            }
-            if (b.isDead()) {
-                System.out.println(b + " killed by " + a);
-                b.setDead();
+            try {
+                flanked();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
@@ -148,11 +80,167 @@ public class Battle {
     }
     
     /* Private methods */
-    /* Check if u1 is blocked by u2 */
-    private boolean checkBlocked(Unit unit) {
-        if (unit.getPathtype() == Pathtype.STATIONARY) {
-            return true;
+    /* Method to do battle normally or when both units are flanked */
+    private void normal() {
+     // A is stationary & B is moving: B then A
+        if (this.flanked == 3) {
+            System.out.println(a + " & " + b + " are flanked");
+            this.aDmg = (int) (aDmg * 0.5);
+            this.bDmg = (int) (bDmg * 0.5);            
         }
-        return false;
+        if (a.getPathtype() == Pathtype.STATIONARY &&
+                b.getPathtype() != Pathtype.STATIONARY) {
+            System.out.println("B then A");
+            if (b.getPathtype() == Pathtype.GOAL ||
+                    b.getPathtype() == Pathtype.SAFEGOAL) {
+                System.out.println(b + " goal move");
+                // Unit b does nothing
+                // Check if b is blocked by a
+                if (b.getPathSize() > 1) {
+                    
+                }
+                else {
+                    if (b.isBlockedBy(a)) {
+                        b.clearPath();
+                    }
+                }
+            }
+            else {
+                System.out.println("\t" + b + " attacks " + a + " for " + bDmg);
+                a.reduceHealth(bDmg);
+                if (a.isDead()) {
+                    System.out.println(a + " killed by " + b);
+                    a.setDead();
+                    return;
+                }
+            }
+            System.out.println("\t" + a + " attacks " + b + " for " + aDmg);
+            b.reduceHealth(aDmg);
+            if (b.isDead()) {
+                System.out.println(b + " killed by " + a);
+                b.setDead();
+            }
+        }
+        // A is moving & B is stationary: A then B
+        // This should not happen
+        else if (b.getPathtype() == Pathtype.STATIONARY &&
+                a.getPathtype() != Pathtype.STATIONARY) {
+            System.out.println("ERROR: A not stationary\nA then B");   
+            if (a.getPathtype() == Pathtype.GOAL ||
+                    a.getPathtype() == Pathtype.SAFEGOAL) {
+                System.out.println(a + " goal move");
+                // Unit a does nothing
+                // Check if a is blocked by b
+                if (a.getPathSize() > 1) {
+                    
+                }
+                else {
+                    if (a.isBlockedBy(b)) {
+                        a.clearPath();
+                    }
+                }
+            }
+            else {
+                b.reduceHealth(aDmg);
+                if (b.isDead()) {
+                    System.out.println(b + " killed by " + a);
+                    b.setDead();
+                    return;
+                }
+            }
+            a.reduceHealth(bDmg);
+            if (a.isDead()) {
+                System.out.println(a + " killed by " + b);
+                a.setDead();
+            }
+        }
+        // A and B simultaneously attack
+        else {
+            System.out.println("A and B");
+            a.reduceHealth(bDmg);
+            b.reduceHealth(aDmg);
+            if (a.isDead()) {
+                System.out.println(a + " killed by " + b);
+                a.setDead();
+            }
+            if (b.isDead()) {
+                System.out.println(b + " killed by " + a);
+                b.setDead();
+            }
+        }
+    }
+    
+    /* Method to do battle when there is a flank */
+    private void flanked() throws Exception {
+        if (this.flanked == 0 || this.flanked == 3) {
+            throw new Exception("Not flanked/both flanked");
+        }
+        // B attacks first
+        if (this.flanked == 1) {
+            System.out.println(a + " is flanked");
+            this.aDmg = (int) (aDmg * 0.5);
+            if (b.getPathtype() == Pathtype.GOAL ||
+                    b.getPathtype() == Pathtype.SAFEGOAL) {
+                System.out.println(b + " goal move");
+                // Unit b does nothing
+                // Check if b is blocked by a
+                if (b.getPathSize() > 1) {
+                    
+                }
+                else {
+                    if (b.isBlockedBy(a)) {
+                        b.clearPath();
+                    }
+                }
+            }
+            else {
+                System.out.println("\t" + b + " attacks " + a + " for " + bDmg);
+                a.reduceHealth(bDmg);
+                if (a.isDead()) {
+                    System.out.println(a + " killed by " + b);
+                    a.setDead();
+                    return;
+                }
+            }
+            System.out.println("\t" + a + " attacks " + b + " for " + aDmg);
+            b.reduceHealth(aDmg);
+            if (b.isDead()) {
+                System.out.println(b + " killed by " + a);
+                b.setDead();
+            }
+        }
+        // A attacks first
+        else {
+            System.out.println(b + " is flanked");
+            this.bDmg = (int) (bDmg * 0.5);
+            if (a.getPathtype() == Pathtype.GOAL ||
+                    a.getPathtype() == Pathtype.SAFEGOAL) {
+                System.out.println(a + " goal move");
+                // Unit a does nothing
+                // Check if a is blocked by b
+                if (a.getPathSize() > 1) {
+                    
+                }
+                else {
+                    if (a.isBlockedBy(b)) {
+                        a.clearPath();
+                    }
+                }
+            }
+            else {
+                b.reduceHealth(aDmg);
+                if (b.isDead()) {
+                    System.out.println(b + " killed by " + a);
+                    b.setDead();
+                    return;
+                }
+            }
+            a.reduceHealth(bDmg);
+            if (a.isDead()) {
+                System.out.println(a + " killed by " + b);
+                a.setDead();
+            }
+        }
+            
     }
 }

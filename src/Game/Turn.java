@@ -40,12 +40,12 @@ public class Turn {
         return MAX_COMMANDS;
     }
 
+    public Team[] getTeams() {
+        return this.teams;
+    }
+    
     public Map getMap() {
         return this.map;
-    }
-
-    public int getCycle() {
-        return this.cycle;
     }
 
     /* Check if list is empty */
@@ -57,16 +57,7 @@ public class Turn {
     public int size() {
         return units.size();
     }
-
-    /* Setters */
-    public void incCycle() {
-        this.cycle++;
-    }
-
-    public void resetCycle() {
-        this.cycle = 0;
-    }
-
+    
     /* Process turn */
     public void process() {
         System.out.println("Processing");
@@ -85,7 +76,6 @@ public class Turn {
         }
         // Update units' next tiles
         setNextTiles();
-        incCycle();
     }
 
     /* Check unit's turn delay and decrement if needed */

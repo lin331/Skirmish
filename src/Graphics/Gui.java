@@ -11,6 +11,7 @@ import Player.Unit;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.table.*;
 
 import java.util.ArrayList;
 
@@ -27,16 +28,9 @@ public class Gui extends JFrame {
     private final int TILE_HEIGHT = 32;
     
     // left side of gui
-    private JPanel infoPanel;
-    private JPanel unitPanel;
-    private JPanel turnPanel;
-    private JPanel healthPanel;
-    private JLabel units;
-    private JLabel turn;
-    private JLabel health;
-    private ArrayList<JLabel> unitDisplay;
-    private ArrayList<JLabel> turnDisplay;
-    private ArrayList<JLabel> healthDisplay;
+    private JScrollPane infoPane;
+    private JTable infoTable;
+    private DefaultTableModel infoModel;
     
     // right side of gui
 	private JPanel mainPanel;
@@ -62,32 +56,29 @@ public class Gui extends JFrame {
     public void initialize() {
         
         // set up info panel        
-        infoPanel = new JPanel();
+        String[] columnNames = {"Unit", "Turn Delay", "Health"};
+        infoModel = new DefaultTableModel(columnNames, 0) {
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+            public Class getColumnClass(int column) {
+                if (column == 0) return Icon.class;
+                else return Object.class;
+            }
+        };
+        infoTable = new JTable(infoModel);
+        infoTable.setRowHeight(30);
+        infoTable.setPreferredSize(new Dimension(GUI_WIDTH/3, GUI_HEIGHT));
+        infoTable.setPreferredScrollableViewportSize(infoTable.getPreferredSize());
         
-        unitPanel = new JPanel();
-        unitPanel.setLayout(new BoxLayout(unitPanel, BoxLayout.Y_AXIS));
-        turnPanel = new JPanel();
-        turnPanel.setLayout(new BoxLayout(turnPanel, BoxLayout.Y_AXIS));
-        healthPanel = new JPanel();
-        healthPanel.setLayout(new BoxLayout(healthPanel, BoxLayout.Y_AXIS));
+        infoPane = new JScrollPane(infoTable);
+        infoPane.setBackground(Color.LIGHT_GRAY);
+        infoPane.getViewport().setBackground(Color.LIGHT_GRAY);
+        infoTable.setBackground(Color.LIGHT_GRAY);
+        infoTable.getTableHeader().setBackground(Color.LIGHT_GRAY);
         
-        unitDisplay = new ArrayList<JLabel>();
-        turnDisplay = new ArrayList<JLabel>();
-        healthDisplay = new ArrayList<JLabel>();
-        infoPanel.add(unitPanel);
-        infoPanel.add(turnPanel);
-        infoPanel.add(healthPanel);
-        ((FlowLayout)infoPanel.getLayout()).setHgap(10);
-        
-        JLabel unitHeader = new JLabel("Unit");
-        JLabel turnHeader = new JLabel("Turn Delay");
-        JLabel healthHeader = new JLabel("Health");
-        unitHeader.setVisible(true);
-        turnHeader.setVisible(true);
-        healthHeader.setVisible(true);
-        unitPanel.add(unitHeader);
-        turnPanel.add(turnHeader);
-        healthPanel.add(healthHeader);
+        infoPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+        infoPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         
         // set up main panel
         mainPanel = new JPanel(new BorderLayout());
@@ -178,15 +169,19 @@ public class Gui extends JFrame {
             }
         });
         pathButtons = new JPanel();
+        pathButtons.setBackground(Color.LIGHT_GRAY);
         pathButtons.add(undo);
         pathButtons.add(endTurn);
         commandPanel.add(commandLabel);
         commandPanel.add(pathButtons);
+        commandPanel.setBackground(Color.LIGHT_GRAY);
+        commandPanel.setOpaque(true);
         mainPanel.add(commandPanel, BorderLayout.SOUTH);
+        mainPanel.setBackground(Color.LIGHT_GRAY);
 		
         // set up the frame
-        add(infoPanel, BorderLayout.WEST);
-        add(mainPanel, BorderLayout.EAST);
+        add(infoPane, BorderLayout.WEST);
+        add(mainPanel, BorderLayout.CENTER);
 
         setTitle("Skirmish");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	
@@ -196,7 +191,7 @@ public class Gui extends JFrame {
         revalidate();
     }
     
-    public void setInfoPanel() {
+    public void setInfoPanel() {    
         for (int i = 0; i < 2; i++) {
             Team t = game.getTeams()[i];
             for (Unit u : t.getUnits()) {
@@ -207,18 +202,12 @@ public class Gui extends JFrame {
                 else {
                     unitIcon = new ImageIcon("res/unit2.png");
                 }
-                JLabel unitLabel = new JLabel(unitIcon);
-                JLabel turnLabel = new JLabel(Integer.toString(u.getPath().getDelay()));
-                JLabel healthLabel = new JLabel(Integer.toString(u.getHealth()));
-                unitLabel.setVisible(true);
-                turnLabel.setVisible(true);
-                healthLabel.setVisible(true);
-                unitDisplay.add(unitLabel);
-                turnDisplay.add(turnLabel);
-                healthDisplay.add(healthLabel);                
-                unitPanel.add(unitDisplay.get(unitDisplay.size() - 1));
-                turnPanel.add(turnDisplay.get(turnDisplay.size() - 1));
-                healthPanel.add(healthDisplay.get(healthDisplay.size() - 1));
+                
+                Object[] unitRow = new Object[3];
+                unitRow[0] = unitIcon;
+                unitRow[1] = Integer.toString(u.getPath().getDelay());
+                unitRow[2] = Integer.toString(u.getHealth());
+                infoModel.addRow(unitRow);
             }
         }
         repaint();
@@ -233,13 +222,12 @@ public class Gui extends JFrame {
             if (i == 1) {
                 index = teamASize;
             }
-            for (Unit u : t.getUnits()) {
-                if (u.isDead()) {
-                    ImageIcon deadIcon = new ImageIcon("res/deadUnit.png");
-                    unitDisplay.get(index + (u.getNum() - 1)).setIcon(deadIcon);
+            for (int j = 0; j < t.getUnits().size(); j++) {
+                if (t.getUnits().get(j).isDead()) {
+                    infoModel.setValueAt(new ImageIcon("res/deadUnit.png"), index + j, 0);
                 }
-                turnDisplay.get(index + (u.getNum() - 1)).setText(Integer.toString(u.getPath().getDelay()));
-                healthDisplay.get(index + (u.getNum() - 1)).setText(Integer.toString(u.getHealth()));
+                infoModel.setValueAt(t.getUnits().get(j).getPath().getDelay(), index + j, 1);
+                infoModel.setValueAt(t.getUnits().get(j).getHealth(), index + j, 2);
             }
         }
     

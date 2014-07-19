@@ -1,5 +1,5 @@
 package Map;
 
 public enum Pathtype {
-    GOAL, SAFEGOAL, STANDARD, PAUSED, STATIONARY;
+    GOAL, SAFEGOAL, STANDARD, PAUSED, STATIONARY, DEAD;
 }
