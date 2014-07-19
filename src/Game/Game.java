@@ -267,6 +267,18 @@ public class Game {
             }
         }
     }
+
+    /* Testing-purposes */
+    /* Reset game */
+    private void reset() {
+        initialize();
+        addUnits();
+        setUnits();
+        initialize2();
+        gui.setInfoPanel();
+        start();
+        gui.render();
+    }
     
     public static void main(String[] args) {
         Game game = new Game();
