@@ -272,6 +272,8 @@ public class Game {
     /* Reset game */
     private void reset() {
         initialize();
+        Gui gui = new Gui(this);
+        setGui(gui);
         addUnits();
         setUnits();
         initialize2();
@@ -299,6 +301,7 @@ public class Game {
             gui.render();
             if (game.isOver()) {
                 game.end();
+                game.reset();
             }
         }
     }
