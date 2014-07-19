@@ -51,33 +51,48 @@ public class Combat {
         checkBattleChanges(turn.getTeams());
         System.out.println("Combat: checking for battles");
         for (Unit unit : units) {
-            checkAdjacent(unit);
+            // Update unit's adjacency array
+            updateAdjacent(unit);
+            // Only check for battle if unit is STATIONARY/STANDARD
             if (unit.getPathtype() == Pathtype.STATIONARY ||
                     unit.getPathtype() == Pathtype.STANDARD) {
+                // Check if unit has adjacent enemies
                 if (hasAdjacent(unit)) {
                     Unit[] enemies = getAdjacent(unit);
                     check:
+                    // Loop through adjacency array
                     for (Unit enemy : enemies) {
                         if (unit.isDead()) {
+                            // Leave battle check if unit died
                             break;
                         }
                         if (enemy != null) {
+                            // Check if battle has occurred
                             for (Battle b : battles) {
                                 if (b.contains(unit, enemy)) {
                                     break check;
                                 }
                             }
+                            // Make unit/enemy STATIONARY if path is STANDARD
                             if (unit.getPathtype() == Pathtype.STANDARD) {
                                 unit.clearPath();
                             }
                             if (enemy.getPathtype() == Pathtype.STANDARD) {
                                 enemy.clearPath();
                             }
+                            // Check for flanking conditions
                             int flanked = isFlanked(unit, enemy);
                             Battle battle = new Battle(unit, enemy,
                                      flanked);
                             battles.add(battle);
                             battle.doBattle();
+                            // Update adjacency array if an unit dies
+                            if (unit.isDead()) {
+                                updateAdjacent(enemy);
+                            }
+                            if (enemy.isDead()) {
+                                updateAdjacent(unit);
+                            }
                         }
                     }
                 }
@@ -119,6 +134,7 @@ public class Combat {
             }
         }
 
+        /* Check if this has adjacent units */
         private boolean hasAdjacent() {
             for (Unit u : adj) {
                 if (u != null) {
@@ -127,7 +143,8 @@ public class Combat {
             }
             return false;
         }
-
+        
+        /* Check if unit is adjacent */
         private boolean contains(Unit unit) {
             for (Unit u : adj) {
                 if (unit == u) {
@@ -244,7 +261,7 @@ public class Combat {
     
     /* Checks for adjacent enemies and */
     /* adds them to adjacent array */
-    private void checkAdjacent(Unit unit) {
+    private void updateAdjacent(Unit unit) {
         Tile tile = unit.getTile();
         if (tile == null) {
             clearAdj(unit);

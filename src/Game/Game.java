@@ -109,7 +109,6 @@ public class Game {
             turn.process();
             map.printMap();
             gui.render();
-            // turn.setNextTiles();
             combat.checkBattle();
             System.out.println("Turn cycle: " + i);
             i++;

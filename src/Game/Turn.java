@@ -16,16 +16,14 @@ public class Turn {
 
     private final int MAX_COMMANDS = 3;
     private ArrayList<Unit> units;
-    Map map;
-    Team[] teams;
-    int cycle;
+    private Map map;
+    private Team[] teams;
 
     /* Public methods */
     public Turn(Map map, Team[] teams) {
         units = new ArrayList<Unit>();
         this.map = map;
         this.teams = teams;
-        this.cycle = 0;
     }
 
     /* Sets up turn for processing */
@@ -61,15 +59,22 @@ public class Turn {
     /* Process turn */
     public void process() {
         System.out.println("Processing");
+        // Run ghost cycle to check for conflicts
         ghostCycle();
         ListIterator<Unit> iterator = units.listIterator();
         while (iterator.hasNext()) {
             Unit u = iterator.next();
-            if (u.getNext() == null) {
+            if (u.isDead()) {
+                // Remove unit from Turn if unit is dead
+                iterator.remove();
+            }
+            else if (u.getNext() == null) {
+                // Remove unit from Turn if unit finished moving
                 System.out.println("Removed " + u);
                 iterator.remove();
             }
             else {
+                // Updates unit's tile
                 Path p = u.getPath();
                 u.setTile(p.remove());
             }
@@ -107,13 +112,11 @@ public class Turn {
 
     /* Private methods */
     /* Add unit to list */
-    // Not used currently
     private void add(Unit unit) {
         units.add(unit);
     }
 
     /* Removes specified unit */
-    // Not used currently
     private void remove(Unit unit) {
         units.remove(unit);
     }
@@ -130,7 +133,7 @@ public class Turn {
                 if (!u.isPathEmpty()) {
                     Path p = u.getPath();
                     if (p.getDelay() == 0) {
-                        units.add(u);
+                        add(u);
                     }
                 }
             }
@@ -140,11 +143,13 @@ public class Turn {
     /* Set all units' next tile */
     private void setNextTiles() {
         for (Unit u : units) {
-            Path p = u.getPath();
-            Tile t = p.getNext();
-            u.setNext(t);
-            if (t == null) {
-                u.setPathtype(Pathtype.STATIONARY);
+            if (!u.isDead()) {
+                Path p = u.getPath();
+                Tile t = p.getNext();
+                u.setNext(t);
+                if (t == null) {
+                    u.setPathtype(Pathtype.STATIONARY);
+                }
             }
         }
     }
