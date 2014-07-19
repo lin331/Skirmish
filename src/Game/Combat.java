@@ -56,11 +56,12 @@ public class Combat {
                     unit.getPathtype() == Pathtype.STANDARD) {
                 if (hasAdjacent(unit)) {
                     Unit[] enemies = getAdjacent(unit);
+                    check:
                     for (Unit enemy : enemies) {
                         if (enemy != null) {
                             for (Battle b : battles) {
                                 if (b.contains(unit, enemy)) {
-                                    break;
+                                    break check;
                                 }
                             }
                             if (unit.getPathtype() == Pathtype.STANDARD) {
