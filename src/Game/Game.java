@@ -182,10 +182,10 @@ public class Game {
                     x = Integer.parseInt(string);
                     System.out.println("Enter y coordinate: ");
                     y = s.nextInt();
-                    valid = map.getTiles()[y][x].getUnit() != null;
+                    valid = map.getTiles()[y][x].getUnit() == null;
                     if (!valid) {
-                        System.out.println("Unit already on tile\n"
-                                + "Re-enter coordinates");
+                        System.out.println("Unit already on tile.\n"
+                                + "Re-enter coordinates.");
                     }
                 } while (!valid);
                 Unit u = new Unit(t, i + 1, UnitType.DEFAULT,
