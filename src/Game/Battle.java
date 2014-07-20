@@ -47,6 +47,7 @@ public class Battle {
     /* Battle for archers */
     public void doBattle(Archer a) {
          int damage = a.getRangedAttack();
+         damage = (int) (damage * a.getType().getAttackModifier(b.getType()));
          b.reduceHealth(damage);
          if (b.isDead()) {
              System.out.println(b + " killed by " + a);
