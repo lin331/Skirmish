@@ -50,7 +50,7 @@ public class Game {
     private void start() {
         this.active = true;
     }
-    
+
     /* Ends the game */
     private void end() {
         this.active = false;
@@ -60,7 +60,7 @@ public class Game {
     private boolean isActive() {
         return active;
     }
-    
+
     /* Check if turn is empty */
     public boolean isTurnEmpty() {
         return this.turn.isEmpty();
@@ -168,14 +168,24 @@ public class Game {
             System.out.println(t.toString() + ":");
             for (int i = 0; i < num; i++) {
                 System.out.println("Unit #" + (i + 1) + ":");
-                System.out.println("Enter x coordinate: ");
-                String string = s.next();
-                if (string.equals("end")) {
-                    break;
-                }
-                int x = Integer.parseInt(string);
-                System.out.println("Enter y coordinate: ");
-                int y = s.nextInt();
+                boolean valid = false;
+                int x = -1;
+                int y = -1;
+                do {
+                    System.out.println("Enter x coordinate: ");
+                    String string = s.next();
+                    if (string.equals("end")) {
+                        break;
+                    }
+                    x = Integer.parseInt(string);
+                    System.out.println("Enter y coordinate: ");
+                    y = s.nextInt();
+                    valid = map.getTiles()[y][x].getUnit() != null;
+                    if (!valid) {
+                        System.out.println("Unit already on tile\n"
+                                + "Re-enter coordinates");
+                    }
+                } while (!valid);
                 Unit u = new Unit(t, i + 1, UnitType.DEFAULT,
                         map.getTiles()[y][x]);
                 t.addUnit(u);
@@ -183,7 +193,7 @@ public class Game {
             System.out.println(t.toString() + " Total Units: " + num);
         }
     }
-    
+
     private void addUnits2() {
         @SuppressWarnings("resource")
         Scanner s = new Scanner(System.in);
@@ -193,10 +203,12 @@ public class Game {
             System.out.println(t.toString() + ":");
             for (int i = 0; i < num; i++) {
                 System.out.println("Unit #" + (i + 1) + ":");
-                System.out.println("Pick unit type: (1 - Footman, 2 - Spearman, 3 - Archer, 4 - Calvary)");
+                System.out.println("Pick unit type:"
+                        + "(1 - Footman, 2 - Spearman, "
+                        + "3 - Archer, 4 - Calvary)");
                 int ut = s.nextInt();
                 UnitType type;
-                switch(ut) {
+                switch (ut) {
                     case 1:
                         type = UnitType.FOOTMAN;
                         break;
@@ -212,22 +224,31 @@ public class Game {
                     default:
                         type = UnitType.DEFAULT;
                 }
-                System.out.println("Enter x coordinate: ");
-                String string = s.next();
-                if (string.equals("end")) {
-                    break;
-                }
-                int x = Integer.parseInt(string);
-                System.out.println("Enter y coordinate: ");
-                int y = s.nextInt();
-                Unit u = new Unit(t, i + 1, type,
-                        map.getTiles()[y][x]);
+                boolean valid = false;
+                int x = -1;
+                int y = -1;
+                do {
+                    System.out.println("Enter x coordinate: ");
+                    String string = s.next();
+                    if (string.equals("end")) {
+                        break;
+                    }
+                    x = Integer.parseInt(string);
+                    System.out.println("Enter y coordinate: ");
+                    y = s.nextInt();
+                    valid = map.getTiles()[y][x].getUnit() != null;
+                    if (!valid) {
+                        System.out.println("Unit already on tile\n"
+                                + "Re-enter coordinates");
+                    }
+                } while (!valid);
+                Unit u = new Unit(t, i + 1, type, map.getTiles()[y][x]);
                 t.addUnit(u);
             }
             System.out.println(t.toString() + " Total Units: " + num);
         }
     }
-    
+
     /* Prompt for selecting unit */
     private Unit selectUnit(Team team) {
         Scanner s = new Scanner(System.in);
@@ -280,7 +301,7 @@ public class Game {
         start();
         gui.render();
     }
-    
+
     public static void main(String[] args) {
         Game game = new Game();
         game.initialize();
