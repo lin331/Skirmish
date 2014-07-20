@@ -168,6 +168,7 @@ public class Game {
         int num = Integer.parseInt(s.next());
         for (Team t : teams) {
             System.out.println(t.toString() + ":");
+            units:
             for (int i = 0; i < num; i++) {
                 System.out.println("Unit #" + (i + 1) + ":");
                 boolean valid = false;
@@ -177,7 +178,7 @@ public class Game {
                     System.out.println("Enter x coordinate: ");
                     String string = s.next();
                     if (string.equals("end")) {
-                        break;
+                        break units;
                     }
                     x = Integer.parseInt(string);
                     System.out.println("Enter y coordinate: ");
