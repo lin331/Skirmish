@@ -1,6 +1,7 @@
 package Game;
 
 import Map.Pathtype;
+import Player.Archer;
 import Player.Unit;
 
 public class Battle {
@@ -15,14 +16,7 @@ public class Battle {
         System.out.println("Battle engaged\n\t" + a + " vs. " + b);
         this.a = a;
         this.b = b;
-        // Calculate modified attack damage
-        /* @formatter:off */
-        this.aDmg = (int) (a.getAttack() * a.getType()
-                .getAttackModifier(b.getType()));
-        this.bDmg = (int) (b.getAttack() * b.getType()
-                .getAttackModifier(a.getType()));
         this.flanked = flanked;
-        /* @formatter:on */
     }
 
     /* Check if battle exists */
@@ -48,6 +42,16 @@ public class Battle {
                 e.printStackTrace();
             }
         }
+    }
+
+    /* Battle for archers */
+    public void doBattle(Archer a) {
+         int damage = a.getRangedAttack();
+         b.reduceHealth(damage);
+         if (b.isDead()) {
+             System.out.println(b + " killed by " + a);
+             b.setDead();             
+         }
     }
 
     /* Getters */
@@ -80,14 +84,26 @@ public class Battle {
     }
     
     /* Private methods */
+    /* Calculate damage modifiers */
+    private void damageMods() {
+        // Calculate modified attack damage
+        /* @formatter:off */
+        this.aDmg = (int) (a.getAttack() * a.getType()
+                .getAttackModifier(b.getType()));
+        this.bDmg = (int) (b.getAttack() * b.getType()
+                .getAttackModifier(a.getType()));
+        /* @formatter:on */
+    }
+    
     /* Method to do battle normally or when both units are flanked */
     private void normal() {
-     // A is stationary & B is moving: B then A
+        damageMods();
         if (this.flanked == 3) {
             System.out.println(a + " & " + b + " are flanked");
             this.aDmg = (int) (aDmg * 0.5);
             this.bDmg = (int) (bDmg * 0.5);            
         }
+        // A is stationary & B is moving: B then A
         if (a.getPathtype() == Pathtype.STATIONARY &&
                 b.getPathtype() != Pathtype.STATIONARY) {
             System.out.println("B then A");
@@ -175,6 +191,7 @@ public class Battle {
         if (this.flanked == 0 || this.flanked == 3) {
             throw new Exception("Not flanked/both flanked");
         }
+        damageMods();
         // B attacks first
         if (this.flanked == 1) {
             System.out.println(a + " is flanked");

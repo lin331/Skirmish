@@ -2,6 +2,7 @@ package Game;
 
 import Graphics.Gui;
 import Map.Map;
+import Player.Archer;
 import Player.Team;
 import Player.UnitType;
 import Player.Unit;
@@ -83,8 +84,8 @@ public class Game {
     /* Initialize game mechanics */
     private void initialize2() {
         this.active = false;
-        this.turn = new Turn(map, teams);
-        this.combat = new Combat(turn, teams);
+        this.turn = new Turn(teams);
+        this.combat = new Combat(map, turn, teams);
     }
 
     /* Put units on map tiles */
@@ -110,6 +111,7 @@ public class Game {
             map.printMap();
             gui.render();
             combat.checkBattle();
+            combat.checkArchers();
             System.out.println("Turn cycle: " + i);
             i++;
         } while (!turn.isEmpty());
@@ -242,8 +244,14 @@ public class Game {
                                 + "Re-enter coordinates");
                     }
                 } while (!valid);
-                Unit u = new Unit(t, i + 1, type, map.getTiles()[y][x]);
-                t.addUnit(u);
+                if (type != UnitType.ARCHER){ 
+                    Unit u = new Unit(t, i + 1, type, map.getTiles()[y][x]);
+                    t.addUnit(u);
+                }
+                else {
+                    Archer u = new Archer(t, i + 1, map.getTiles()[y][x]);
+                    t.addUnit(u);
+                }
             }
             System.out.println(t.toString() + " Total Units: " + num);
         }

@@ -8,15 +8,15 @@ import Map.Tile;
 import java.util.Scanner;
 
 public class Unit implements Comparable<Unit> {
-    private Team team; // Unit's team
-    private int num; // Unit's number
-    private UnitType type; // Unit type
-    private int health; // Unit's health stat
-    private int attack; // Unit's attack stat
-    private int moves; // How far unit can move
-    private Tile tile; // Unit's current tile
-    private Tile next; // Unit's next tile
-    private Path path; // Path to new tile
+    protected Team team; // Unit's team
+    protected int num; // Unit's number
+    protected UnitType type; // Unit type
+    protected int health; // Unit's health stat
+    protected int attack; // Unit's attack stat
+    protected int moves; // How far unit can move
+    protected Tile tile; // Unit's current tile
+    protected Tile next; // Unit's next tile
+    protected Path path; // Path to new tile
 
     /* Public methods */
     public Unit(Team team, int num, Tile tile) {

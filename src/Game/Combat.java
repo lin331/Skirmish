@@ -5,6 +5,7 @@ import Map.Pathtype;
 import Map.Tile;
 import Player.Team;
 import Player.Unit;
+import Player.Archer;
 import Player.UnitType;
 
 import java.util.ArrayList;
@@ -18,9 +19,9 @@ public class Combat {
     private ArrayList<Battle> battles = new ArrayList<Battle>();
 
     /* Public methods */
-    public Combat(Turn turn, Team[] teams) {
+    public Combat(Map map, Turn turn, Team[] teams) {
         this.turn = turn;
-        this.map = turn.getMap();
+        this.map = map;
         initialize(teams);
     }
 
@@ -99,6 +100,39 @@ public class Combat {
             }
         }
         System.out.println("Combat: Checking Done");
+    }
+    
+    /* Check if archers need to attack */
+    public void checkArchers() {
+        // Add attacking archers to list
+        ArrayList<Archer> archers = new ArrayList<Archer>();
+        for (Unit u : units) {
+            if (u.getType() == UnitType.ARCHER) {
+                Archer archer = (Archer) u;
+                if (archer.getAttackTile() != null) {
+                    archers.add(archer);
+                }
+            }
+        }
+        check:
+        for (Archer a : archers) {
+            if (a.isPathEmpty()) {
+                Tile t = a.getAttackTile();
+                Unit enemy = t.getUnit();
+                if (enemy != null) {
+                    if (enemy.getTeam() != a.getTeam()) {
+                        for (Battle b : battles) {
+                            if (b.contains(a, enemy)) {
+                                break check;
+                            }
+                        }
+                        Battle battle = new Battle(a, enemy, 0);
+                        battles.add(battle);
+                        battle.doBattle(a);
+                    }
+                }
+            }
+        }
     }
 
     /* Clears battle list */

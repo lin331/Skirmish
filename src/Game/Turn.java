@@ -1,11 +1,11 @@
 package Game;
 
-import Map.Map;
 import Map.Path;
 import Map.Pathtype;
 import Map.Tile;
 import Player.Team;
 import Player.Unit;
+import Player.UnitType;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,14 +15,12 @@ import java.util.ListIterator;
 public class Turn {
 
     private final int MAX_COMMANDS = 3;
-    private ArrayList<Unit> units;
-    private Map map;
-    private Team[] teams;
+    private ArrayList<Unit> units; // Units represent move commands
+    private Team[] teams; // Used to get 
 
     /* Public methods */
-    public Turn(Map map, Team[] teams) {
+    public Turn(Team[] teams) {
         units = new ArrayList<Unit>();
-        this.map = map;
         this.teams = teams;
     }
 
@@ -41,10 +39,6 @@ public class Turn {
     public Team[] getTeams() {
         return this.teams;
     }
-    
-    public Map getMap() {
-        return this.map;
-    }
 
     /* Check if list is empty */
     public boolean isEmpty() {
@@ -61,6 +55,7 @@ public class Turn {
         System.out.println("Processing");
         // Run ghost cycle to check for conflicts
         ghostCycle();
+        // Iterate through list of commands
         ListIterator<Unit> iterator = units.listIterator();
         while (iterator.hasNext()) {
             Unit u = iterator.next();
@@ -115,12 +110,7 @@ public class Turn {
     private void add(Unit unit) {
         units.add(unit);
     }
-
-    /* Removes specified unit */
-    private void remove(Unit unit) {
-        units.remove(unit);
-    }
-
+    
     /* Sort units by move priority */
     private void sort() {
         Collections.sort(units);
