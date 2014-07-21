@@ -1,4 +1,4 @@
-package Graphics;
+package graphics;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -6,8 +6,8 @@ import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 
-import Player.Unit;
-import Player.UnitType;
+import player.Unit;
+import player.UnitType;
 
 public class UnitSetup implements MouseListener {
     private Gui gui;

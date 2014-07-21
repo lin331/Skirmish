@@ -1,9 +1,9 @@
-package Map;
-
-import Player.Team;
-import Player.Unit;
+package map;
 
 import java.util.ArrayList;
+
+import player.Team;
+import player.Unit;
 
 /* Map for game */
 public class Map {

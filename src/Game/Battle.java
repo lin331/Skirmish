@@ -1,8 +1,8 @@
-package Game;
+package game;
 
-import Map.Pathtype;
-import Player.Archer;
-import Player.Unit;
+import player.Archer;
+import player.Unit;
+import map.Pathtype;
 
 public class Battle {
     Unit a;

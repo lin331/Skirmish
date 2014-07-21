@@ -1,15 +1,15 @@
-package Game;
-
-import Map.Map;
-import Map.Pathtype;
-import Map.Tile;
-import Player.Team;
-import Player.Unit;
-import Player.Archer;
-import Player.UnitType;
+package game;
 
 import java.util.ArrayList;
 import java.util.ListIterator;
+
+import player.Archer;
+import player.Team;
+import player.Unit;
+import player.UnitType;
+import map.Map;
+import map.Pathtype;
+import map.Tile;
 
 public class Combat {
     private Turn turn;

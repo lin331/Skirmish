@@ -1,16 +1,16 @@
-package Game;
-
-import Map.Path;
-import Map.Pathtype;
-import Map.Tile;
-import Player.Team;
-import Player.Unit;
-import Player.UnitType;
+package game;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.ListIterator;
+
+import player.Team;
+import player.Unit;
+import player.UnitType;
+import map.Path;
+import map.Pathtype;
+import map.Tile;
 
 public class Turn {
 

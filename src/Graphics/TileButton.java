@@ -1,11 +1,12 @@
-package Graphics;
-
-import Map.Position;
-import Map.Tile;
+package graphics;
 
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
+
+import map.Position;
+import map.Tile;
 
 public class TileButton extends JButton {
 

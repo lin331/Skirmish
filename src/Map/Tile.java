@@ -1,6 +1,6 @@
-package Map;
+package map;
 
-import Player.Unit;
+import player.Unit;
 
 /* Tiles for map */
 public class Tile {

@@ -1,7 +1,8 @@
-package Map;
+package map;
 
-import Player.Unit;
 import java.util.ArrayList;
+
+import player.Unit;
 
 public class Path {
     private Pathtype type;

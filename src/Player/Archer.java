@@ -1,6 +1,6 @@
-package Player;
+package player;
 
-import Map.Tile;
+import map.Tile;
 
 public class Archer extends Unit {
     private Tile attackTile;

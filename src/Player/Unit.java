@@ -1,11 +1,11 @@
-package Player;
-
-import Map.Map;
-import Map.Path;
-import Map.Pathtype;
-import Map.Tile;
+package player;
 
 import java.util.Scanner;
+
+import map.Map;
+import map.Path;
+import map.Pathtype;
+import map.Tile;
 
 public class Unit implements Comparable<Unit> {
     protected Team team; // Unit's team

@@ -1,14 +1,15 @@
-package Graphics;
-
-import Map.Path;
-import Map.Pathtype;
-import Map.Tile;
-import Player.Team;
-import Player.Unit;
+package graphics;
 
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
+
+import player.Team;
+import player.Unit;
+import map.Path;
+import map.Pathtype;
+import map.Tile;
 
 import java.util.ArrayList;
 

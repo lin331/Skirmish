@@ -1,17 +1,18 @@
-package Game;
+package game;
 
-import Graphics.Gui;
-import Map.Map;
-import Player.Archer;
-import Player.Team;
-import Player.UnitType;
-import Player.Unit;
+import graphics.Gui;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import player.Archer;
+import player.Team;
+import player.Unit;
+import player.UnitType;
+import map.Map;
 
 public class Game {
     private Gui gui;

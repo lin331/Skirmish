@@ -1,19 +1,20 @@
-package Graphics;
+package graphics;
 
-import Game.Game;
-import Map.Map;
-import Map.Pathtype;
-import Map.Position;
-import Map.Tile;
-import Player.Team;
-import Player.Unit;
-import Player.UnitType;
+import game.Game;
 
 import java.awt.*;
 import java.awt.event.*;
 
 import javax.swing.*;
 import javax.swing.table.*;
+
+import player.Team;
+import player.Unit;
+import player.UnitType;
+import map.Map;
+import map.Pathtype;
+import map.Position;
+import map.Tile;
 
 import java.util.ArrayList;
 
