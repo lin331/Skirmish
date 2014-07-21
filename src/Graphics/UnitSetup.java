@@ -84,7 +84,7 @@ public class UnitSetup implements MouseListener {
         gui.pathOptions.setVisible(false);*/
     }
     
-    private void chooseUnitType(UnitType type) {
+    public void chooseUnitType(UnitType type) {
         
     }
     

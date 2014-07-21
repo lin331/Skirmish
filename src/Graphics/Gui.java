@@ -7,9 +7,11 @@ import Map.Position;
 import Map.Tile;
 import Player.Team;
 import Player.Unit;
+import Player.UnitType;
 
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
 import javax.swing.table.*;
 
@@ -123,17 +125,69 @@ public class Gui extends JFrame {
             }
         }
         mainPanel.add(mapPane, BorderLayout.NORTH);
-
-        // set up path type choices
-        pathOptions = new JPanel(new BorderLayout());
-        pathOptions.setBounds(0, 0, TILE_WIDTH * 3, TILE_HEIGHT * 2);
-        mapPane.add(pathOptions, new Integer(1), 0);
         
         // setup unit type choices
         unitOptions = new JPanel(new BorderLayout());
         unitOptions.setBounds(0, 0, TILE_WIDTH * 3, TILE_HEIGHT * 2);
         mapPane.add(unitOptions, 1, 0);
+        unitOptions.setVisible(false);
         
+        // def = default
+        JButton def = new JButton("Default");
+        def.setPreferredSize(new Dimension(TILE_WIDTH * 3,
+                TILE_HEIGHT * 2 / 3));
+        def.setFont(new Font("Arial", Font.PLAIN, 8));
+        def.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                uSetup.chooseUnitType(UnitType.DEFAULT);
+            }
+        });
+        
+        JButton footman = new JButton("Footman");
+        footman.setPreferredSize(new Dimension(TILE_WIDTH * 3,
+                TILE_HEIGHT * 2 / 3));
+        footman.setFont(new Font("Arial", Font.PLAIN, 8));
+        footman.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                uSetup.chooseUnitType(UnitType.FOOTMAN);
+            }
+        });
+
+        JButton spearman = new JButton("Spearman");
+        spearman .setPreferredSize(new Dimension(TILE_WIDTH * 3,
+                TILE_HEIGHT * 2 / 3));
+        spearman .setFont(new Font("Arial", Font.PLAIN, 8));
+        spearman .addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                uSetup.chooseUnitType(UnitType.SPEARMAN);
+            }
+        });
+
+        JButton cavalry = new JButton("Standard Move");
+        cavalry.setPreferredSize(new Dimension(TILE_WIDTH * 3,
+                TILE_HEIGHT * 2 / 3));
+        cavalry.setFont(new Font("Arial", Font.PLAIN, 8));
+        cavalry.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                uSetup.chooseUnitType(UnitType.CAVALRY);
+            }
+        });
+        
+        JButton archer = new JButton("Standard Move");
+        archer.setPreferredSize(new Dimension(TILE_WIDTH * 3,
+                TILE_HEIGHT * 2 / 3));
+        archer.setFont(new Font("Arial", Font.PLAIN, 8));
+        archer.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                uSetup.chooseUnitType(UnitType.ARCHER);
+            }
+        });
+        
+        // set up path type choices
+        pathOptions = new JPanel(new BorderLayout());
+        pathOptions.setBounds(0, 0, TILE_WIDTH * 3, TILE_HEIGHT * 2);
+        mapPane.add(pathOptions, new Integer(1), 0);
+
         JButton safeGoal = new JButton("Safe Goal Move");
         safeGoal.setPreferredSize(new Dimension(TILE_WIDTH * 3,
                 TILE_HEIGHT * 2 / 3));
@@ -164,9 +218,9 @@ public class Gui extends JFrame {
             }
         });
         
-        pathOptions.add(standard, BorderLayout.SOUTH);
-        pathOptions.add(safeGoal, BorderLayout.NORTH);
-        pathOptions.add(goal, BorderLayout.CENTER);
+        pathOptions.add(standard, BorderLayout.NORTH);
+        pathOptions.add(safeGoal, BorderLayout.CENTER);
+        pathOptions.add(goal, BorderLayout.SOUTH);
         pathOptions.setVisible(false);
 
         // set up turn panel under tiles
