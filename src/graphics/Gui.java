@@ -128,13 +128,12 @@ public class Gui extends JFrame {
         mainPanel.add(mapPane, BorderLayout.NORTH);
         
         // setup unit type choices
-        unitOptions = new JPanel(new BorderLayout());
-        unitOptions.setBounds(0, 0, TILE_WIDTH * 3, TILE_HEIGHT * 2);
+        unitOptions = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+        unitOptions.setBounds(0, 0, TILE_WIDTH * 3, TILE_HEIGHT * 10 / 3);
         mapPane.add(unitOptions, 1, 0);
         unitOptions.setVisible(false);
         
-        // def = default
-        JButton def = new JButton("Default");
+        JButton def = new JButton("Default"); // def = default
         def.setPreferredSize(new Dimension(TILE_WIDTH * 3,
                 TILE_HEIGHT * 2 / 3));
         def.setFont(new Font("Arial", Font.PLAIN, 8));
@@ -164,7 +163,7 @@ public class Gui extends JFrame {
             }
         });
 
-        JButton cavalry = new JButton("Standard Move");
+        JButton cavalry = new JButton("Cavalry");
         cavalry.setPreferredSize(new Dimension(TILE_WIDTH * 3,
                 TILE_HEIGHT * 2 / 3));
         cavalry.setFont(new Font("Arial", Font.PLAIN, 8));
@@ -174,7 +173,7 @@ public class Gui extends JFrame {
             }
         });
         
-        JButton archer = new JButton("Standard Move");
+        JButton archer = new JButton("Archer");
         archer.setPreferredSize(new Dimension(TILE_WIDTH * 3,
                 TILE_HEIGHT * 2 / 3));
         archer.setFont(new Font("Arial", Font.PLAIN, 8));
@@ -184,8 +183,14 @@ public class Gui extends JFrame {
             }
         });
         
+        unitOptions.add(def);
+        unitOptions.add(footman);
+        unitOptions.add(spearman);
+        unitOptions.add(cavalry);
+        unitOptions.add(archer);
+        
         // set up path type choices
-        pathOptions = new JPanel(new BorderLayout());
+        pathOptions = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
         pathOptions.setBounds(0, 0, TILE_WIDTH * 3, TILE_HEIGHT * 2);
         mapPane.add(pathOptions, new Integer(1), 0);
 
@@ -219,9 +224,9 @@ public class Gui extends JFrame {
             }
         });
         
-        pathOptions.add(standard, BorderLayout.NORTH);
-        pathOptions.add(safeGoal, BorderLayout.CENTER);
-        pathOptions.add(goal, BorderLayout.SOUTH);
+        pathOptions.add(standard);
+        pathOptions.add(safeGoal);
+        pathOptions.add(goal);
         pathOptions.setVisible(false);
 
         // set up turn panel under tiles
