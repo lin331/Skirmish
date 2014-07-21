@@ -1,31 +1,27 @@
-package Game;
-
-import Map.Map;
-import Map.Path;
-import Map.Pathtype;
-import Map.Tile;
-import Player.Team;
-import Player.Unit;
+package game;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.ListIterator;
 
+import player.Team;
+import player.Unit;
+import player.UnitType;
+import map.Path;
+import map.Pathtype;
+import map.Tile;
+
 public class Turn {
 
     private final int MAX_COMMANDS = 3;
-    private ArrayList<Unit> units;
-    Map map;
-    Team[] teams;
-    int cycle;
+    private ArrayList<Unit> units; // Units represent move commands
+    private Team[] teams; // Used to get 
 
     /* Public methods */
-    public Turn(Map map, Team[] teams) {
+    public Turn(Team[] teams) {
         units = new ArrayList<Unit>();
-        this.map = map;
         this.teams = teams;
-        this.cycle = 0;
     }
 
     /* Sets up turn for processing */
@@ -43,10 +39,6 @@ public class Turn {
     public Team[] getTeams() {
         return this.teams;
     }
-    
-    public Map getMap() {
-        return this.map;
-    }
 
     /* Check if list is empty */
     public boolean isEmpty() {
@@ -61,15 +53,23 @@ public class Turn {
     /* Process turn */
     public void process() {
         System.out.println("Processing");
+        // Run ghost cycle to check for conflicts
         ghostCycle();
+        // Iterate through list of commands
         ListIterator<Unit> iterator = units.listIterator();
         while (iterator.hasNext()) {
             Unit u = iterator.next();
-            if (u.getNext() == null) {
+            if (u.isDead()) {
+                // Remove unit from Turn if unit is dead
+                iterator.remove();
+            }
+            else if (u.getNext() == null) {
+                // Remove unit from Turn if unit finished moving
                 System.out.println("Removed " + u);
                 iterator.remove();
             }
             else {
+                // Updates unit's tile
                 Path p = u.getPath();
                 u.setTile(p.remove());
             }
@@ -107,17 +107,10 @@ public class Turn {
 
     /* Private methods */
     /* Add unit to list */
-    // Not used currently
     private void add(Unit unit) {
         units.add(unit);
     }
-
-    /* Removes specified unit */
-    // Not used currently
-    private void remove(Unit unit) {
-        units.remove(unit);
-    }
-
+    
     /* Sort units by move priority */
     private void sort() {
         Collections.sort(units);
@@ -130,7 +123,7 @@ public class Turn {
                 if (!u.isPathEmpty()) {
                     Path p = u.getPath();
                     if (p.getDelay() == 0) {
-                        units.add(u);
+                        add(u);
                     }
                 }
             }
@@ -140,11 +133,13 @@ public class Turn {
     /* Set all units' next tile */
     private void setNextTiles() {
         for (Unit u : units) {
-            Path p = u.getPath();
-            Tile t = p.getNext();
-            u.setNext(t);
-            if (t == null) {
-                u.setPathtype(Pathtype.STATIONARY);
+            if (!u.isDead()) {
+                Path p = u.getPath();
+                Tile t = p.getNext();
+                u.setNext(t);
+                if (t == null) {
+                    u.setPathtype(Pathtype.STATIONARY);
+                }
             }
         }
     }

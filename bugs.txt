@@ -1,12 +1,8 @@
 Need to fix:
-1)Opposing Stationary units that do not move at the end of their turns while being adjacent do not damage each other in the subsequent turns
-
-(they should damage each other once per turn when they are adjacent to each other)
-
-2)move options get cut off at the bottom of the screen, pic: http://screencloud.net/v/p3DW
+1)move options get cut off at the bottom of the screen, pic: http://screencloud.net/v/p3DW
   (it currently creates the dialogue box where you let go of your click)
 
-3)Movement mechanics, instead of having to press undo to fix a movement, should be able to just click the unit again and drag
+2)Movement mechanics, instead of having to press undo to fix a movement, should be able to just click the unit again and drag
   should also be click unit first to select it, and then drag path 2nd instead of just drag all in one go
     -can use mouse hover for pathing instead of drag if its more intuitive that way
 
@@ -19,6 +15,9 @@ Fixed:
 2)Goal move bugs (when the destination is diagonal to enemy unit)
   pics: <http://screencloud.net/v/hGnk> <http://screencloud.net/v/eTak>
 
+3)Opposing Stationary units that do not move at the end of their turns while being adjacent do not damage each other in the subsequent turns
+
+(they should damage each other once per turn when they are adjacent to each other)
 
 Things to Implement:
 1) floating damage text

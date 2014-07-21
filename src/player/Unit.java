@@ -1,22 +1,22 @@
-package Player;
-
-import Map.Map;
-import Map.Path;
-import Map.Pathtype;
-import Map.Tile;
+package player;
 
 import java.util.Scanner;
 
+import map.Map;
+import map.Path;
+import map.Pathtype;
+import map.Tile;
+
 public class Unit implements Comparable<Unit> {
-    private Team team; // Unit's team
-    private int num; // Unit's number
-    private UnitType type; // Unit type
-    private int health; // Unit's health stat
-    private int attack; // Unit's attack stat
-    private int moves; // How far unit can move
-    private Tile tile; // Unit's current tile
-    private Tile next; // Unit's next tile
-    private Path path; // Path to new tile
+    protected Team team; // Unit's team
+    protected int num; // Unit's number
+    protected UnitType type; // Unit type
+    protected int health; // Unit's health stat
+    protected int attack; // Unit's attack stat
+    protected int moves; // How far unit can move
+    protected Tile tile; // Unit's current tile
+    protected Tile next; // Unit's next tile
+    protected Path path; // Path to new tile
 
     /* Public methods */
     public Unit(Team team, int num, Tile tile) {
@@ -43,12 +43,11 @@ public class Unit implements Comparable<Unit> {
         path = new Path(this);
     }
 
-    
     /* Check if unit is blocking this */
     // TODO: Needs testing
     public boolean isBlockedBy(Unit u) {
         if (u.getNext() == this.next) {
-            if (u.getPathtype() == Pathtype.STATIONARY){ 
+            if (u.getPathtype() == Pathtype.STATIONARY) {
                 return true;
             }
         }
@@ -89,7 +88,7 @@ public class Unit implements Comparable<Unit> {
         this.path.clear();
         this.next = null;
     }
-    
+
     public void setDead() {
         this.tile.setUnit(null);
         this.tile = null;
@@ -97,7 +96,7 @@ public class Unit implements Comparable<Unit> {
         this.path.clear();
         this.path.setType(Pathtype.DEAD);
     }
-    
+
     /* Test purpose-only setters */
     public void setHealth(int health) {
         this.health = health;
@@ -106,7 +105,7 @@ public class Unit implements Comparable<Unit> {
     public void setAttack(int attack) {
         this.attack = attack;
     }
-    
+
     /* Getters below */
     public Team getTeam() {
         return team;
@@ -159,10 +158,11 @@ public class Unit implements Comparable<Unit> {
     public boolean isPathEmpty() {
         return path.isEmpty();
     }
-    
+
     /* Test print */
     public void printStats() {
-        System.out.println(team + " " + num + "\tHealth: " + health + "\tTile: " + tile);
+        System.out.println(team + " " + num + "\tHealth: " + health
+                + "\tTile: " + tile);
     }
 
     /* Console input */
