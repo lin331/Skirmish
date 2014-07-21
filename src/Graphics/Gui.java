@@ -37,9 +37,11 @@ public class Gui extends JFrame {
     private JPanel mainContainer;
     private JLayeredPane mapPane;
     public JPanel pathOptions;
+    public JPanel unitOptions;
     private JPanel tilePanel;
     private ArrayList<TileButton> tileButtons;
     private PathFinder pfinder;
+    private UnitSetup uSetup;
     private JPanel commandPanel;
     private JLabel commandLabel;
     private JPanel pathButtons;
@@ -107,12 +109,14 @@ public class Gui extends JFrame {
 
         // set up tile grid
         pfinder = new PathFinder(this);
+        uSetup = new UnitSetup(this);
         tileButtons = new ArrayList<TileButton>();
         for (int i = 0; i < map.getHeight(); i++) {
             for (int j = 0; j < map.getWidth(); j++) {
                 Tile t = map.getTiles()[i][j];
                 TileButton b = new TileButton(t, new ImageIcon("res/tile.png"));
                 b.addMouseListener(pfinder);
+                b.addMouseListener(uSetup);
                 b.setBorder(null);
                 tilePanel.add(b);
                 tileButtons.add(b);
@@ -120,12 +124,16 @@ public class Gui extends JFrame {
         }
         mainPanel.add(mapPane, BorderLayout.NORTH);
 
-        // set up pathtype choice
+        // set up path type choices
         pathOptions = new JPanel(new BorderLayout());
-
         pathOptions.setBounds(0, 0, TILE_WIDTH * 3, TILE_HEIGHT * 2);
         mapPane.add(pathOptions, new Integer(1), 0);
-
+        
+        // setup unit type choices
+        unitOptions = new JPanel(new BorderLayout());
+        unitOptions.setBounds(0, 0, TILE_WIDTH * 3, TILE_HEIGHT * 2);
+        mapPane.add(unitOptions, 1, 0);
+        
         JButton safeGoal = new JButton("Safe Goal Move");
         safeGoal.setPreferredSize(new Dimension(TILE_WIDTH * 3,
                 TILE_HEIGHT * 2 / 3));
@@ -155,10 +163,10 @@ public class Gui extends JFrame {
                 pfinder.choosePathtype(Pathtype.STANDARD);
             }
         });
-
+        
+        pathOptions.add(standard, BorderLayout.SOUTH);
         pathOptions.add(safeGoal, BorderLayout.NORTH);
         pathOptions.add(goal, BorderLayout.CENTER);
-        pathOptions.add(standard, BorderLayout.SOUTH);
         pathOptions.setVisible(false);
 
         // set up turn panel under tiles

@@ -43,12 +43,11 @@ public class Unit implements Comparable<Unit> {
         path = new Path(this);
     }
 
-    
     /* Check if unit is blocking this */
     // TODO: Needs testing
     public boolean isBlockedBy(Unit u) {
         if (u.getNext() == this.next) {
-            if (u.getPathtype() == Pathtype.STATIONARY){ 
+            if (u.getPathtype() == Pathtype.STATIONARY) {
                 return true;
             }
         }
@@ -89,7 +88,7 @@ public class Unit implements Comparable<Unit> {
         this.path.clear();
         this.next = null;
     }
-    
+
     public void setDead() {
         this.tile.setUnit(null);
         this.tile = null;
@@ -97,7 +96,7 @@ public class Unit implements Comparable<Unit> {
         this.path.clear();
         this.path.setType(Pathtype.DEAD);
     }
-    
+
     /* Test purpose-only setters */
     public void setHealth(int health) {
         this.health = health;
@@ -106,7 +105,7 @@ public class Unit implements Comparable<Unit> {
     public void setAttack(int attack) {
         this.attack = attack;
     }
-    
+
     /* Getters below */
     public Team getTeam() {
         return team;
@@ -159,10 +158,11 @@ public class Unit implements Comparable<Unit> {
     public boolean isPathEmpty() {
         return path.isEmpty();
     }
-    
+
     /* Test print */
     public void printStats() {
-        System.out.println(team + " " + num + "\tHealth: " + health + "\tTile: " + tile);
+        System.out.println(team + " " + num + "\tHealth: " + health
+                + "\tTile: " + tile);
     }
 
     /* Console input */
