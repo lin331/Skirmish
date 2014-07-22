@@ -158,6 +158,15 @@ public class Game {
         }
     }
 
+    /* Add units to team */
+    private void addUnits() {
+        for (int i = 0; i < 2; i++) {
+            gui.setCurrentTeam(teams[i]);
+            printf("log.txt", "%s's turn to add units", teams[i]);
+            gui.addUnits();
+        }
+    }
+    
     /* Takes move commands and processes them */
     private void requestTurn() {
         for (int i = 0; i < 2; i++) {
@@ -170,45 +179,8 @@ public class Game {
 
     /* For console input: */
     /* Add units to team */
-    private void addUnits() {
-        @SuppressWarnings("resource")
-        Scanner s = new Scanner(System.in);
-        System.out.println("Enter # of units per team: ");
-        int num = Integer.parseInt(s.next());
-        for (Team t : teams) {
-            System.out.println(t.toString() + ":");
-            units:
-            for (int i = 0; i < num; i++) {
-                System.out.println("Unit #" + (i + 1) + ":");
-                boolean valid = false;
-                int x = -1;
-                int y = -1;
-                do {
-                    System.out.println("Enter x coordinate: ");
-                    String string = s.next();
-                    if (string.equals("end")) {
-                        break units;
-                    }
-                    x = Integer.parseInt(string);
-                    System.out.println("Enter y coordinate: ");
-                    y = s.nextInt();
-                    valid = map.getTiles()[y][x].getUnit() == null;
-                    if (!valid) {
-                        System.out.println("Unit already on tile.\n"
-                                + "Re-enter coordinates.");
-                    }
-                } while (!valid);
-                Unit u = new Unit(t, i + 1, UnitType.DEFAULT,
-                        map.getTiles()[y][x]);
-                t.addUnit(u);
-                printf("log.txt", "Added %s\n", u);
-            }
-            printf("log.txt", "%s Total Units: %d\n", t, num);
-            System.out.println(t + " Total Units: " + num);
-        }
-    }
-
-    private void addUnits2() {
+    @Deprecated
+    private void addUnitsConsole() {
         @SuppressWarnings("resource")
         Scanner s = new Scanner(System.in);
         System.out.println("Enter # of units per team: ");

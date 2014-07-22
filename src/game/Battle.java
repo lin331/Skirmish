@@ -184,7 +184,7 @@ public class Battle {
         }
         // A and B simultaneously attack
         else {
-            printf("log.txt", "A and B");
+            printf("log.txt", "A and B\n");
             System.out.println("A and B");
             a.reduceHealth(bDmg);
             b.reduceHealth(aDmg);

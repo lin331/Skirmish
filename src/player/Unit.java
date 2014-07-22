@@ -63,6 +63,9 @@ public class Unit implements Comparable<Unit> {
     /* Setters */
     public void reduceHealth(int damage) {
         this.health = this.health - damage;
+        if (this.health < 0) {
+            this.health = 0;
+        }
     }
 
     public void setTile(Tile tile) {
@@ -96,15 +99,6 @@ public class Unit implements Comparable<Unit> {
         this.next = null;
         this.path.clear();
         this.path.setType(Pathtype.DEAD);
-    }
-
-    /* Test purpose-only setters */
-    public void setHealth(int health) {
-        this.health = health;
-    }
-
-    public void setAttack(int attack) {
-        this.attack = attack;
     }
 
     /* Getters below */

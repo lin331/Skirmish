@@ -17,6 +17,10 @@ public class Team {
         units.add(unit);
     }
 
+    public void remove(Unit unit) {
+        units.remove(unit);
+    }
+
     /* Getters */
     public Unit getUnit(int i) {
         return units.get(i - 1); // Return specific unit

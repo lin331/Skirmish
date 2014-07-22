@@ -87,14 +87,25 @@ public class PathFinder implements MouseListener {
             b.getTile().getUnit().setPath(paths.get(pathNum - 1));
             System.out.println(b.getTile().getUnit().getPath());
             drawingPath = false;
-
             choosingPathtype = true;
-
+            
             // Tile height/width = 32
             // Horizontal container padding = 73p
             // Vertical container padding = 37p
-            int chooseBoxX = (b.getTile().getX() * 32) + 73 + e.getX();
-            int chooseBoxY = (b.getTile().getY() * 32) + 37 + e.getY();
+            int chooseBoxX = 0;
+            int chooseBoxY = 0;
+            if (b.getTile().getY() < 3) {
+                chooseBoxY = (b.getTile().getY() * 32) + 37 + e.getY();
+            }
+            else {
+                chooseBoxY = ((b.getTile().getY() - 1) * 32) + 27 + e.getY();                    
+            }
+            if (b.getTile().getX() < 6) {
+                chooseBoxX = (b.getTile().getX() * 32) + 73 + e.getX();
+            }
+            else {
+                chooseBoxX = ((b.getTile().getX() - 3) * 32) + 73 + e.getX();
+            }
             gui.pathOptions.setBounds(chooseBoxX, chooseBoxY, 32 * 3, 32 * 2);
             gui.pathOptions.setVisible(true);
 
