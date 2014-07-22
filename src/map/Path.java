@@ -6,6 +6,7 @@ import player.Unit;
 
 public class Path {
     private Pathtype type;
+    private Unit unit;
     private ArrayList<Tile> tiles; // Positions in path
     private int maxMoves; // Total moves in path
     private int delay;
@@ -13,8 +14,8 @@ public class Path {
     /* Public methods */
     public Path(Unit unit) {
         this.type = Pathtype.STATIONARY;
+        this.unit = unit;
         this.tiles = new ArrayList<Tile>();
-        // this.tiles.add(unit.getTile());
         this.maxMoves = unit.getMove();
         delay = 0;
     }
@@ -56,23 +57,27 @@ public class Path {
     public boolean isValid(Tile t) {
         if (tiles.size() == 0) {
             // System.out.println("Valid");
-            return true;
+            Tile cur = unit.getTile();
+            if (t.isAdjacent(cur)) {
+                return true;
+            }
+            return false;
         }
         if (maxMoves == tiles.size()) {
-            System.out.println("Not valid: path full");
+            // System.out.println("Not valid: path full");
             return false;
         }
         if (t.isAdjacent(tiles.get(tiles.size() - 1))) {
             for (Tile tile : tiles) {
                 if (t.equals(tile)) {
-                    System.out.println("Not valid: Already moving there");
+                    // System.out.println("Not valid: Already moving there");
                     return false;
                 }
             }
             // System.out.println("Valid");
             return true;
         }
-        System.out.println("Not valid: not adjacent");
+        // System.out.println("Not valid: not adjacent");
         return false;
     }
 
