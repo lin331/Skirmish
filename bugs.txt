@@ -30,3 +30,4 @@ Things to Implement:
 8) line or something to mark the middle of the grid/sides (to improve map readability)
 9) damage animation (maybe flashing line or something)
 10) smooth unit cycle transitions (rather than just disappear then reappear)
+11) networking capabilities
