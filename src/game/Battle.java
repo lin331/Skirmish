@@ -128,7 +128,7 @@ public class Battle {
                 }
             }
             else {
-                printf("log.txt", "\t%s attacks %s for %d", b, a, bDmg);
+                printf("log.txt", "\t%s attacks %s for %d\n", b, a, bDmg);
                 System.out.println("\t" + b + " attacks " + a + " for " + bDmg);
                 a.reduceHealth(bDmg);
                 if (a.isDead()) {
@@ -152,7 +152,7 @@ public class Battle {
         // This should not happen
         else if (b.getPathtype() == Pathtype.STATIONARY &&
                 a.getPathtype() != Pathtype.STATIONARY) {
-            printf("log.txt", "!!!!!you fucked up here!!!!!");
+            printf("log.txt", "!!!!!you fucked up here!!!!!\n");
             System.out.println("ERROR: A not stationary\nA then B");   
             if (a.getPathtype() == Pathtype.GOAL ||
                     a.getPathtype() == Pathtype.SAFEGOAL) {
