@@ -162,8 +162,11 @@ public class Game {
     private void addUnits() {
         for (int i = 0; i < 2; i++) {
             gui.setCurrentTeam(teams[i]);
-            printf("log.txt", "%s's turn to add units", teams[i]);
+            printf("log.txt", "%s's turn to add units\n", teams[i]);
+            System.out.println(teams[i] + "'s turn to add units");
             gui.addUnits();
+            System.out.println(teams[i] + " has " + teams[i].getUnits().size()
+                    + " units");
         }
     }
     
