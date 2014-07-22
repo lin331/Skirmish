@@ -1,11 +1,13 @@
 package game;
 
+import static output.Output.Print.*;
 import graphics.Gui;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Scanner;
 
 import player.Archer;
@@ -108,12 +110,13 @@ public class Game {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            printf("log.txt", "Turn cycle: %d\n", i);
+            System.out.println("Turn cycle: " + i);
             turn.process();
             map.printMap();
             gui.render();
             combat.checkBattle();
             combat.checkArchers();
-            System.out.println("Turn cycle: " + i);
             i++;
         } while (!turn.isEmpty());
         combat.clearBattles();
@@ -126,14 +129,17 @@ public class Game {
         boolean b1 = !teams[0].hasUnits();
         boolean b2 = !teams[1].hasUnits();
         if (b1 && b2) {
+            printf("log.txt", "Tie game\n");
             System.out.println("Tie game");
             return true;
         }
         else if (b1) {
+            printf("log.txt", "%s has lost\n", teams[0]);
             System.out.println(teams[0] + " has lost");
             return true;
         }
         else if (b2) {
+            printf("log.txt", "%s has lost\n", teams[1]);
             System.out.println(teams[1] + " has lost");
             return true;
         }
@@ -142,6 +148,7 @@ public class Game {
 
     /* Prints units' stats to console */
     private void printStats() {
+        printf("log.txt", "Unit stats:\n");
         System.out.println("Unit stats:");
         for (Team t : teams) {
             ArrayList<Unit> units = t.getUnits();
@@ -155,7 +162,8 @@ public class Game {
     private void requestTurn() {
         for (int i = 0; i < 2; i++) {
             gui.setCurrentTeam(teams[i]);
-            System.out.println(teams[i].toString() + "'s turn:");
+            printf("log.txt", "%s's turn: \n", teams[i]);
+            System.out.println(teams[i] + "'s turn:");
             gui.requestPath();
         }
     }
@@ -193,8 +201,10 @@ public class Game {
                 Unit u = new Unit(t, i + 1, UnitType.DEFAULT,
                         map.getTiles()[y][x]);
                 t.addUnit(u);
+                printf("log.txt", "Added %s\n", u);
             }
-            System.out.println(t.toString() + " Total Units: " + num);
+            printf("log.txt", "%s Total Units: %d\n", t, num);
+            System.out.println(t + " Total Units: " + num);
         }
     }
 
@@ -204,7 +214,7 @@ public class Game {
         System.out.println("Enter # of units per team: ");
         int num = Integer.parseInt(s.next());
         for (Team t : teams) {
-            System.out.println(t.toString() + ":");
+            System.out.println(t + ":");
             for (int i = 0; i < num; i++) {
                 System.out.println("Unit #" + (i + 1) + ":");
                 System.out.println("Pick unit type:"
@@ -249,17 +259,21 @@ public class Game {
                 if (type != UnitType.ARCHER){ 
                     Unit u = new Unit(t, i + 1, type, map.getTiles()[y][x]);
                     t.addUnit(u);
+                    printf("log.txt", "Added %s\n", u);
                 }
                 else {
                     Archer u = new Archer(t, i + 1, map.getTiles()[y][x]);
                     t.addUnit(u);
+                    printf("log.txt", "Added %s\n", u);
                 }
             }
+            System.out.println(t + " Total Units: " + num);
             System.out.println(t.toString() + " Total Units: " + num);
         }
     }
 
     /* Prompt for selecting unit */
+    @Deprecated
     private Unit selectUnit(Team team) {
         Scanner s = new Scanner(System.in);
         System.out.println("Select unit: 1-" + team.getUnits().size());
@@ -283,6 +297,7 @@ public class Game {
 
     /* Takes move commands and processes them */
     /* May be broken */
+    @Deprecated
     private void requestTurnConsole() {
         for (int i = 0; i < 2; i++) {
             System.out.println(teams[i].toString() + "'s turn:");
@@ -313,7 +328,9 @@ public class Game {
     }
 
     public static void main(String[] args) {
+        printf("log.txt", "\n\n" + new Date().toString() + "\n");
         Game game = new Game();
+        printf("log.txt", "Game started\n");
         game.initialize();
         Gui gui = new Gui(game);
         game.setGui(gui);
@@ -332,6 +349,7 @@ public class Game {
             if (game.isOver()) {
                 game.end();
                 game.reset();
+                printf("log.txt", "\n\n" + new Date().toString() + "\n");
             }
         }
     }

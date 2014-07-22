@@ -1,5 +1,6 @@
 package game;
 
+import static output.Output.Print.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -52,6 +53,7 @@ public class Turn {
     
     /* Process turn */
     public void process() {
+        printf("log.txt", "Turn processing\n");
         System.out.println("Processing");
         // Run ghost cycle to check for conflicts
         ghostCycle();
@@ -65,6 +67,7 @@ public class Turn {
             }
             else if (u.getNext() == null) {
                 // Remove unit from Turn if unit finished moving
+                printf("log.txt", "Removed %s\n", u);
                 System.out.println("Removed " + u);
                 iterator.remove();
             }
@@ -91,6 +94,7 @@ public class Turn {
     /* Test printing */
     public void print() {
         for (Unit u : units) {
+            printf("log.txt", "%s - %s: %s\n", u.getTeam(), u, u.getPath());
             System.out.println(u.getTeam() + " - " + u + ": " + u.getPath());
         }
     }
@@ -147,6 +151,7 @@ public class Turn {
     /* Process tile conflicts */
     private void processConflicts(HashSet<ArrayList<Unit>> set) {
         if (!set.isEmpty()) {
+            printf("log.txt", "Conflicts processing\n");
             System.out.println("Conflicts: processing");
             for (ArrayList<Unit> list : set) {
                 Collections.sort(list);
@@ -175,6 +180,7 @@ public class Turn {
 
     /* Ghost cycle */
     private void ghostCycle() {
+        printf("log.txt", "Ghost cycle\n");
         System.out.println("Ghost cycle");
         HashSet<ArrayList<Unit>> set = new HashSet<ArrayList<Unit>>();
         ArrayList<Unit> temp = new ArrayList<Unit>(units);

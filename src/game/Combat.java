@@ -1,5 +1,6 @@
 package game;
 
+import static output.Output.Print.*;
 import java.util.ArrayList;
 import java.util.ListIterator;
 
@@ -50,6 +51,7 @@ public class Combat {
     /* Check for battles */
     public void checkBattle() {
         checkBattleChanges(turn.getTeams());
+        printf("log.txt", "Combat: checking for battles\n");
         System.out.println("Combat: checking for battles");
         for (Unit unit : units) {
             // Update unit's adjacency array
@@ -99,6 +101,7 @@ public class Combat {
                 }
             }
         }
+        printf("log.txt", "Combat: done checking\n");
         System.out.println("Combat: Checking Done");
     }
     
@@ -221,10 +224,13 @@ public class Combat {
         
         /* Test print */
         private void print() {
+            printf("log.txt", "%s\n", unit);
             System.out.println(unit);
             for (Unit u : adj) {
+                printf("log.txt", "%s ", u);
                 System.out.print(u + " ");
             }
+            printf("log.txt", "\n");
             System.out.println("");
         }
 
@@ -255,6 +261,7 @@ public class Combat {
 
     /* Initialize combat object */
     private void initialize(Team[] teams) {
+        printf("log.txt", "Initializing combat\n");
         System.out.println("Initializing combat");
         for (Team t : teams) {
             ArrayList<Unit> units = t.getUnits();
