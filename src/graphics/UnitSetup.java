@@ -14,7 +14,7 @@ import player.UnitType;
 
 public class UnitSetup implements MouseListener {
     private Gui gui;
-    
+
     private boolean listening;
     private boolean finished;
     private boolean mouseExiting;
@@ -24,7 +24,7 @@ public class UnitSetup implements MouseListener {
     private ArrayList<Tile> tiles;
     private ArrayList<TileButton> buttons;
     private int unitNum;
-    
+
     public UnitSetup(Gui gui) {
         this.gui = gui;
         this.listening = false;
@@ -37,11 +37,11 @@ public class UnitSetup implements MouseListener {
         tiles = new ArrayList<Tile>();
         buttons = new ArrayList<TileButton>();
     }
-    
+
     public boolean isListening() {
         return this.listening;
     }
-    
+
     public boolean isFinished() {
         return this.finished;
     }
@@ -49,12 +49,12 @@ public class UnitSetup implements MouseListener {
     public int getUnitNum() {
         return this.unitNum;
     }
-    
+
     public void start() {
         this.listening = true;
         this.finished = false;
     }
-    
+
     public void endTurn() {
         if (!choosingUnitType) {
             unitNum = 0;
@@ -84,7 +84,7 @@ public class UnitSetup implements MouseListener {
         choosingUnitType = false;
         gui.unitOptions.setVisible(false);
     }
-    
+
     public void setUnitType(UnitType type) {
         Team t = gui.getCurrentTeam();
         unitNum++;
@@ -102,26 +102,16 @@ public class UnitSetup implements MouseListener {
         b.setIcon(chooseIcon(b));
         choosingUnitType = false;
     }
-    
+
     public void chooseUnitType(UnitType type) {
         setUnitType(type);
         gui.unitOptions.setVisible(false);
     }
-    
+
     public ImageIcon chooseIcon(TileButton b) {
         ImageIcon icon = new ImageIcon("res/tile.png");
         if (undo) {
-            icon = new ImageIcon("res/tile.png");            
-        }
-        else if (choosingUnitType) {
-            if (!b.getTile().isEmpty()) {
-                if (gui.getCurrentTeam().getName() == "A") {
-                    icon = new ImageIcon("res/passedUnit1Tile1.png");                
-                }
-                else if (gui.getCurrentTeam().getName() == "B") {
-                    icon = new ImageIcon("res/passedUnit2Tile1.png");
-                }
-            }
+            icon = new ImageIcon("res/tile.png");
         }
         else if (b.getTile().isEmpty() && !mouseExiting) {
             icon = new ImageIcon("res/pathTile1.png");
@@ -130,19 +120,42 @@ public class UnitSetup implements MouseListener {
             icon = new ImageIcon("res/tile.png");
         }
         else if (!b.getTile().isEmpty()) {
+            StringBuilder sb = new StringBuilder("res/passed");
+            switch (b.getTile().getUnit().getType()) {
+                case FOOTMAN:
+                    sb.append("Footman");
+                    break;
+                case SPEARMAN:
+                    sb.append("Spearman");
+                    break;
+                case ARCHER:
+                    sb.append("Archer");
+                    break;
+                case CAVALRY:
+                    sb.append("Cavalry");
+                    break;
+                case BARBARIAN:
+                    sb.append("Barbarian");
+                    break;
+                default:
+                    break;
+            }
             if (b.getTile().getUnit().getTeam().getName() == "A") {
-                icon = new ImageIcon("res/passedUnit1Tile1.png");
+                sb.append("1");
             }
             else if (b.getTile().getUnit().getTeam().getName() == "B") {
-                icon = new ImageIcon("res/passedUnit2Tile1.png");
+                sb.append("2");
             }
+            sb.append("Tile1.png");
+            System.out.println(sb.toString());
+            icon = new ImageIcon(sb.toString());
         }
         else {
-            icon = new ImageIcon("res/tile.png");            
+            icon = new ImageIcon("res/tile.png");
         }
         return icon;
     }
-    
+
     /* Overrides */
     @Override
     public void mouseClicked(MouseEvent e) {
@@ -158,16 +171,18 @@ public class UnitSetup implements MouseListener {
                     chooseBoxY = (b.getTile().getY() * 32) + 37 + e.getY();
                 }
                 else {
-                    chooseBoxY = ((b.getTile().getY() - 3) * 32) + 27 + e.getY();                    
+                    chooseBoxY = ((b.getTile().getY() - 3) * 32) + 27
+                            + e.getY();
                 }
                 if (b.getTile().getX() < 6) {
                     chooseBoxX = (b.getTile().getX() * 32) + 73 + e.getX();
                 }
                 else {
-                    chooseBoxX = ((b.getTile().getX() - 3) * 32) + 73 + e.getX();
+                    chooseBoxX = ((b.getTile().getX() - 3) * 32) + 73
+                            + e.getX();
                 }
-                gui.unitOptions.setBounds(chooseBoxX, chooseBoxY,
-                        32 * 3, 32 * 10 / 3);
+                gui.unitOptions.setBounds(chooseBoxX, chooseBoxY, 32 * 3,
+                        32 * 10 / 3);
                 gui.unitOptions.setVisible(true);
             }
         }
@@ -175,12 +190,12 @@ public class UnitSetup implements MouseListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        
+
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        
+
     }
 
     @Override

@@ -212,6 +212,7 @@ public class Game {
                         break;
                     default:
                         type = UnitType.DEFAULT;
+                        break;
                 }
                 boolean valid = false;
                 int x = -1;

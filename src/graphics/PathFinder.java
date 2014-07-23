@@ -197,36 +197,50 @@ public class PathFinder implements MouseListener {
                 }
             }
             else {
+                Unit u = b.getTile().getUnit();
+                StringBuilder sb = new StringBuilder("res/passed");
+                switch (u.getType()) {
+                    case FOOTMAN:
+                        sb.append("Footman");
+                        break;
+                    case SPEARMAN:
+                        sb.append("Spearman");
+                        break;
+                    case ARCHER:
+                        sb.append("Archer");
+                        break;
+                    case CAVALRY:
+                        sb.append("Cavalry");
+                        break;
+                    case BARBARIAN:
+                        sb.append("Barbarian");
+                        break;
+                    default:
+                        sb.append("Unit");
+                        break;
+                }
                 if (b.getTile().getUnit().getTeam().getName() == "A") {
-                    switch (pathNum) {
-                        case 0:
-                            icon = new ImageIcon("res/passedUnit1Tile1.png");
-                            break;
-                        case 1:
-                            icon = new ImageIcon("res/passedUnit1Tile2.png");
-                            break;
-                        case 2:
-                            icon = new ImageIcon("res/passedUnit1Tile3.png");
-                            break;
-                        default:
-                            break;
-                    }
+                    sb.append("1");
                 }
                 else if (b.getTile().getUnit().getTeam().getName() == "B") {
-                    switch (pathNum) {
-                        case 0:
-                            icon = new ImageIcon("res/passedUnit2Tile1.png");
-                            break;
-                        case 1:
-                            icon = new ImageIcon("res/passedUnit2Tile2.png");
-                            break;
-                        case 2:
-                            icon = new ImageIcon("res/passedUnit2Tile3.png");
-                            break;
-                        default:
-                            break;
-                    }
+                    sb.append("2");
                 }
+                switch (pathNum) {
+                    case 0:
+                        sb.append("Tile1");
+                        break;
+                    case 1:
+                        sb.append("Tile2");
+                        break;
+                    case 2:
+                        sb.append("Tile3");
+                        break;
+                    default:
+                        break;
+                }
+                sb.append(".png");
+                System.out.println(sb.toString());
+                icon = new ImageIcon(sb.toString());
             }
         } // if drawingPath
         else {
@@ -234,12 +248,37 @@ public class PathFinder implements MouseListener {
                 icon = new ImageIcon("res/tile.png");
             }
             else {
+                Unit u = b.getTile().getUnit();
+                StringBuilder sb = new StringBuilder("res/");
+                switch (u.getType()) {
+                    case FOOTMAN:
+                        sb.append("Footman");
+                        break;
+                    case SPEARMAN:
+                        sb.append("Spearman");
+                        break;
+                    case ARCHER:
+                        sb.append("Archer");
+                        break;
+                    case CAVALRY:
+                        sb.append("Cavalry");
+                        break;
+                    case BARBARIAN:
+                        sb.append("Barbarian");
+                        break;
+                    default:
+                        sb.append("Unit");
+                        break;
+                }
                 if (b.getTile().getUnit().getTeam().getName() == "A") {
-                    icon = new ImageIcon("res/unit1Tile.png");
+                    sb.append("1");
                 }
                 else if (b.getTile().getUnit().getTeam().getName() == "B") {
-                    icon = new ImageIcon("res/unit2Tile.png");
+                    sb.append("2");
                 }
+                sb.append("Tile.png");
+                System.out.println(sb.toString());
+                icon = new ImageIcon(sb.toString());
             }
         }
 

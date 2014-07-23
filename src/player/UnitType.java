@@ -6,7 +6,8 @@ public enum UnitType {
     SPEARMAN  (70, 20, 5),
     ARCHER    (70, 30, 3),
     CAVALRY   (70, 25, 10),
-    BARBARIAN (50, 30, 6);
+    BARBARIAN (50, 30, 6),
+    DEFAULT   (20, 5, 5);
     /* @formatter:on */
 
     private final int health;

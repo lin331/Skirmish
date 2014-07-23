@@ -116,26 +116,45 @@ public class Gui extends JFrame {
         }
 
         // render tiles
-        ImageIcon tileIcon = new ImageIcon("res/tile.png");
-        ImageIcon unit1Tile = new ImageIcon("res/unit1Tile.png");
-        ImageIcon unit2Tile = new ImageIcon("res/unit2Tile.png");
 
         for (TileButton b : tileButtons) {
+            ImageIcon icon = null;
             if (b.getTile().isEmpty()) {
-                b.setIcon(tileIcon);
+                icon = new ImageIcon("res/tile.png");
             }
             else {
-                if (b.getTile().getUnit().getTeam().getName() == 
-                        game.getTeams()[0].getName())
-                {
-                    b.setIcon(unit1Tile);
+                Unit u = b.getTile().getUnit();
+                StringBuilder sb = new StringBuilder("res/");
+                switch (u.getType()) {
+                    case FOOTMAN:
+                        sb.append("Footman");
+                        break;
+                    case SPEARMAN:
+                        sb.append("Spearman");
+                        break;
+                    case ARCHER:
+                        sb.append("Archer");
+                        break;
+                    case CAVALRY:
+                        sb.append("Cavalry");
+                        break;
+                    case BARBARIAN:
+                        sb.append("Barbarian");
+                        break;
+                    default:
+                        sb.append("Unit");
+                        break;
                 }
-                else if (b.getTile().getUnit().getTeam().getName() ==
-                        game.getTeams()[1].getName())
-                {
-                    b.setIcon(unit2Tile);
+                if (b.getTile().getUnit().getTeam().getName() == "A") {
+                    sb.append("1");
                 }
+                else if (b.getTile().getUnit().getTeam().getName() == "B") {
+                    sb.append("2");
+                }
+                sb.append("Tile.png");
+                icon = new ImageIcon(sb.toString());
             }
+            b.setIcon(icon);
         }
 
         revalidate();
