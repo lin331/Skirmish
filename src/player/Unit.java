@@ -33,7 +33,6 @@ public class Unit implements Comparable<Unit> {
     }
 
     /* Check if unit is blocking this */
-    // TODO: Needs testing
     public boolean isBlockedBy(Unit u) {
         if (u.getNext() == this.next) {
             if (u.getPathtype() == Pathtype.STATIONARY) {
@@ -57,7 +56,7 @@ public class Unit implements Comparable<Unit> {
     }
 
     public void setTile(Tile tile) {
-        if (tile.getUnit() != this) {
+        if (this.tile.getUnit() == this) {
             this.tile.setUnit(null);
         }
         this.tile = tile;
