@@ -119,7 +119,7 @@ public class Gui extends JFrame {
             if (i == 1) {
                 index = teamASize;
             }
-            for (int j = 0; j < t.getUnits().size() - 1; j++) {
+            for (int j = 0; j < t.getUnits().size(); j++) {
                 if (t.getUnits().get(j).isDead()) {
                     infoModel.setValueAt(new ImageIcon("res/deadUnit.png"),
                             index + j, 0);
