@@ -2,11 +2,11 @@ package player;
 
 public enum UnitType {
     /* @formatter:off */
-    DEFAULT  (20, 5, 5),
-    FOOTMAN  (90, 20, 5),
-    SPEARMAN (70, 20, 5),
-    ARCHER   (70, 30, 3),
-    CAVALRY  (70, 25, 10);
+    FOOTMAN   (90, 20, 5),
+    SPEARMAN  (70, 20, 5),
+    ARCHER    (70, 30, 3),
+    CAVALRY   (70, 25, 10),
+    BARBARIAN (50, 30, 6);
     /* @formatter:on */
 
     private final int health;
@@ -34,8 +34,14 @@ public enum UnitType {
 
     /* Returns damage modifier based on unit type */
     public double getAttackModifier(UnitType t) {
-        double[][] modifiers = { { 1, 1, 2, 1 }, { 1, 1, 1, 2 },
-                { 1, 2, 1, 2 }, { 2, 0.75, 2, 1 } };
+        /* @formatter:off */
+        double[][] modifiers = {
+                { 1, 1, 2, 1, 1 },
+                { 1, 1, 1, 2, 1.5 },
+                { 1, 2, 1, 2, 1 },
+                { 2, 0.6, 2, 1, 1 },
+                { 1, 0.5, 1, 1, 1 }};
+        /* @formatter:on */
         int attacker;
         int defender;
         switch (this) {
@@ -50,6 +56,9 @@ public enum UnitType {
                 break;
             case CAVALRY:
                 attacker = 3;
+                break;
+            case BARBARIAN:
+                attacker = 4;
                 break;
             default:
                 attacker = -1;
@@ -68,6 +77,9 @@ public enum UnitType {
             case CAVALRY:
                 defender = 3;
                 break;
+            case BARBARIAN:
+                defender = 4;
+                break;
             default:
                 defender = -1;
                 break;
@@ -78,5 +90,3 @@ public enum UnitType {
         return modifiers[attacker][defender];
     }
 }
-
-// SUICIDAL

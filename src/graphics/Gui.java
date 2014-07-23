@@ -284,16 +284,6 @@ public class Gui extends JFrame {
         mapPane.add(unitOptions, 1, 0);
         unitOptions.setVisible(false);
         
-        JButton def = new JButton("Default"); // def = default
-        def.setPreferredSize(new Dimension(TILE_WIDTH * 3,
-                TILE_HEIGHT * 2 / 3));
-        def.setFont(new Font("Arial", Font.PLAIN, 8));
-        def.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                uSetup.chooseUnitType(UnitType.DEFAULT);
-            }
-        });
-        
         JButton footman = new JButton("Footman");
         footman.setPreferredSize(new Dimension(TILE_WIDTH * 3,
                 TILE_HEIGHT * 2 / 3));
@@ -334,11 +324,21 @@ public class Gui extends JFrame {
             }
         });
         
-        unitOptions.add(def);
+        JButton barbarian = new JButton("Barbarian");
+        barbarian.setPreferredSize(new Dimension(TILE_WIDTH * 3,
+                TILE_HEIGHT * 2 / 3));
+        barbarian.setFont(new Font("Arial", Font.PLAIN, 8));
+        barbarian.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                uSetup.chooseUnitType(UnitType.BARBARIAN);
+            }
+        });
+        
         unitOptions.add(footman);
         unitOptions.add(spearman);
         unitOptions.add(cavalry);
         unitOptions.add(archer);   
+        unitOptions.add(barbarian);
         
         undo.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {

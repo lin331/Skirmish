@@ -146,7 +146,7 @@ public class UnitSetup implements MouseListener {
     /* Overrides */
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (listening) {
+        if (listening && !choosingUnitType) {
             TileButton b = (TileButton) e.getSource();
             if (b.getTile().isEmpty()) {
                 buttons.add(b);

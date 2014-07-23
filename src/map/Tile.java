@@ -52,6 +52,10 @@ public class Tile {
     public int getY() {
         return this.y;
     }
+    
+    public int distanceFrom(Tile tile) {
+        return Math.abs(this.x - tile.getX()) + Math.abs(this.y - tile.getY()); 
+    }
 
     /* Overrides */
     @Override

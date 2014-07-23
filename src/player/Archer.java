@@ -7,7 +7,7 @@ public class Archer extends Unit {
     private int rangedAttack = 30;
     
     public Archer(Team team, int num, Tile tile) {
-        super(team, num, tile);
+        super(team, num, UnitType.ARCHER, tile);
         this.type = UnitType.ARCHER;
         this.attackTile = null;
     }
@@ -27,9 +27,7 @@ public class Archer extends Unit {
     }
     
     private boolean checkValid(Tile tile) {
-        /*if (statement) {
-            System.out.println("Invalid tile: Not in range");            
-        }*/
-        return true;
+        int distance = this.tile.distanceFrom(tile);
+        return distance > 1 && distance <= 5;
     }
 }

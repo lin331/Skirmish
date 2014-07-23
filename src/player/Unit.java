@@ -20,18 +20,6 @@ public class Unit implements Comparable<Unit> {
     protected Path path; // Path to new tile
 
     /* Public methods */
-    public Unit(Team team, int num, Tile tile) {
-        this.team = team;
-        this.num = num;
-        this.type = UnitType.DEFAULT;
-        this.health = type.getHealth();
-        this.attack = type.getAttack();
-        this.moves = type.getMove();
-        this.tile = tile;
-        this.next = null;
-        path = new Path(this);
-    }
-
     public Unit(Team team, int num, UnitType type, Tile tile) {
         this.team = team;
         this.num = num;
