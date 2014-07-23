@@ -8,12 +8,6 @@ import java.io.PrintWriter;
 
 public class Output {
     public static class Print {
-        /*public static void printf(String string) {
-            PrintWriter writer = null;
-            writer = new PrintWriter(new OutputStreamWriter(System.out));
-            writer.print(string);
-            writer.close();
-        }*/
 
         public static void printf(String format, Object... args) {
             PrintWriter writer = null;
@@ -32,6 +26,7 @@ public class Output {
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
+            System.out.format(format, args);
         }
     }
 }

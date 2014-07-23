@@ -1,6 +1,7 @@
 package game;
 
 import static output.Output.Print.*;
+
 import player.Archer;
 import player.Unit;
 import map.Pathtype;
@@ -15,7 +16,6 @@ public class Battle {
     /* Public methods */
     public Battle(Unit a, Unit b, int flanked) {
         printf("log.txt", "Battle engaged: %s vs. %s\n", a, b);
-        //System.out.println("Battle engaged\n\t" + a + " vs. " + b);
         this.a = a;
         this.b = b;
         this.flanked = flanked;
@@ -52,7 +52,7 @@ public class Battle {
          damage = (int) (damage * a.getType().getAttackModifier(b.getType()));
          b.reduceHealth(damage);
          if (b.isDead()) {
-             System.out.println(b + " killed by " + a);
+             printf("log.txt", "%s killed by %s\n", b, a);
              b.setDead();             
          }
     }
@@ -103,7 +103,6 @@ public class Battle {
         damageMods();
         if (this.flanked == 3) {
             printf("log.txt", "%s & %s are flanked\n", a, b);
-            System.out.println(a + " & " + b + " are flanked");
             this.aDmg = (int) (aDmg * 0.5);
             this.bDmg = (int) (bDmg * 0.5);            
         }
@@ -111,11 +110,9 @@ public class Battle {
         if (a.getPathtype() == Pathtype.STATIONARY &&
                 b.getPathtype() != Pathtype.STATIONARY) {
             printf("log.txt", "B then A\n");
-            System.out.println("B then A");
             if (b.getPathtype() == Pathtype.GOAL ||
                     b.getPathtype() == Pathtype.SAFEGOAL) {
                 printf("log.txt", "%s using goal move\n", b);
-                System.out.println(b + " goal move");
                 // Unit b does nothing
                 // Check if b is blocked by a
                 if (b.getPathSize() > 1) {
@@ -129,22 +126,18 @@ public class Battle {
             }
             else {
                 printf("log.txt", "\t%s attacks %s for %d\n", b, a, bDmg);
-                System.out.println("\t" + b + " attacks " + a + " for " + bDmg);
                 a.reduceHealth(bDmg);
                 if (a.isDead()) {
                     printf("log.txt","%s killed by %s\n", a, b); 
-                    System.out.println(a + " killed by " + b);
                     a.setDead();
                     return;
                 }
             }
             
             printf("log.txt", "\t%s attacks %s for %d\n", a, b, aDmg);
-            System.out.println("\t" + a + " attacks " + b + " for " + aDmg);
             b.reduceHealth(aDmg);
             if (b.isDead()) {
                 printf("log.txt", "%s killed by %s\n", b, a);
-                System.out.println(b + " killed by " + a);
                 b.setDead();
             }
         }
@@ -152,11 +145,10 @@ public class Battle {
         // This should not happen
         else if (b.getPathtype() == Pathtype.STATIONARY &&
                 a.getPathtype() != Pathtype.STATIONARY) {
-            printf("log.txt", "!!!!!you fucked up here!!!!!\n");
-            System.out.println("ERROR: A not stationary\nA then B");   
+            printf("log.txt", "!!!!!you fucked up here!!!!!\n"
+                    + "ERROR: A not stationary\n");
             if (a.getPathtype() == Pathtype.GOAL ||
                     a.getPathtype() == Pathtype.SAFEGOAL) {
-                System.out.println(a + " goal move");
                 // Unit a does nothing
                 // Check if a is blocked by b
                 if (a.getPathSize() > 1) {
@@ -171,31 +163,26 @@ public class Battle {
             else {
                 b.reduceHealth(aDmg);
                 if (b.isDead()) {
-                    System.out.println(b + " killed by " + a);
                     b.setDead();
                     return;
                 }
             }
             a.reduceHealth(bDmg);
             if (a.isDead()) {
-                System.out.println(a + " killed by " + b);
                 a.setDead();
             }
         }
         // A and B simultaneously attack
         else {
             printf("log.txt", "A and B\n");
-            System.out.println("A and B");
             a.reduceHealth(bDmg);
             b.reduceHealth(aDmg);
             if (a.isDead()) {
                 printf("log.txt", "%s killed by %s\n", a, b);
-                System.out.println(a + " killed by " + b);
                 a.setDead();
             }
             if (b.isDead()) {
                 printf("log.txt", "%s killed by %s\n", b, a);
-                System.out.println(b + " killed by " + a);
                 b.setDead();
             }
         }
@@ -210,12 +197,10 @@ public class Battle {
         // B attacks first
         if (this.flanked == 1) {
             printf("log.txt", "%s is flanked\n", a);
-            System.out.println(a + " is flanked");
             this.aDmg = (int) (aDmg * 0.5);
             if (b.getPathtype() == Pathtype.GOAL ||
                     b.getPathtype() == Pathtype.SAFEGOAL) {
                 printf("log.txt", "%s goal move\n", b);
-                System.out.println(b + " goal move");
                 // Unit b does nothing
                 // Check if b is blocked by a
                 if (b.getPathSize() > 1) {
@@ -229,33 +214,27 @@ public class Battle {
             }
             else {
                 printf("log.txt", "\t%s attacks %s for %d\n", b, a, bDmg);
-                System.out.println("\t" + b + " attacks " + a + " for " + bDmg);
                 a.reduceHealth(bDmg);
                 if (a.isDead()) {
                     printf("log.txt", "%s killed by %s\n", a, b);
-                    // System.out.println(a + " killed by " + b);
                     a.setDead();
                     return;
                 }
             }
             printf("log.txt", "\t%s attacks %s for %d\n", a, b, aDmg);
-            System.out.println("\t" + a + " attacks " + b + " for " + aDmg);
             b.reduceHealth(aDmg);
             if (b.isDead()) {
                 printf("log.txt", "%s killed by %s\n", b, a);
-                System.out.println(b + " killed by " + a);
                 b.setDead();
             }
         }
         // A attacks first
         else {
             printf("log.txt", "%s is flanked\n", b);
-            System.out.println(b + " is flanked");
             this.bDmg = (int) (bDmg * 0.5);
             if (a.getPathtype() == Pathtype.GOAL ||
                     a.getPathtype() == Pathtype.SAFEGOAL) {
                 printf("log.txt", "%s goal move\n", a);
-                System.out.println(a + " goal move");
                 // Unit a does nothing
                 // Check if a is blocked by b
                 if (a.getPathSize() > 1) {
@@ -271,7 +250,6 @@ public class Battle {
                 b.reduceHealth(aDmg);
                 if (b.isDead()) {
                     printf("log.txt", "%s killed by %s\n", b, a);
-                    System.out.println(b + " killed by " + a);
                     b.setDead();
                     return;
                 }
@@ -279,7 +257,6 @@ public class Battle {
             a.reduceHealth(bDmg);
             if (a.isDead()) {
                 printf("log.txt", "%s killed by %s\n", a, b);
-                System.out.println(a + " killed by " + b);
                 a.setDead();
             }
         }

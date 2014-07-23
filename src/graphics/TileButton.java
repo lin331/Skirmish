@@ -1,13 +1,12 @@
 package graphics;
 
-import java.awt.*;
-import java.awt.event.*;
-
-import javax.swing.*;
-
-import map.Position;
 import map.Tile;
 
+import javax.swing.Icon;
+import javax.swing.JButton;
+
+
+@SuppressWarnings("serial")
 public class TileButton extends JButton {
 
     private Tile tile;

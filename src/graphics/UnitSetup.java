@@ -1,16 +1,17 @@
 package graphics;
 
+import map.Tile;
+import player.Archer;
+import player.Team;
+import player.Unit;
+import player.UnitType;
+
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 
-import map.Tile;
-import player.Archer;
-import player.Team;
-import player.Unit;
-import player.UnitType;
 
 public class UnitSetup implements MouseListener {
     private Gui gui;
@@ -68,21 +69,23 @@ public class UnitSetup implements MouseListener {
     }
 
     public void undo() {
-        if (unitNum > 0) {
-            undo = true;
-            listening = true;
-            unitNum--;
-            Team team = gui.getCurrentTeam();
-            Unit u = units.remove(unitNum);
-            team.remove(u);
-            Tile t = tiles.remove(unitNum);
-            t.setUnit(null);
-            TileButton b = buttons.remove(unitNum);
-            b.setIcon(chooseIcon(b));
-            undo = false;
+        if (!choosingUnitType) {
+            if (unitNum > 0) {
+                undo = true;
+                listening = true;
+                unitNum--;
+                Team team = gui.getCurrentTeam();
+                Unit u = units.remove(unitNum);
+                team.remove(u);
+                Tile t = tiles.remove(unitNum);
+                t.setUnit(null);
+                TileButton b = buttons.remove(unitNum);
+                b.setIcon(chooseIcon(b));
+                undo = false;
+            }
+            choosingUnitType = false;
+            gui.unitOptions.setVisible(false);
         }
-        choosingUnitType = false;
-        gui.unitOptions.setVisible(false);
     }
 
     public void setUnitType(UnitType type) {
@@ -147,7 +150,6 @@ public class UnitSetup implements MouseListener {
                 sb.append("2");
             }
             sb.append("Tile1.png");
-            System.out.println(sb.toString());
             icon = new ImageIcon(sb.toString());
         }
         else {
@@ -168,18 +170,16 @@ public class UnitSetup implements MouseListener {
                 int chooseBoxX = 0;
                 int chooseBoxY = 0;
                 if (b.getTile().getY() < 3) {
-                    chooseBoxY = (b.getTile().getY() * 32) + 37 + e.getY();
+                    chooseBoxY = (b.getTile().getY() * 32);
                 }
                 else {
-                    chooseBoxY = ((b.getTile().getY() - 3) * 32) + 27
-                            + e.getY();
+                    chooseBoxY = (b.getTile().getY() * 32);
                 }
                 if (b.getTile().getX() < 6) {
-                    chooseBoxX = (b.getTile().getX() * 32) + 73 + e.getX();
+                    chooseBoxX = (b.getTile().getX() * 32) + 32 * 3 + 7;
                 }
                 else {
-                    chooseBoxX = ((b.getTile().getX() - 3) * 32) + 73
-                            + e.getX();
+                    chooseBoxX = (b.getTile().getX() * 32) - 25;
                 }
                 gui.unitOptions.setBounds(chooseBoxX, chooseBoxY, 32 * 3,
                         32 * 10 / 3);

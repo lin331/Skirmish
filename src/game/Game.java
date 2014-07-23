@@ -1,20 +1,14 @@
 package game;
 
 import static output.Output.Print.*;
+
 import graphics.Gui;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Scanner;
-
-import player.Archer;
 import player.Team;
 import player.Unit;
-import player.UnitType;
 import map.Map;
+
+import java.util.ArrayList;
+import java.util.Date;
 
 public class Game {
     private Gui gui;
@@ -111,7 +105,6 @@ public class Game {
                 e.printStackTrace();
             }
             printf("log.txt", "Turn cycle: %d\n", i);
-            System.out.println("Turn cycle: " + i);
             turn.process();
             map.printMap();
             gui.render();
@@ -130,17 +123,14 @@ public class Game {
         boolean b2 = !teams[1].hasUnits();
         if (b1 && b2) {
             printf("log.txt", "Tie game\n");
-            System.out.println("Tie game");
             return true;
         }
         else if (b1) {
             printf("log.txt", "%s has lost\n", teams[0]);
-            System.out.println(teams[0] + " has lost");
             return true;
         }
         else if (b2) {
             printf("log.txt", "%s has lost\n", teams[1]);
-            System.out.println(teams[1] + " has lost");
             return true;
         }
         return false;
@@ -149,7 +139,6 @@ public class Game {
     /* Prints units' stats to console */
     private void printStats() {
         printf("log.txt", "Unit stats:\n");
-        System.out.println("Unit stats:");
         for (Team t : teams) {
             ArrayList<Unit> units = t.getUnits();
             for (Unit u : units) {
@@ -163,10 +152,8 @@ public class Game {
         for (int i = 0; i < 2; i++) {
             gui.setCurrentTeam(teams[i]);
             printf("log.txt", "%s's turn to add units\n", teams[i]);
-            System.out.println(teams[i] + "'s turn to add units");
             gui.addUnits();
-            System.out.println(teams[i] + " has " + teams[i].getUnits().size()
-                    + " units");
+            printf("log.txt", "%s has %d units\n", teams[i], teams[i].getUnits().size());
         }
     }
     
@@ -175,117 +162,7 @@ public class Game {
         for (int i = 0; i < 2; i++) {
             gui.setCurrentTeam(teams[i]);
             printf("log.txt", "%s's turn: \n", teams[i]);
-            System.out.println(teams[i] + "'s turn:");
             gui.requestPath();
-        }
-    }
-
-    /* For console input: */
-    /* Add units to team */
-    @Deprecated
-    private void addUnitsConsole() {
-        @SuppressWarnings("resource")
-        Scanner s = new Scanner(System.in);
-        System.out.println("Enter # of units per team: ");
-        int num = Integer.parseInt(s.next());
-        for (Team t : teams) {
-            System.out.println(t + ":");
-            for (int i = 0; i < num; i++) {
-                System.out.println("Unit #" + (i + 1) + ":");
-                System.out.println("Pick unit type:"
-                        + "(1 - Footman, 2 - Spearman, "
-                        + "3 - Archer, 4 - Calvary)");
-                int ut = s.nextInt();
-                UnitType type;
-                switch (ut) {
-                    case 1:
-                        type = UnitType.FOOTMAN;
-                        break;
-                    case 2:
-                        type = UnitType.SPEARMAN;
-                        break;
-                    case 3:
-                        type = UnitType.ARCHER;
-                        break;
-                    case 4:
-                        type = UnitType.CAVALRY;
-                        break;
-                    default:
-                        type = UnitType.DEFAULT;
-                        break;
-                }
-                boolean valid = false;
-                int x = -1;
-                int y = -1;
-                do {
-                    System.out.println("Enter x coordinate: ");
-                    String string = s.next();
-                    if (string.equals("end")) {
-                        break;
-                    }
-                    x = Integer.parseInt(string);
-                    System.out.println("Enter y coordinate: ");
-                    y = s.nextInt();
-                    valid = map.getTiles()[y][x].getUnit() != null;
-                    if (!valid) {
-                        System.out.println("Unit already on tile\n"
-                                + "Re-enter coordinates");
-                    }
-                } while (!valid);
-                if (type != UnitType.ARCHER){ 
-                    Unit u = new Unit(t, i + 1, type, map.getTiles()[y][x]);
-                    t.addUnit(u);
-                    printf("log.txt", "Added %s\n", u);
-                }
-                else {
-                    Archer u = new Archer(t, i + 1, map.getTiles()[y][x]);
-                    t.addUnit(u);
-                    printf("log.txt", "Added %s\n", u);
-                }
-            }
-            System.out.println(t + " Total Units: " + num);
-            System.out.println(t.toString() + " Total Units: " + num);
-        }
-    }
-
-    /* Prompt for selecting unit */
-    @Deprecated
-    private Unit selectUnit(Team team) {
-        Scanner s = new Scanner(System.in);
-        System.out.println("Select unit: 1-" + team.getUnits().size());
-        String string = s.next();
-        if (string.equals("end")) {
-            return null;
-        }
-        int u = Integer.parseInt(string);
-        while (u < 1 || u > team.getUnits().size()) {
-            System.out.println("Invalid unit");
-            System.out.println("Select unit: 1-" + team.getUnits().size());
-            string = s.next();
-            if (string.equals("end")) {
-                return null;
-            }
-            u = Integer.parseInt(string);
-        }
-        Unit unit = team.getUnit(u);
-        return unit;
-    }
-
-    /* Takes move commands and processes them */
-    /* May be broken */
-    @Deprecated
-    private void requestTurnConsole() {
-        for (int i = 0; i < 2; i++) {
-            System.out.println(teams[i].toString() + "'s turn:");
-            for (int j = 0; j < turn.getMaxCommands(); j++) {
-                System.out.println("Command #" + (j + 1) + ": ");
-                Unit unit = selectUnit(teams[i]);
-                if (unit == null) {
-                    break;
-                }
-                // turn.add(unit);
-                unit.addPath(map);
-            }
         }
     }
 

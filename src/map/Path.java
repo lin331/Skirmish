@@ -1,8 +1,11 @@
 package map;
 
-import java.util.ArrayList;
+import static output.Output.Print.*;
 
 import player.Unit;
+
+import java.util.ArrayList;
+
 
 public class Path {
     private Pathtype type;
@@ -44,7 +47,7 @@ public class Path {
     /* Delete next tile in path */
     public Tile remove() {
         if (type == Pathtype.STATIONARY) {
-            System.out.println("Wtf man, it's stationary");
+            printf("log.txt", "!!!!!Unit is stationary....!!!!!");
         }
         Tile t = tiles.remove(0);
         if (tiles.isEmpty()) {
@@ -56,7 +59,6 @@ public class Path {
     /* Check if move is valid */
     public boolean isValid(Tile t) {
         if (tiles.size() == 0) {
-            // System.out.println("Valid");
             Tile cur = unit.getTile();
             if (t.isAdjacent(cur)) {
                 return true;
@@ -64,20 +66,16 @@ public class Path {
             return false;
         }
         if (maxMoves == tiles.size()) {
-            // System.out.println("Not valid: path full");
             return false;
         }
         if (t.isAdjacent(tiles.get(tiles.size() - 1))) {
             for (Tile tile : tiles) {
                 if (t.equals(tile)) {
-                    // System.out.println("Not valid: Already moving there");
                     return false;
                 }
             }
-            // System.out.println("Valid");
             return true;
         }
-        // System.out.println("Not valid: not adjacent");
         return false;
     }
 

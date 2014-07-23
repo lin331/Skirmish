@@ -1,9 +1,7 @@
 package player;
 
 import static output.Output.Print.*;
-import java.util.Scanner;
 
-import map.Map;
 import map.Path;
 import map.Pathtype;
 import map.Tile;
@@ -143,40 +141,8 @@ public class Unit implements Comparable<Unit> {
 
     /* Test print */
     public void printStats() {
-        printf("log.txt", "%s %d\tHealth: %d\tTile: %s\n",
-                team, num, health, tile);
-        System.out.println(team + " " + num + "\tHealth: " + health
-                + "\tTile: " + tile);
-    }
-
-    /* Console input */
-    /* Add to path */
-    @Deprecated
-    public void addPath(Map map) {
-        @SuppressWarnings("resource")
-        Scanner s = new Scanner(System.in);
-        for (int i = 0; i < moves; i++) {
-            System.out.println("Moves left: " + (moves - i));
-            System.out.println("Enter x coordinate: ");
-            String string = s.next();
-            if (string.equals("end")) {
-                break;
-            }
-            int x = Integer.parseInt(string);
-            while (x < 0 || x >= map.getWidth()) {
-                System.out.println("x error: Not on map");
-                System.out.println("Enter x coordinate: ");
-                x = s.nextInt();
-            }
-            System.out.println("Enter y coordinate: ");
-            int y = s.nextInt();
-            while (y < 0 || y >= map.getWidth()) {
-                System.out.println("y error: Not on map");
-                System.out.println("Enter y coordinate: ");
-                y = s.nextInt();
-            }
-            path.add(new Tile(x, y));
-        }
+        printf("log.txt", "%s %d\tHealth: %d\tTile: %s\n", team, num, health,
+                tile);
     }
 
     /* Overrides */

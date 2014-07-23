@@ -1,8 +1,6 @@
 package game;
 
 import static output.Output.Print.*;
-import java.util.ArrayList;
-import java.util.ListIterator;
 
 import player.Archer;
 import player.Team;
@@ -11,6 +9,10 @@ import player.UnitType;
 import map.Map;
 import map.Pathtype;
 import map.Tile;
+
+import java.util.ArrayList;
+import java.util.ListIterator;
+
 
 public class Combat {
     private Turn turn;
@@ -52,7 +54,6 @@ public class Combat {
     public void checkBattle() {
         checkBattleChanges(turn.getTeams());
         printf("log.txt", "Combat: checking for battles\n");
-        System.out.println("Combat: checking for battles");
         for (Unit unit : units) {
             // Update unit's adjacency array
             updateAdjacent(unit);
@@ -102,7 +103,6 @@ public class Combat {
             }
         }
         printf("log.txt", "Combat: done checking\n");
-        System.out.println("Combat: Checking Done");
     }
     
     /* Check if archers need to attack */
@@ -158,6 +158,8 @@ public class Combat {
         return node.getAdjacent();
     }
 
+
+    @SuppressWarnings("unused")
     private class AdjNode {
         Unit unit;
         // Index 0 = N; 1 = W; 2 = S; 3 = E
@@ -225,13 +227,10 @@ public class Combat {
         /* Test print */
         private void print() {
             printf("log.txt", "%s\n", unit);
-            System.out.println(unit);
             for (Unit u : adj) {
                 printf("log.txt", "%s ", u);
-                System.out.print(u + " ");
             }
             printf("log.txt", "\n");
-            System.out.println("");
         }
 
         /* Overrides */
@@ -262,7 +261,6 @@ public class Combat {
     /* Initialize combat object */
     private void initialize(Team[] teams) {
         printf("log.txt", "Initializing combat\n");
-        System.out.println("Initializing combat");
         for (Team t : teams) {
             ArrayList<Unit> units = t.getUnits();
             for (Unit u : units) {

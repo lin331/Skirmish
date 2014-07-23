@@ -1,13 +1,6 @@
 package graphics;
 
 import game.Game;
-
-import java.awt.*;
-import java.awt.event.*;
-
-import javax.swing.*;
-import javax.swing.table.*;
-
 import player.Team;
 import player.Unit;
 import player.UnitType;
@@ -15,8 +8,31 @@ import map.Map;
 import map.Pathtype;
 import map.Tile;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import javax.swing.BoxLayout;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+
+@SuppressWarnings("serial")
 public class Gui extends JFrame {
 
     private Game game;
@@ -103,7 +119,7 @@ public class Gui extends JFrame {
             if (i == 1) {
                 index = teamASize;
             }
-            for (int j = 0; j < t.getUnits().size(); j++) {
+            for (int j = 0; j < t.getUnits().size() - 1; j++) {
                 if (t.getUnits().get(j).isDead()) {
                     infoModel.setValueAt(new ImageIcon("res/deadUnit.png"),
                             index + j, 0);
@@ -203,6 +219,7 @@ public class Gui extends JFrame {
                 return false;
             }
 
+            @SuppressWarnings({ "unchecked", "rawtypes" })
             public Class getColumnClass(int column) {
                 if (column == 0)
                     return Icon.class;

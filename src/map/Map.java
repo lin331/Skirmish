@@ -20,7 +20,6 @@ public class Map {
     /* Set units on map */
     public void setUnits(Team teams[]) {
         printf("log.txt", "Map: setting units\n");
-        System.out.println("Map: settings units");
         for (Team t : teams) {
             ArrayList<Unit> units = t.getUnits();
             for (int i = 0; i < units.size(); i++) {
@@ -54,7 +53,6 @@ public class Map {
                 }
                 return tiles[tile.getY()][tile.getX() - 1];
             default:
-                // System.out.println("Invalid direction");
                 return null;
         }
     }
@@ -62,40 +60,28 @@ public class Map {
     /* Prints text map */
     public void printMap() {
         printf("log.txt", "  0  1  2  3  4  5  6  7  8 \n");
-        System.out.println("  0  1  2  3  4  5  6  7  8 ");
         for (int i = 0; i < HEIGHT; i++) {
             printf("log.txt", "-");
-            System.out.print("-");
             for (int k = 0; k < WIDTH; k++) {
                 printf("log.txt", "---");
-                System.out.print("---");
             }
             printf("log.txt", "\n%d", i);
-            System.out.println();
-            System.out.print(i);
             for (int j = 0; j < WIDTH; j++) {
                 printf("log.txt", "|");
-                System.out.print("|");
                 if (tiles[i][j].isEmpty()) {
                     printf("log.txt", "  ");
-                    System.out.print("  ");
                 }
                 else {
                     printf("log.txt", "%s", tiles[i][j].getUnit());
-                    System.out.print(tiles[i][j].getUnit());
                 }
             }
             printf("log.txt", "|\n");
-            System.out.println("|");
         }
         printf("log.txt", "-");
-        System.out.print("-");
         for (int k = 0; k < WIDTH; k++) {
             printf("log.txt", "---");
-            System.out.print("---");
         }
         printf("log.txt", "\n");
-        System.out.println();
     }
 
     /* Getters */

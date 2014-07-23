@@ -1,23 +1,23 @@
 package game;
 
 import static output.Output.Print.*;
+
+import player.Team;
+import player.Unit;
+import map.Path;
+import map.Pathtype;
+import map.Tile;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.ListIterator;
 
-import player.Team;
-import player.Unit;
-import player.UnitType;
-import map.Path;
-import map.Pathtype;
-import map.Tile;
-
 public class Turn {
 
     private final int MAX_COMMANDS = 3;
     private ArrayList<Unit> units; // Units represent move commands
-    private Team[] teams; // Used to get 
+    private Team[] teams; // Used to get
 
     /* Public methods */
     public Turn(Team[] teams) {
@@ -50,11 +50,10 @@ public class Turn {
     public int size() {
         return units.size();
     }
-    
+
     /* Process turn */
     public void process() {
         printf("log.txt", "Turn processing\n");
-        System.out.println("Processing");
         // Run ghost cycle to check for conflicts
         ghostCycle();
         // Iterate through list of commands
@@ -68,7 +67,6 @@ public class Turn {
             else if (u.getNext() == null) {
                 // Remove unit from Turn if unit finished moving
                 printf("log.txt", "Removed %s\n", u);
-                System.out.println("Removed " + u);
                 iterator.remove();
             }
             else {
@@ -95,7 +93,6 @@ public class Turn {
     public void print() {
         for (Unit u : units) {
             printf("log.txt", "%s - %s: %s\n", u.getTeam(), u, u.getPath());
-            System.out.println(u.getTeam() + " - " + u + ": " + u.getPath());
         }
     }
 
@@ -114,7 +111,7 @@ public class Turn {
     private void add(Unit unit) {
         units.add(unit);
     }
-    
+
     /* Sort units by move priority */
     private void sort() {
         Collections.sort(units);
@@ -147,27 +144,22 @@ public class Turn {
             }
         }
     }
-    
+
     /* Process tile conflicts */
     private void processConflicts(HashSet<ArrayList<Unit>> set) {
         if (!set.isEmpty()) {
             printf("log.txt", "Conflicts processing\n");
-            System.out.println("Conflicts: processing");
             for (ArrayList<Unit> list : set) {
                 Collections.sort(list);
-                /* @formatter:off */
                 if (list.get(0).getPathtype()
                         .compareTo(list.get(1).getPathtype()) == 0) {
-                /* @formatter:on */
                     for (Unit u : list) {
                         u.setNext(null);
                         u.clearPath();
                     }
                 }
-                /* @formatter:off */
                 else if (list.get(0).getPathtype()
                         .compareTo(list.get(1).getPathtype()) < 0) {
-                /* @formatter:on */
                     list.remove(0);
                     for (Unit u : list) {
                         u.setNext(null);
@@ -181,7 +173,6 @@ public class Turn {
     /* Ghost cycle */
     private void ghostCycle() {
         printf("log.txt", "Ghost cycle\n");
-        System.out.println("Ghost cycle");
         HashSet<ArrayList<Unit>> set = new HashSet<ArrayList<Unit>>();
         ArrayList<Unit> temp = new ArrayList<Unit>(units);
         ListIterator<Unit> iterator = temp.listIterator();

@@ -1,17 +1,15 @@
 package graphics;
 
-import java.awt.*;
-import java.awt.event.*;
+import static output.Output.Print.*;
 
-import javax.swing.*;
-
-import player.Team;
 import player.Unit;
 import map.Path;
 import map.Pathtype;
-import map.Tile;
 
+import java.awt.event.*;
 import java.util.ArrayList;
+
+import javax.swing.*;
 
 public class PathFinder implements MouseListener {
 
@@ -85,7 +83,7 @@ public class PathFinder implements MouseListener {
             pathNum++;
             TileButton b = (TileButton) e.getSource();
             b.getTile().getUnit().setPath(paths.get(pathNum - 1));
-            System.out.println(b.getTile().getUnit().getPath());
+            printf("log.txt", "%s", b.getTile().getUnit().getPath());
             drawingPath = false;
             choosingPathtype = true;
             
@@ -95,16 +93,16 @@ public class PathFinder implements MouseListener {
             int chooseBoxX = 0;
             int chooseBoxY = 0;
             if (b.getTile().getY() < 3) {
-                chooseBoxY = (b.getTile().getY() * 32) + 37 + e.getY();
+                chooseBoxY = (b.getTile().getY() * 32);
             }
             else {
-                chooseBoxY = ((b.getTile().getY() - 1) * 32) + 27 + e.getY();                    
+                chooseBoxY = (b.getTile().getY() * 32);
             }
             if (b.getTile().getX() < 6) {
-                chooseBoxX = (b.getTile().getX() * 32) + 73 + e.getX();
+                chooseBoxX = (b.getTile().getX() * 32) + 32 * 3 + 7;
             }
             else {
-                chooseBoxX = ((b.getTile().getX() - 3) * 32) + 73 + e.getX();
+                chooseBoxX = (b.getTile().getX() * 32) - 25;
             }
             gui.pathOptions.setBounds(chooseBoxX, chooseBoxY, 32 * 3, 32 * 2);
             gui.pathOptions.setVisible(true);
@@ -156,26 +154,27 @@ public class PathFinder implements MouseListener {
     }
 
     public void undo() {
-        if (pathNum > 0) {
-            listening = true;
-            pathNum--;
-            unitsMoved.remove(unitsMoved.size() - 1);
-            paths.remove(paths.size() - 1);
-
-            for (TileButton b : lastPath) {
-                b.setIcon(chooseIcon(b));
+        if (!choosingPathtype) {
+            if (pathNum > 0) {
+                listening = true;
+                pathNum--;
+                unitsMoved.remove(unitsMoved.size() - 1);
+                paths.remove(paths.size() - 1);
+    
+                for (TileButton b : lastPath) {
+                    b.setIcon(chooseIcon(b));
+                }
             }
+            choosingPathtype = false;
+            gui.pathOptions.setVisible(false);
         }
-        choosingPathtype = false;
-        gui.pathOptions.setVisible(false);
     }
 
     public void choosePathtype(Pathtype type) {
         setPathtype(type);
         choosingPathtype = false;
         gui.pathOptions.setVisible(false);
-        System.out.println("Chose " + paths.get(paths.size() - 1).getType()
-                + " move");
+        printf("log.txt", "Chose %s move\n", paths.get(paths.size() - 1).getType());
     }
 
     public ImageIcon chooseIcon(TileButton b) {
@@ -239,7 +238,6 @@ public class PathFinder implements MouseListener {
                         break;
                 }
                 sb.append(".png");
-                System.out.println(sb.toString());
                 icon = new ImageIcon(sb.toString());
             }
         } // if drawingPath
@@ -277,7 +275,6 @@ public class PathFinder implements MouseListener {
                     sb.append("2");
                 }
                 sb.append("Tile.png");
-                System.out.println(sb.toString());
                 icon = new ImageIcon(sb.toString());
             }
         }
