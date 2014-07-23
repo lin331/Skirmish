@@ -17,7 +17,7 @@
   </target>   
 
   <target name="run" depends="compile" description="run the application">
-   <java classname="Game.Game" classpath="build" fork="true"/> 
+   <java classname="game.Game" classpath="build" fork="true"/> 
   </target>
 
 </project>
