@@ -31,3 +31,4 @@ Things to Implement:
 9) damage animation (maybe flashing line or something)
 10) smooth unit cycle transitions (rather than just disappear then reappear)
 11) networking capabilities
+12) simple menu before game starts (like simple version of pvp.net, normal/ranked/stats/startgame
