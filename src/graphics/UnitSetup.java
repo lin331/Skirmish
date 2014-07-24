@@ -111,7 +111,63 @@ public class UnitSetup implements MouseListener {
         gui.unitOptions.setVisible(false);
     }
 
-    public ImageIcon chooseIcon(TileButton b) {
+    /* Overrides */
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        if (listening && !choosingUnitType) {
+            if (e.getModifiers() == MouseEvent.BUTTON1_MASK) {
+                TileButton b = (TileButton) e.getSource();
+                if (b.getTile().isEmpty()) {
+                    buttons.add(b);
+                    tiles.add(b.getTile());
+                    choosingUnitType = true;
+                    int chooseBoxX = 0;
+                    int chooseBoxY = 0;
+                    if (b.getTile().getY() < 3) {
+                        chooseBoxY = (b.getTile().getY() * 32);
+                    }
+                    else {
+                        chooseBoxY = (b.getTile().getY() * 32);
+                    }
+                    if (b.getTile().getX() < 6) {
+                        chooseBoxX = (b.getTile().getX() * 32) + 32 * 3 + 7;
+                    }
+                    else {
+                        chooseBoxX = (b.getTile().getX() * 32) - 25;
+                    }
+                    gui.unitOptions.setBounds(chooseBoxX, chooseBoxY, 32 * 3,
+                            32 * 10 / 3);
+                    gui.unitOptions.setVisible(true);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+        TileButton b = (TileButton) e.getSource();
+        b.setIcon(chooseIcon(b));
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+        mouseExiting = true;
+        TileButton b = (TileButton) e.getSource();
+        b.setIcon(chooseIcon(b));
+        mouseExiting = false;
+    }
+
+    private ImageIcon chooseIcon(TileButton b) {
         ImageIcon icon = new ImageIcon("res/tile.png");
         if (undo) {
             icon = new ImageIcon("res/tile.png");
@@ -156,59 +212,5 @@ public class UnitSetup implements MouseListener {
             icon = new ImageIcon("res/tile.png");
         }
         return icon;
-    }
-
-    /* Overrides */
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        if (listening && !choosingUnitType) {
-            TileButton b = (TileButton) e.getSource();
-            if (b.getTile().isEmpty()) {
-                buttons.add(b);
-                tiles.add(b.getTile());
-                choosingUnitType = true;
-                int chooseBoxX = 0;
-                int chooseBoxY = 0;
-                if (b.getTile().getY() < 3) {
-                    chooseBoxY = (b.getTile().getY() * 32);
-                }
-                else {
-                    chooseBoxY = (b.getTile().getY() * 32);
-                }
-                if (b.getTile().getX() < 6) {
-                    chooseBoxX = (b.getTile().getX() * 32) + 32 * 3 + 7;
-                }
-                else {
-                    chooseBoxX = (b.getTile().getX() * 32) - 25;
-                }
-                gui.unitOptions.setBounds(chooseBoxX, chooseBoxY, 32 * 3,
-                        32 * 10 / 3);
-                gui.unitOptions.setVisible(true);
-            }
-        }
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-        TileButton b = (TileButton) e.getSource();
-        b.setIcon(chooseIcon(b));
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-        mouseExiting = true;
-        TileButton b = (TileButton) e.getSource();
-        b.setIcon(chooseIcon(b));
-        mouseExiting = false;
     }
 }

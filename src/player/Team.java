@@ -43,6 +43,10 @@ public class Team {
         return false;
     }
     
+    public int getSize() {
+        return units.size();
+    }
+    
     /* Overrides */
     @Override
     public String toString() {

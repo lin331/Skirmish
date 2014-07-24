@@ -79,12 +79,20 @@ public class Gui extends JFrame {
     }
     
     /* Getters */
+    public Team[] getTeams() {
+        return game.getTeams();
+    }
+    
     public Team getCurrentTeam() {
         return currentTeam;
     }
 
     public JLayeredPane getMapPane() {
         return this.mapPane;
+    }
+    
+    public DefaultTableModel getTable() {
+        return this.infoModel;
     }
     
     
@@ -111,15 +119,15 @@ public class Gui extends JFrame {
     }
 
     public void render() {
-        // render info
-        int teamASize = game.getTeams()[0].getUnits().size();
+        // render info table
+        int teamASize = game.getTeams()[0].getSize();
         for (int i = 0; i < 2; i++) {
             Team t = game.getTeams()[i];
             int index = 0;
             if (i == 1) {
                 index = teamASize;
             }
-            for (int j = 0; j < t.getUnits().size(); j++) {
+            for (int j = 0; j < t.getSize(); j++) {
                 if (t.getUnits().get(j).isDead()) {
                     infoModel.setValueAt(new ImageIcon("res/deadUnit.png"),
                             index + j, 0);
@@ -132,7 +140,6 @@ public class Gui extends JFrame {
         }
 
         // render tiles
-
         for (TileButton b : tileButtons) {
             ImageIcon icon = null;
             if (b.getTile().isEmpty()) {
@@ -181,8 +188,8 @@ public class Gui extends JFrame {
         uSetup.start();
         while (!uSetup.isFinished()) {
             int unitNum = uSetup.getUnitNum() + 1;
-            commandLabel.setText("Team " + currentTeam + ": Unit " + unitNum
-                    + "  Select tile");
+            commandLabel.setText("Team " + currentTeam + ": Place Unit #" 
+                    + unitNum + " on a tile");
             try {
                 Thread.sleep(500);
             } catch (InterruptedException ex) {

@@ -1,7 +1,6 @@
 package graphics;
 
 import static output.Output.Print.*;
-
 import player.Unit;
 import map.Path;
 import map.Pathtype;
@@ -58,6 +57,43 @@ public class PathFinder implements MouseListener {
         this.finished = false;
     }
 
+    public void endTurn() {
+        if (!choosingPathtype) {
+            pathNum = 0;
+            unitsMoved.clear();
+            paths.clear();
+            lastPath.clear();
+            gui.render();
+            listening = false;
+            finished = true;
+        }
+    }
+
+    public void undo() {
+        if (!choosingPathtype) {
+            if (pathNum > 0) {
+                listening = true;
+                pathNum--;
+                unitsMoved.remove(unitsMoved.size() - 1);
+                paths.remove(paths.size() - 1);
+
+                for (TileButton b : lastPath) {
+                    b.setIcon(chooseIcon(b));
+                }
+            }
+            choosingPathtype = false;
+            gui.pathOptions.setVisible(false);
+        }
+    }
+
+    public void choosePathtype(Pathtype type) {
+        setPathtype(type);
+        choosingPathtype = false;
+        gui.pathOptions.setVisible(false);
+        printf("log.txt", "Chose %s move\n", paths.get(paths.size() - 1)
+                .getType());
+    }
+
     @Override
     public void mousePressed(MouseEvent e) {
         if (listening && !choosingPathtype) {
@@ -65,8 +101,7 @@ public class PathFinder implements MouseListener {
             if (!b.getTile().isEmpty()
                     && !unitsMoved.contains(b.getTile().getUnit())
                     && b.getTile().getUnit().getTeam().getName() == gui
-                            .getCurrentTeam().getName())
-            {
+                            .getCurrentTeam().getName()) {
                 lastPath.clear();
                 drawingPath = true;
                 unitsMoved.add(b.getTile().getUnit());
@@ -86,7 +121,7 @@ public class PathFinder implements MouseListener {
             printf("log.txt", "%s", b.getTile().getUnit().getPath());
             drawingPath = false;
             choosingPathtype = true;
-            
+
             // Tile height/width = 32
             // Horizontal container padding = 73p
             // Vertical container padding = 37p
@@ -129,11 +164,16 @@ public class PathFinder implements MouseListener {
                 b.setIcon(chooseIcon(b));
             }
         }
+        else if (listening && !drawingPath) {
+            // TODO: Highlight row in table to corresponding unit on hover
+        }
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-
+        if (listening && !drawingPath) {
+            // TODO: Un-highlight row in table to corresponding unit on hover
+        }
     }
 
     @Override
@@ -141,43 +181,7 @@ public class PathFinder implements MouseListener {
 
     }
 
-    public void endTurn() {
-        if (!choosingPathtype) {
-            pathNum = 0;
-            unitsMoved.clear();
-            paths.clear();
-            lastPath.clear();
-            gui.render();
-            listening = false;
-            finished = true;
-        }
-    }
-
-    public void undo() {
-        if (!choosingPathtype) {
-            if (pathNum > 0) {
-                listening = true;
-                pathNum--;
-                unitsMoved.remove(unitsMoved.size() - 1);
-                paths.remove(paths.size() - 1);
-    
-                for (TileButton b : lastPath) {
-                    b.setIcon(chooseIcon(b));
-                }
-            }
-            choosingPathtype = false;
-            gui.pathOptions.setVisible(false);
-        }
-    }
-
-    public void choosePathtype(Pathtype type) {
-        setPathtype(type);
-        choosingPathtype = false;
-        gui.pathOptions.setVisible(false);
-        printf("log.txt", "Chose %s move\n", paths.get(paths.size() - 1).getType());
-    }
-
-    public ImageIcon chooseIcon(TileButton b) {
+    private ImageIcon chooseIcon(TileButton b) {
         ImageIcon icon = null;
         if (drawingPath) {
             if (b.getTile().isEmpty()) {
@@ -278,7 +282,6 @@ public class PathFinder implements MouseListener {
                 icon = new ImageIcon(sb.toString());
             }
         }
-
         return icon;
     }
 }
