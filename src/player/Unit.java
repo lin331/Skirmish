@@ -40,12 +40,11 @@ public class Unit implements Comparable<Unit> {
         return false;
     }
 
-    /* Check if unit is dead */
-    public boolean isDead() {
-        return health < 1;
+    /* Setters */
+    public void setType(UnitType type) {
+        this.type = type;
     }
 
-    /* Setters */
     public void reduceHealth(int damage) {
         this.health = this.health - damage;
         if (this.health < 0) {
@@ -105,6 +104,10 @@ public class Unit implements Comparable<Unit> {
 
     public int getHealth() {
         return health;
+    }
+
+    public boolean isDead() {
+        return health < 1;
     }
 
     public int getAttack() {

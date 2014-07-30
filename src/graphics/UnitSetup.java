@@ -90,6 +90,7 @@ public class UnitSetup implements MouseListener {
                 choosingUnitType = false;
             }
             if (editing) {
+                selected = null;
                 gui.editUnit.setVisible(false);
                 editing = false;
             }
@@ -124,21 +125,30 @@ public class UnitSetup implements MouseListener {
 
     public void setUnitType(UnitType type) {
         if (listening) {
-            Team t = gui.getCurrentTeam();
-            unitNum++;
-            Unit unit;
-            if (type == UnitType.ARCHER) {
-                unit = new Archer(t, unitNum, tiles.get(unitNum - 1));
+            if (editing) {
+                Unit u = selected.getTile() .getUnit();
+                u.setType(type);
+                selected.setIcon(chooseIcon(selected));
+                selected = null;
+                editing = false;
             }
             else {
-                unit = new Unit(t, unitNum, type, tiles.get(unitNum - 1));
+                Team t = gui.getCurrentTeam();
+                unitNum++;
+                Unit unit;
+                if (type == UnitType.ARCHER) {
+                    unit = new Archer(t, unitNum, tiles.get(unitNum - 1));
+                }
+                else {
+                    unit = new Unit(t, unitNum, type, tiles.get(unitNum - 1));
+                }
+                units.add(unit);
+                t.addUnit(unit);
+                tiles.get(unitNum - 1).setUnit(unit);
+                TileButton b = buttons.get(unitNum - 1);
+                b.setIcon(chooseIcon(b));
+                choosingUnitType = false;
             }
-            units.add(unit);
-            t.addUnit(unit);
-            tiles.get(unitNum - 1).setUnit(unit);
-            TileButton b = buttons.get(unitNum - 1);
-            b.setIcon(chooseIcon(b));
-            choosingUnitType = false;
         }
     }
 
@@ -158,6 +168,7 @@ public class UnitSetup implements MouseListener {
             tiles.remove(t);
             t.setUnit(null);
             selected.setIcon(chooseIcon(selected));
+            selected = null;
             gui.editUnit.setVisible(false);
             editing = false;
         }
@@ -165,8 +176,24 @@ public class UnitSetup implements MouseListener {
 
     public void change() {
         if (listening && editing) {
-            Unit u = selected.getTile().getUnit();
-
+            gui.editUnit.setVisible(false);
+            int x = 0;
+            int y = 0;
+            if (selected.getTile().getX() < 6) {
+                x = (selected.getTile().getX() * 32) + 32 + 73;
+            }
+            else {
+                x = (selected.getTile().getX() * 32) - 32 * 3 + 73;
+            }
+            if (selected.getTile().getY() < 3) {
+                y = (selected.getTile().getY() * 32) + 32 + 37;
+            }
+            else {
+                y = (selected.getTile().getY() * 32)
+                         - (32 * 10 / 3) + 37;
+            }
+            gui.unitOptions.setLocation(x, y);
+            gui.unitOptions.setVisible(true);
         }
     }
 
@@ -180,22 +207,22 @@ public class UnitSetup implements MouseListener {
                     buttons.add(b);
                     tiles.add(b.getTile());
                     choosingUnitType = true;
-                    int chooseBoxX = 0;
-                    int chooseBoxY = 0;
+                    int x = 0;
+                    int y = 0;
                     if (b.getTile().getX() < 6) {
-                        chooseBoxX = (b.getTile().getX() * 32) + 32 + 73;
+                        x = (b.getTile().getX() * 32) + 32 + 73;
                     }
                     else {
-                        chooseBoxX = (b.getTile().getX() * 32) - 32 * 3 + 73;
+                        x = (b.getTile().getX() * 32) - 32 * 3 + 73;
                     }
                     if (b.getTile().getY() < 3) {
-                        chooseBoxY = (b.getTile().getY() * 32) + 32 + 37;
+                        y = (b.getTile().getY() * 32) + 32 + 37;
                     }
                     else {
-                        chooseBoxY = (b.getTile().getY() * 32)
+                        y = (b.getTile().getY() * 32)
                                  - (32 * 10 / 3) + 37;
                     }
-                    gui.unitOptions.setLocation(chooseBoxX, chooseBoxY);
+                    gui.unitOptions.setLocation(x, y);
                     gui.unitOptions.setVisible(true);
                 }
             }
@@ -205,22 +232,22 @@ public class UnitSetup implements MouseListener {
                     System.out.println("Editing unit");
                     selected = b;
                     editing = true;
-                    int chooseBoxX = 0;
-                    int chooseBoxY = 0;
+                    int x = 0;
+                    int y = 0;
                     if (b.getTile().getX() < 6) {
-                        chooseBoxX = (b.getTile().getX() * 32) + 32 + 73;
+                        x = (b.getTile().getX() * 32) + 32 + 73;
                     }
                     else {
-                        chooseBoxX = (b.getTile().getX() * 32) - 32 * 3 + 73;
+                        x = (b.getTile().getX() * 32) - 32 * 3 + 73;
                     }
                     if (b.getTile().getY() < 3) {
-                        chooseBoxY = (b.getTile().getY() * 32) + 32 + 37;
+                        y = (b.getTile().getY() * 32) + 32 + 37;
                     }
                     else {
-                        chooseBoxY = (b.getTile().getY() * 32)
+                        y = (b.getTile().getY() * 32)
                                  - (32 * 4 / 3) + 37;
                     }
-                    gui.editUnit.setLocation(chooseBoxX, chooseBoxY);
+                    gui.editUnit.setLocation(x, y);
                     gui.editUnit.setVisible(true);
                 }
             }
