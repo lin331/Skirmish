@@ -58,13 +58,16 @@ public class UnitSetup implements MouseListener {
         return this.unitNum;
     }
 
+    public void activate(boolean flag) {
+        this.listening = flag;
+    }
+    
     public void start() {
-        this.listening = true;
         this.finished = false;
     }
 
     public void undo() {
-        if (!choosingUnitType) {
+        if (listening && !choosingUnitType) {
             if (unitNum > 0) {
                 undo = true;
                 listening = true;
@@ -112,13 +115,11 @@ public class UnitSetup implements MouseListener {
     }
     
     public void endTurn() {
-        if (!choosingUnitType) {
-            unitNum = 0;
+        if (listening && !choosingUnitType) {
             units.clear();
             tiles.clear();
             buttons.clear();
             unitNum = 0;
-            listening = false;
             finished = true;
         }
     }
@@ -274,66 +275,73 @@ public class UnitSetup implements MouseListener {
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        TileButton b = (TileButton) e.getSource();
-        b.setIcon(chooseIcon(b));
+        if (listening) {
+            TileButton b = (TileButton) e.getSource();
+            b.setIcon(chooseIcon(b));
+        }
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        mouseExiting = true;
-        TileButton b = (TileButton) e.getSource();
-        b.setIcon(chooseIcon(b));
-        mouseExiting = false;
+        if (listening) {
+            mouseExiting = true;
+            TileButton b = (TileButton) e.getSource();
+            b.setIcon(chooseIcon(b));
+            mouseExiting = false;
+        }
     }
 
     /* Private methods */
     private ImageIcon chooseIcon(TileButton b) {
-        ImageIcon icon = new ImageIcon("res/tile.png");
-        if (undo) {
-            icon = new ImageIcon("res/tile.png");
-        }
-        else if (b.getTile().isEmpty() && editing) {
-            icon = new ImageIcon("res/tile.png");            
-        }
-        else if (b.getTile().isEmpty() && !mouseExiting) {
-            icon = new ImageIcon("res/pathTile1.png");
-        }
-        else if (b.getTile().isEmpty() && mouseExiting) {
-            icon = new ImageIcon("res/tile.png");
-        }
-        else if (!b.getTile().isEmpty()) {
-            StringBuilder sb = new StringBuilder("res/passed");
-            switch (b.getTile().getUnit().getType()) {
-                case FOOTMAN:
-                    sb.append("Footman");
-                    break;
-                case SPEARMAN:
-                    sb.append("Spearman");
-                    break;
-                case ARCHER:
-                    sb.append("Archer");
-                    break;
-                case CAVALRY:
-                    sb.append("Cavalry");
-                    break;
-                case BARBARIAN:
-                    sb.append("Barbarian");
-                    break;
-                default:
-                    break;
+        if (listening) {
+            ImageIcon icon = new ImageIcon("res/tile.png");
+            if (undo) {
+                icon = new ImageIcon("res/tile.png");
             }
-            if (b.getTile().getUnit().getTeam().getName() == "A") {
-                sb.append("1");
+            else if (b.getTile().isEmpty() && editing) {
+                icon = new ImageIcon("res/tile.png");            
             }
-            else if (b.getTile().getUnit().getTeam().getName() == "B") {
-                sb.append("2");
+            else if (b.getTile().isEmpty() && !mouseExiting) {
+                icon = new ImageIcon("res/pathTile1.png");
             }
-            sb.append("Tile1.png");
-            icon = new ImageIcon(sb.toString());
+            else if (b.getTile().isEmpty() && mouseExiting) {
+                icon = new ImageIcon("res/tile.png");
+            }
+            else if (!b.getTile().isEmpty()) {
+                StringBuilder sb = new StringBuilder("res/passed");
+                switch (b.getTile().getUnit().getType()) {
+                    case FOOTMAN:
+                        sb.append("Footman");
+                        break;
+                    case SPEARMAN:
+                        sb.append("Spearman");
+                        break;
+                    case ARCHER:
+                        sb.append("Archer");
+                        break;
+                    case CAVALRY:
+                        sb.append("Cavalry");
+                        break;
+                    case BARBARIAN:
+                        sb.append("Barbarian");
+                        break;
+                    default:
+                        break;
+                }
+                if (b.getTile().getUnit().getTeam().getName() == "A") {
+                    sb.append("1");
+                }
+                else if (b.getTile().getUnit().getTeam().getName() == "B") {
+                    sb.append("2");
+                }
+                sb.append("Tile1.png");
+                icon = new ImageIcon(sb.toString());
+            }
+            else {
+                icon = new ImageIcon("res/tile.png");
+            }
+            return icon;
         }
-        else {
-            icon = new ImageIcon("res/tile.png");
-        }
-        return icon;
+        return null;
     }
 }

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 
-public class PathFinder implements MouseListener {
+public class CommandInput implements MouseListener {
 
     private Gui gui;
 
@@ -27,7 +27,7 @@ public class PathFinder implements MouseListener {
 
     private TileButton selected;
 
-    public PathFinder(Gui gui) {
+    public CommandInput(Gui gui) {
         this.gui = gui;
 
         this.paths = new ArrayList<Path>();
@@ -50,7 +50,7 @@ public class PathFinder implements MouseListener {
     public boolean isListening() {
         return this.listening;
     }
-
+    
     public int getPathNum() {
         return this.pathNum;
     }
@@ -59,25 +59,16 @@ public class PathFinder implements MouseListener {
         paths.get(paths.size() - 1).setType(type);
     }
 
+    public void activate(boolean flag) {
+        this.listening = flag;
+    }
+    
     public void start() {
-        this.listening = true;
         this.finished = false;
     }
 
-    public void endTurn() {
-        if (!choosingPathtype) {
-            pathNum = 0;
-            unitsMoved.clear();
-            paths.clear();
-            lastPath.clear();
-            gui.render();
-            listening = false;
-            finished = true;
-        }
-    }
-
     public void undo() {
-        if (!choosingPathtype) {
+        if (listening && !choosingPathtype) {
             if (pathNum > 0) {
                 listening = true;
                 pathNum--;
@@ -93,16 +84,34 @@ public class PathFinder implements MouseListener {
         }
     }
 
+    public void clear() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void endTurn() {
+        if (listening && !choosingPathtype) {
+            pathNum = 0;
+            unitsMoved.clear();
+            paths.clear();
+            lastPath.clear();
+            gui.render();
+            finished = true;
+        }
+    }
+
     public void choosePathtype(Pathtype type) {
-        setPathtype(type);
-        choosingPathtype = false;
-        gui.pathOptions.setVisible(false);
-        printf("log.txt", "Chose %s move\n", paths.get(paths.size() - 1)
-                .getType());
+        if (listening) {
+            setPathtype(type);
+            choosingPathtype = false;
+            gui.pathOptions.setVisible(false);
+            printf("log.txt", "Chose %s move\n", paths.get(paths.size() - 1)
+                    .getType());
+        }
     }
 
     public void setDelay(String d) {
-        if (settingDelay) {
+        if (listening && settingDelay) {
             int delay = 0;
             try {
                 delay = Integer.parseInt(d);
@@ -206,114 +215,117 @@ public class PathFinder implements MouseListener {
                 if (!selected.getTile().getUnit().isPathEmpty()) {
                     int x = (selected.getTile().getX() * 32) + 32 + 73;
                     int y = (selected.getTile().getY() * 32) + 32 + 37;
-                    gui.rightClickOptions.setLocation(x,y);
-                    gui.rightClickOptions.setVisible(true);
+                    gui.editCommand.setLocation(x,y);
+                    gui.editCommand.setVisible(true);
                 }
             }
         }
     }
 
     private ImageIcon chooseIcon(TileButton b) {
-        ImageIcon icon = null;
-        if (drawingPath) {
-            if (b.getTile().isEmpty()) {
-                switch (pathNum) {
-                    case 0:
-                        icon = new ImageIcon("res/pathTile1.png");
-                        break;
-                    case 1:
-                        icon = new ImageIcon("res/pathTile2.png");
-                        break;
-                    case 2:
-                        icon = new ImageIcon("res/pathTile3.png");
-                        break;
-                    default:
-                        break;
+        if (listening) {
+            ImageIcon icon = null;
+            if (drawingPath) {
+                if (b.getTile().isEmpty()) {
+                    switch (pathNum) {
+                        case 0:
+                            icon = new ImageIcon("res/pathTile1.png");
+                            break;
+                        case 1:
+                            icon = new ImageIcon("res/pathTile2.png");
+                            break;
+                        case 2:
+                            icon = new ImageIcon("res/pathTile3.png");
+                            break;
+                        default:
+                            break;
+                    }
                 }
-            }
+                else {
+                    Unit u = b.getTile().getUnit();
+                    StringBuilder sb = new StringBuilder("res/passed");
+                    switch (u.getType()) {
+                        case FOOTMAN:
+                            sb.append("Footman");
+                            break;
+                        case SPEARMAN:
+                            sb.append("Spearman");
+                            break;
+                        case ARCHER:
+                            sb.append("Archer");
+                            break;
+                        case CAVALRY:
+                            sb.append("Cavalry");
+                            break;
+                        case BARBARIAN:
+                            sb.append("Barbarian");
+                            break;
+                        default:
+                            sb.append("Unit");
+                            break;
+                    }
+                    if (b.getTile().getUnit().getTeam().getName() == "A") {
+                        sb.append("1");
+                    }
+                    else if (b.getTile().getUnit().getTeam().getName() == "B") {
+                        sb.append("2");
+                    }
+                    switch (pathNum) {
+                        case 0:
+                            sb.append("Tile1");
+                            break;
+                        case 1:
+                            sb.append("Tile2");
+                            break;
+                        case 2:
+                            sb.append("Tile3");
+                            break;
+                        default:
+                            break;
+                    }
+                    sb.append(".png");
+                    icon = new ImageIcon(sb.toString());
+                }
+            } // if drawingPath
             else {
-                Unit u = b.getTile().getUnit();
-                StringBuilder sb = new StringBuilder("res/passed");
-                switch (u.getType()) {
-                    case FOOTMAN:
-                        sb.append("Footman");
-                        break;
-                    case SPEARMAN:
-                        sb.append("Spearman");
-                        break;
-                    case ARCHER:
-                        sb.append("Archer");
-                        break;
-                    case CAVALRY:
-                        sb.append("Cavalry");
-                        break;
-                    case BARBARIAN:
-                        sb.append("Barbarian");
-                        break;
-                    default:
-                        sb.append("Unit");
-                        break;
+                if (b.getTile().isEmpty()) {
+                    icon = new ImageIcon("res/tile.png");
                 }
-                if (b.getTile().getUnit().getTeam().getName() == "A") {
-                    sb.append("1");
+                else {
+                    Unit u = b.getTile().getUnit();
+                    StringBuilder sb = new StringBuilder("res/");
+                    switch (u.getType()) {
+                        case FOOTMAN:
+                            sb.append("Footman");
+                            break;
+                        case SPEARMAN:
+                            sb.append("Spearman");
+                            break;
+                        case ARCHER:
+                            sb.append("Archer");
+                            break;
+                        case CAVALRY:
+                            sb.append("Cavalry");
+                            break;
+                        case BARBARIAN:
+                            sb.append("Barbarian");
+                            break;
+                        default:
+                            sb.append("Unit");
+                            break;
+                    }
+                    if (b.getTile().getUnit().getTeam().getName() == "A") {
+                        sb.append("1");
+                    }
+                    else if (b.getTile().getUnit().getTeam().getName() == "B") {
+                        sb.append("2");
+                    }
+                    sb.append("Tile.png");
+                    icon = new ImageIcon(sb.toString());
                 }
-                else if (b.getTile().getUnit().getTeam().getName() == "B") {
-                    sb.append("2");
-                }
-                switch (pathNum) {
-                    case 0:
-                        sb.append("Tile1");
-                        break;
-                    case 1:
-                        sb.append("Tile2");
-                        break;
-                    case 2:
-                        sb.append("Tile3");
-                        break;
-                    default:
-                        break;
-                }
-                sb.append(".png");
-                icon = new ImageIcon(sb.toString());
             }
-        } // if drawingPath
-        else {
-            if (b.getTile().isEmpty()) {
-                icon = new ImageIcon("res/tile.png");
-            }
-            else {
-                Unit u = b.getTile().getUnit();
-                StringBuilder sb = new StringBuilder("res/");
-                switch (u.getType()) {
-                    case FOOTMAN:
-                        sb.append("Footman");
-                        break;
-                    case SPEARMAN:
-                        sb.append("Spearman");
-                        break;
-                    case ARCHER:
-                        sb.append("Archer");
-                        break;
-                    case CAVALRY:
-                        sb.append("Cavalry");
-                        break;
-                    case BARBARIAN:
-                        sb.append("Barbarian");
-                        break;
-                    default:
-                        sb.append("Unit");
-                        break;
-                }
-                if (b.getTile().getUnit().getTeam().getName() == "A") {
-                    sb.append("1");
-                }
-                else if (b.getTile().getUnit().getTeam().getName() == "B") {
-                    sb.append("2");
-                }
-                sb.append("Tile.png");
-                icon = new ImageIcon(sb.toString());
-            }
+            return icon;
         }
-        return icon;
+        return null;
     }
 }

@@ -67,11 +67,11 @@ public class Gui extends JFrame {
     private ArrayList<TileButton> tileButtons;
     
     // options
-    private PathFinder pfinder;
+    private CommandInput cInput;
     public JPanel pathOptions;
-    public JPanel rightClickOptions;
-    private JButton setDelay;
+    public JPanel editCommand;
     private JButton changePath;
+    private JButton setDelay;
     private JButton cancelDelay;
     public JPanel delayOption;
     private JFormattedTextField delay;
@@ -195,7 +195,6 @@ public class Gui extends JFrame {
     }
 
     public void addUnits() {
-        setupUnitChoices();
         uSetup.start();
         int unitNum = 0;
         while (!uSetup.isFinished()) {
@@ -204,22 +203,20 @@ public class Gui extends JFrame {
             commandLabel.setText("Place Unit #" 
                     + unitNum + " on a tile");
             try {
-                Thread.sleep(500)
-;            } catch (InterruptedException ex) {
+                Thread.sleep(500);
+            } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
             }
         }
-        removeUnitChoices();
         teamLabel.setText("");
         commandLabel.setText("");
     }
     
     public void requestPath() {
-        setupPathChoices();
-        pfinder.start();
-        while (!pfinder.isFinished()) {
+        cInput.start();
+        while (!cInput.isFinished()) {
             int commandsLeft = game.getTurn().getMaxCommands()
-                    - pfinder.getPathNum();
+                    - cInput.getPathNum();
             teamLabel.setText("Team " + currentTeam + "'s Turn:");
             commandLabel.setText(commandsLeft
                     + " commands remaining");
@@ -233,116 +230,9 @@ public class Gui extends JFrame {
         commandLabel.setText("");
     }
 
-    /* Private methods */
-    private void initialize() {
-        // set up info panel
-        String[] columnNames = { "Unit", "Turn Delay", "Health" };
-        infoModel = new DefaultTableModel(columnNames, 0) {
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-
-            @SuppressWarnings({ "unchecked", "rawtypes" })
-            public Class getColumnClass(int column) {
-                if (column == 0)
-                    return Icon.class;
-                else
-                    return Object.class;
-            }
-        };
-        infoTable = new JTable(infoModel);
-        infoTable.setRowHeight(30);
-        infoTable.setPreferredSize(new Dimension(GUI_WIDTH / 3, GUI_HEIGHT));
-        infoTable.setPreferredScrollableViewportSize(infoTable
-                .getPreferredSize());
-
-        infoPane = new JScrollPane(infoTable);
-        infoPane.setBackground(Color.LIGHT_GRAY);
-        infoPane.getViewport().setBackground(Color.LIGHT_GRAY);
-        infoTable.setBackground(Color.LIGHT_GRAY);
-        infoTable.getTableHeader().setBackground(Color.LIGHT_GRAY);
-
-        infoPane.setVerticalScrollBarPolicy(JScrollPane.
-                VERTICAL_SCROLLBAR_NEVER);
-        infoPane.setHorizontalScrollBarPolicy(JScrollPane.
-                HORIZONTAL_SCROLLBAR_NEVER);
-
-        // set up main panel
-        mainPanel = new JPanel(new BorderLayout());
-
-        mapPane = new JLayeredPane();
-        mapPane.setLayout(null);
-        mapPane.setPreferredSize(new Dimension(GUI_WIDTH * 2 / 3,
-                GUI_HEIGHT * 2 / 3));
-
-        mainContainer = new JPanel(new GridBagLayout());
-        mainContainer.setBounds(0, 0, GUI_WIDTH * 2 / 3, GUI_HEIGHT * 2 / 3);
-        mapPane.add(mainContainer, new Integer(-1), 0);
-        mainContainer.setBackground(Color.YELLOW);
-        mainContainer.setOpaque(true);
-
-        GridLayout grid = new GridLayout(map.getHeight(), map.getWidth());
-        tilePanel = new JPanel(grid);
-
-        mainContainer.add(tilePanel, new GridBagConstraints());
-
-        // set up tile grid
-        pfinder = new PathFinder(this);
-        uSetup = new UnitSetup(this);
-        tileButtons = new ArrayList<TileButton>();
-        for (int i = 0; i < map.getHeight(); i++) {
-            for (int j = 0; j < map.getWidth(); j++) {
-                Tile t = map.getTiles()[i][j];
-                TileButton b = new TileButton(t, new ImageIcon("res/tile.png"));
-                b.setBorder(null);
-                tilePanel.add(b);
-                tileButtons.add(b);
-            }
-        }
-        mainPanel.add(mapPane, BorderLayout.NORTH);
+    public void setupUnitSetup() {
+        uSetup.activate(true);
         
-        // set up turn panel under tiles
-        commandPanel = new JPanel();
-        commandPanel.setLayout(new BoxLayout(commandPanel, BoxLayout.Y_AXIS));
-        
-        teamLabel = new JLabel();
-        teamLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        commandLabel = new JLabel();
-        commandLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        pathButtons = new JPanel(new FlowLayout());
-        pathButtons.setBackground(Color.LIGHT_GRAY);
-        undo = new JButton("Undo");
-        clear = new JButton("Clear");
-        endTurn = new JButton("End Turn");
-        undo.getPreferredSize().height = 32 * 4 / 5;
-        clear.getPreferredSize().height = 32 * 4 / 5;
-        endTurn.getPreferredSize().height = 32 * 4 / 5;
-        pathButtons.add(undo);
-        pathButtons.add(clear);
-        pathButtons.add(endTurn);
-        
-        commandPanel.add(teamLabel);
-        commandPanel.add(commandLabel);
-        commandPanel.add(pathButtons);
-        commandPanel.setBackground(Color.LIGHT_GRAY);
-        commandPanel.setOpaque(true);
-        mainPanel.add(commandPanel, BorderLayout.SOUTH);
-        mainPanel.setBackground(Color.LIGHT_GRAY);
-
-        // set up the frame
-        add(infoPane, BorderLayout.WEST);
-        add(mainPanel, BorderLayout.CENTER);
-
-        setTitle("Skirmish");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(GUI_WIDTH, GUI_HEIGHT);
-        setVisible(true);
-
-        revalidate();
-    }
-
-    private void setupUnitChoices() {
         for (TileButton b : tileButtons) {
             b.addMouseListener(uSetup);
         }
@@ -367,7 +257,7 @@ public class Gui extends JFrame {
         endTurn.setVisible(true);
 
         // setup unit type choices
-        unitOptions = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        unitOptions = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
         unitOptions.setBounds(0, 0, TILE_WIDTH * 3, TILE_HEIGHT * 10 / 3);
         mapPane.add(unitOptions, 1, 0);
         unitOptions.setVisible(false);
@@ -429,7 +319,7 @@ public class Gui extends JFrame {
         unitOptions.add(archer);   
         unitOptions.add(barbarian);
 
-        editUnit = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        editUnit = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
         mapPane.add(editUnit, 1, 0);
         editUnit.setBounds(0, 0, TILE_WIDTH * 3, TILE_HEIGHT * 4 / 3);
         editUnit.setVisible(false);
@@ -456,20 +346,24 @@ public class Gui extends JFrame {
 
         editUnit.add(remove);
         editUnit.add(change);
+        
+        uSetup.start();
     }
     
-    private void removeUnitChoices() {
+    public void removeUnitSetup() {
         for (TileButton b : tileButtons) {
             b.removeMouseListener(uSetup);
         }
         undo.removeActionListener(undo.getActionListeners()[0]);
         endTurn.removeActionListener(endTurn.getActionListeners()[0]);
+        uSetup.activate(false);
     }
     
-    private void setupPathChoices() {
+    public void setupCommandInput() {
+        cInput.activate(true);
         // set up path type choices
         for (TileButton b : tileButtons) {
-            b.addMouseListener(pfinder);
+            b.addMouseListener(cInput);
         }
         
         pathOptions = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
@@ -482,7 +376,7 @@ public class Gui extends JFrame {
         safeGoal.setFont(new Font("Arial", Font.PLAIN, 8));
         safeGoal.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                pfinder.choosePathtype(Pathtype.SAFEGOAL);
+                cInput.choosePathtype(Pathtype.SAFEGOAL);
             }
         });
 
@@ -492,7 +386,7 @@ public class Gui extends JFrame {
         goal.setFont(new Font("Arial", Font.PLAIN, 8));
         goal.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                pfinder.choosePathtype(Pathtype.GOAL);
+                cInput.choosePathtype(Pathtype.GOAL);
             }
         });
 
@@ -502,7 +396,7 @@ public class Gui extends JFrame {
         standard.setFont(new Font("Arial", Font.PLAIN, 8));
         standard.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                pfinder.choosePathtype(Pathtype.STANDARD);
+                cInput.choosePathtype(Pathtype.STANDARD);
             }
         });
         
@@ -510,6 +404,14 @@ public class Gui extends JFrame {
         pathOptions.add(safeGoal);
         pathOptions.add(goal);
         pathOptions.setVisible(false);    
+        
+        editCommand = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+        delayOption.setBounds(0, 0, TILE_WIDTH * 2, TILE_HEIGHT * 4 / 3);
+        mapPane.add(editCommand, 1, 0);
+        
+        // changePath
+        // setDelay
+        // changeDelay
         
         delayOption = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
         delayOption.setBounds(0, 0, TILE_WIDTH * 2, TILE_HEIGHT * 4 / 3);
@@ -527,7 +429,7 @@ public class Gui extends JFrame {
         delayOK.setFont(new Font("Arial", Font.PLAIN, 8));
         delayOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                pfinder.setDelay(delay.getText());
+                cInput.setDelay(delay.getText());
             }
         });
 
@@ -537,13 +439,129 @@ public class Gui extends JFrame {
 
         undo.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                pfinder.undo();
+                cInput.undo();
             }
-        }); 
+        });
+        clear.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                cInput.clear();
+            }
+        });
         endTurn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                pfinder.endTurn();
+                cInput.endTurn();
             }
-        });  
+        });
+        
+        cInput.start();
+    }
+
+    /* Private methods */
+    private void initialize() {
+        // set up info panel
+        String[] columnNames = { "Unit", "Turn Delay", "Health" };
+        infoModel = new DefaultTableModel(columnNames, 0) {
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+
+            @SuppressWarnings({ "unchecked", "rawtypes" })
+            public Class getColumnClass(int column) {
+                if (column == 0)
+                    return Icon.class;
+                else
+                    return Object.class;
+            }
+        };
+        infoTable = new JTable(infoModel);
+        infoTable.setRowHeight(30);
+        infoTable.setPreferredSize(new Dimension(GUI_WIDTH / 3, GUI_HEIGHT));
+        infoTable.setPreferredScrollableViewportSize(infoTable
+                .getPreferredSize());
+
+        infoPane = new JScrollPane(infoTable);
+        infoPane.setBackground(Color.LIGHT_GRAY);
+        infoPane.getViewport().setBackground(Color.LIGHT_GRAY);
+        infoTable.setBackground(Color.LIGHT_GRAY);
+        infoTable.getTableHeader().setBackground(Color.LIGHT_GRAY);
+
+        infoPane.setVerticalScrollBarPolicy(JScrollPane.
+                VERTICAL_SCROLLBAR_NEVER);
+        infoPane.setHorizontalScrollBarPolicy(JScrollPane.
+                HORIZONTAL_SCROLLBAR_NEVER);
+
+        // set up main panel
+        mainPanel = new JPanel(new BorderLayout());
+
+        mapPane = new JLayeredPane();
+        mapPane.setLayout(null);
+        mapPane.setPreferredSize(new Dimension(GUI_WIDTH * 2 / 3,
+                GUI_HEIGHT * 2 / 3));
+
+        mainContainer = new JPanel(new GridBagLayout());
+        mainContainer.setBounds(0, 0, GUI_WIDTH * 2 / 3, GUI_HEIGHT * 2 / 3);
+        mapPane.add(mainContainer, new Integer(-1), 0);
+        mainContainer.setBackground(Color.YELLOW);
+        mainContainer.setOpaque(true);
+
+        GridLayout grid = new GridLayout(map.getHeight(), map.getWidth());
+        tilePanel = new JPanel(grid);
+
+        mainContainer.add(tilePanel, new GridBagConstraints());
+
+        // set up tile grid
+        cInput = new CommandInput(this);
+        uSetup = new UnitSetup(this);
+        tileButtons = new ArrayList<TileButton>();
+        for (int i = 0; i < map.getHeight(); i++) {
+            for (int j = 0; j < map.getWidth(); j++) {
+                Tile t = map.getTiles()[i][j];
+                TileButton b = new TileButton(t, new ImageIcon("res/tile.png"));
+                b.setBorder(null);
+                tilePanel.add(b);
+                tileButtons.add(b);
+            }
+        }
+        mainPanel.add(mapPane, BorderLayout.NORTH);
+        
+        // set up turn panel under tiles
+        commandPanel = new JPanel();
+        commandPanel.setLayout(new BoxLayout(commandPanel, BoxLayout.Y_AXIS));
+        
+        teamLabel = new JLabel();
+        teamLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        commandLabel = new JLabel();
+        commandLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        pathButtons = new JPanel(new FlowLayout());
+        pathButtons.setBackground(Color.LIGHT_GRAY);
+        undo = new JButton("Undo");
+        clear = new JButton("Clear");
+        endTurn = new JButton("End Turn");
+        undo.getPreferredSize().height = 32 * 4 / 5;
+        clear.getPreferredSize().height = 32 * 4 / 5;
+        endTurn.getPreferredSize().height = 32 * 4 / 5;
+        pathButtons.add(undo);
+        pathButtons.add(clear);
+        pathButtons.add(endTurn);
+        
+        commandPanel.add(teamLabel);
+        commandPanel.add(commandLabel);
+        commandPanel.add(pathButtons);
+        commandPanel.setBackground(Color.LIGHT_GRAY);
+        commandPanel.setOpaque(true);
+        mainPanel.add(commandPanel, BorderLayout.SOUTH);
+        mainPanel.setBackground(Color.LIGHT_GRAY);
+
+        // set up the frame
+        add(infoPane, BorderLayout.WEST);
+        add(mainPanel, BorderLayout.CENTER);
+
+        setTitle("Skirmish");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(GUI_WIDTH, GUI_HEIGHT);
+        setVisible(true);
+
+        revalidate();
     }
 }

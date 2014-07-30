@@ -47,6 +47,8 @@ public class Game {
     /* Begins the game */
     private void start() {
         this.active = true;
+        gui.render();
+        gui.setupCommandInput();
     }
 
     /* Ends the game */
@@ -149,12 +151,15 @@ public class Game {
 
     /* Add units to team */
     private void addUnits() {
+        gui.setupUnitSetup();
         for (int i = 0; i < 2; i++) {
             gui.setCurrentTeam(teams[i]);
             printf("log.txt", "%s's turn to add units\n", teams[i]);
             gui.addUnits();
-            printf("log.txt", "%s has %d units\n", teams[i], teams[i].getUnits().size());
+            printf("log.txt", "%s has %d units\n",
+                teams[i], teams[i].getUnits().size());
         }
+        gui.removeUnitSetup();
     }
     
     /* Takes move commands and processes them */
@@ -192,7 +197,6 @@ public class Game {
         game.initialize2();
         gui.setInfoPanel();
         game.start();
-        gui.render();
         while (game.isActive()) {
             if (game.turn.isEmpty()) {
                 game.requestTurn();
