@@ -69,6 +69,10 @@ public class Unit implements Comparable<Unit> {
         this.path = p;
     }
 
+    public void setDelay(int d) {
+        this.path.setDelay(d);
+    }
+    
     public void decPathDelay() {
         path.decDelay();
     }
@@ -121,6 +125,10 @@ public class Unit implements Comparable<Unit> {
 
     public Path getPath() {
         return path;
+    }
+
+    public int getPathDelay() {
+        return path.getDelay();
     }
 
     public int getPathSize() {

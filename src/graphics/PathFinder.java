@@ -18,22 +18,29 @@ public class PathFinder implements MouseListener {
     private boolean drawingPath;
     private boolean finished;
     private boolean choosingPathtype;
+    private boolean settingDelay;
 
     private ArrayList<Path> paths;
     private ArrayList<Unit> unitsMoved;
     private ArrayList<TileButton> lastPath;
     private int pathNum;
 
+    private TileButton selected;
+
     public PathFinder(Gui gui) {
         this.gui = gui;
+
         this.paths = new ArrayList<Path>();
         this.unitsMoved = new ArrayList<Unit>();
         this.lastPath = new ArrayList<TileButton>();
+
         this.pathNum = 0;
         this.listening = false;
         this.drawingPath = false;
         this.finished = false;
         this.choosingPathtype = false;
+        this.settingDelay = false;
+        this.selected = null;
     }
 
     public boolean isFinished() {
@@ -94,20 +101,36 @@ public class PathFinder implements MouseListener {
                 .getType());
     }
 
+    public void setDelay(String d) {
+        if (settingDelay) {
+            int delay = 0;
+            try {
+                delay = Integer.parseInt(d);
+            } catch (NumberFormatException e) {
+                delay = 0;
+            }
+            selected.getTile().getUnit().setDelay(delay);
+            gui.delayOption.setVisible(false);
+            selected = null;
+        }
+    }
+
     @Override
     public void mousePressed(MouseEvent e) {
         if (listening && !choosingPathtype) {
-            TileButton b = (TileButton) e.getSource();
-            if (!b.getTile().isEmpty()
-                    && !unitsMoved.contains(b.getTile().getUnit())
-                    && b.getTile().getUnit().getTeam().getName() == gui
-                            .getCurrentTeam().getName()) {
-                lastPath.clear();
-                drawingPath = true;
-                unitsMoved.add(b.getTile().getUnit());
-                paths.add(b.getTile().getUnit().getPath());
-                lastPath.add(b);
-                b.setIcon(chooseIcon(b));
+            if (e.getModifiers() == MouseEvent.BUTTON1_MASK) {
+                TileButton b = (TileButton) e.getSource();
+                if (!b.getTile().isEmpty()
+                        && !unitsMoved.contains(b.getTile().getUnit())
+                        && b.getTile().getUnit().getTeam().getName() == gui
+                                .getCurrentTeam().getName()) {
+                    lastPath.clear();
+                    drawingPath = true;
+                    unitsMoved.add(b.getTile().getUnit());
+                    paths.add(b.getTile().getUnit().getPath());
+                    lastPath.add(b);
+                    b.setIcon(chooseIcon(b));
+                }
             }
         }
     }
@@ -115,38 +138,41 @@ public class PathFinder implements MouseListener {
     @Override
     public void mouseReleased(MouseEvent e) {
         if (listening && drawingPath) {
-            pathNum++;
-            TileButton b = (TileButton) e.getSource();
-            b.getTile().getUnit().setPath(paths.get(pathNum - 1));
-            printf("log.txt", "%s", b.getTile().getUnit().getPath());
-            drawingPath = false;
-            choosingPathtype = true;
-
-            // Tile height/width = 32
-            // Horizontal container padding = 73p
-            // Vertical container padding = 37p
-            int chooseBoxX = 0;
-            int chooseBoxY = 0;
-            if (b.getTile().getY() < 3) {
-                chooseBoxY = (b.getTile().getY() * 32);
-            }
-            else {
-                chooseBoxY = (b.getTile().getY() * 32);
-            }
-            if (b.getTile().getX() < 6) {
-                chooseBoxX = (b.getTile().getX() * 32) + 32 * 3 + 7;
-            }
-            else {
-                chooseBoxX = (b.getTile().getX() * 32) - 25;
-            }
-            gui.pathOptions.setBounds(chooseBoxX, chooseBoxY, 32 * 3, 32 * 2);
-            gui.pathOptions.setVisible(true);
-
-            gui.revalidate();
-
-            // Turn MAX_COMMANDS
-            if (pathNum == 3) {
-                listening = false;
+            if (e.getModifiers() == MouseEvent.BUTTON1_MASK) {
+                pathNum++;
+                TileButton b = (TileButton) e.getSource();
+                b.getTile().getUnit().setPath(paths.get(pathNum - 1));
+                printf("log.txt", "%s\n", b.getTile().getUnit().getPath());
+                drawingPath = false;
+                choosingPathtype = true;
+    
+                // tile height/width = 32
+                // horizontal padding = 73
+                // vertical padding = 37
+                int chooseBoxX = 0;
+                int chooseBoxY = 0;
+                if (b.getTile().getX() < 6) {
+                    chooseBoxX = (b.getTile().getX() * 32) + 32 + 73;
+                }
+                else {
+                    chooseBoxX = (b.getTile().getX() * 32) - 32 * 3 + 73;
+                }
+                if (b.getTile().getY() < 3) {
+                    chooseBoxY = (b.getTile().getY() * 32) + 32 + 37;
+                }
+                else {
+                    chooseBoxY = (b.getTile().getY() * 32) 
+                             - (32 * 10 / 3) + 37;
+                }
+                gui.pathOptions.setLocation(chooseBoxX, chooseBoxY);
+                gui.pathOptions.setVisible(true);
+    
+                gui.revalidate();
+    
+                // Turn MAX_COMMANDS
+                if (pathNum == 3) {
+                    listening = false;
+                }
             }
         }
     }
@@ -164,21 +190,27 @@ public class PathFinder implements MouseListener {
                 b.setIcon(chooseIcon(b));
             }
         }
-        else if (listening && !drawingPath) {
-            // TODO: Highlight row in table to corresponding unit on hover
-        }
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        if (listening && !drawingPath) {
-            // TODO: Un-highlight row in table to corresponding unit on hover
-        }
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-
+        if (listening && !drawingPath && !choosingPathtype) {
+            if (e.getModifiers() == MouseEvent.BUTTON3_MASK) {
+                System.out.println("Right click");
+                settingDelay = true;
+                selected = (TileButton) e.getSource();
+                if (!selected.getTile().getUnit().isPathEmpty()) {
+                    int x = (selected.getTile().getX() * 32) + 32 + 73;
+                    int y = (selected.getTile().getY() * 32) + 32 + 37;
+                    gui.rightClickOptions.setLocation(x,y);
+                    gui.rightClickOptions.setVisible(true);
+                }
+            }
+        }
     }
 
     private ImageIcon chooseIcon(TileButton b) {
