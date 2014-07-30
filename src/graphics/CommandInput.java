@@ -55,10 +55,6 @@ public class CommandInput implements MouseListener {
         return this.pathNum;
     }
 
-    public void setPathtype(Pathtype type) {
-        paths.get(paths.size() - 1).setType(type);
-    }
-
     public void activate(boolean flag) {
         this.listening = flag;
     }
@@ -100,6 +96,10 @@ public class CommandInput implements MouseListener {
         }
     }
 
+    public void setPathtype(Pathtype type) {
+        paths.get(paths.size() - 1).setType(type);
+    }
+
     public void choosePathtype(Pathtype type) {
         if (listening) {
             setPathtype(type);
@@ -112,15 +112,33 @@ public class CommandInput implements MouseListener {
 
     public void setDelay(String d) {
         if (listening && settingDelay) {
-            int delay = 0;
-            try {
-                delay = Integer.parseInt(d);
-            } catch (NumberFormatException e) {
-                delay = 0;
+            if (!selected.getTile().getUnit().isPathEmpty()) {
+                int delay = 0;
+                try {
+                    delay = Integer.parseInt(d);
+                } catch (NumberFormatException e) {
+                    delay = 0;
+                }
+                selected.getTile().getUnit().setDelay(delay);
+                gui.delayOption.setVisible(false);
             }
-            selected.getTile().getUnit().setDelay(delay);
-            gui.delayOption.setVisible(false);
             selected = null;
+        }
+    }
+
+    public void getDelay() {
+        if (listening) {
+            if (!selected.getTile().getUnit().isPathEmpty()) {
+                settingDelay = true;
+                int x = (selected.getTile().getX() * 32) + 32 + 73;
+                int y = (selected.getTile().getY() * 32) + 32 + 37;
+                gui.delayOption.setLocation(x,y);
+                gui.delayOption.setVisible(true);
+            }
+            else {
+                selected = null;
+            }
+            gui.editCommand.setVisible(false);
         }
     }
 
@@ -158,22 +176,22 @@ public class CommandInput implements MouseListener {
                 // tile height/width = 32
                 // horizontal padding = 73
                 // vertical padding = 37
-                int chooseBoxX = 0;
-                int chooseBoxY = 0;
+                int x = 0;
+                int y = 0;
                 if (b.getTile().getX() < 6) {
-                    chooseBoxX = (b.getTile().getX() * 32) + 32 + 73;
+                    x = (b.getTile().getX() * 32) + 32 + 73;
                 }
                 else {
-                    chooseBoxX = (b.getTile().getX() * 32) - 32 * 3 + 73;
+                    x = (b.getTile().getX() * 32) - 32 * 3 + 73;
                 }
                 if (b.getTile().getY() < 3) {
-                    chooseBoxY = (b.getTile().getY() * 32) + 32 + 37;
+                    y = (b.getTile().getY() * 32) + 32 + 37;
                 }
                 else {
-                    chooseBoxY = (b.getTile().getY() * 32) 
-                             - (32 * 10 / 3) + 37;
+                    y = (b.getTile().getY() * 32) 
+                             - (32 * 6 / 3) + 37;
                 }
-                gui.pathOptions.setLocation(chooseBoxX, chooseBoxY);
+                gui.pathOptions.setLocation(x, y);
                 gui.pathOptions.setVisible(true);
     
                 gui.revalidate();
@@ -209,10 +227,9 @@ public class CommandInput implements MouseListener {
     public void mouseClicked(MouseEvent e) {
         if (listening && !drawingPath && !choosingPathtype) {
             if (e.getModifiers() == MouseEvent.BUTTON3_MASK) {
-                System.out.println("Right click");
-                settingDelay = true;
-                selected = (TileButton) e.getSource();
-                if (!selected.getTile().getUnit().isPathEmpty()) {
+                TileButton b = (TileButton) e.getSource();
+                if (!b.getTile().isEmpty()) {
+                    selected = b;
                     int x = (selected.getTile().getX() * 32) + 32 + 73;
                     int y = (selected.getTile().getY() * 32) + 32 + 37;
                     gui.editCommand.setLocation(x,y);

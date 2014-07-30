@@ -9,7 +9,6 @@ import map.Pathtype;
 import map.Tile;
 
 import java.awt.BorderLayout;
-import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -23,7 +22,6 @@ import java.awt.event.ActionListener;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 
-import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -37,7 +35,6 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JFormattedTextField;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.UIManager;
 
 @SuppressWarnings("serial")
 public class Gui extends JFrame {
@@ -70,12 +67,7 @@ public class Gui extends JFrame {
     private CommandInput cInput;
     public JPanel pathOptions;
     public JPanel editCommand;
-    private JButton changePath;
-    private JButton setDelay;
-    private JButton cancelDelay;
     public JPanel delayOption;
-    private JFormattedTextField delay;
-    private JButton delayOK;
 
     private UnitSetup uSetup;
     public JPanel unitOptions;
@@ -260,7 +252,6 @@ public class Gui extends JFrame {
         unitOptions = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
         unitOptions.setBounds(0, 0, TILE_WIDTH * 3, TILE_HEIGHT * 10 / 3);
         mapPane.add(unitOptions, 1, 0);
-        unitOptions.setVisible(false);
         
         JButton footman = new JButton("Footman");
         footman.setPreferredSize(new Dimension(TILE_WIDTH * 3,
@@ -318,12 +309,11 @@ public class Gui extends JFrame {
         unitOptions.add(cavalry);
         unitOptions.add(archer);   
         unitOptions.add(barbarian);
+        unitOptions.setVisible(false);
 
         editUnit = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
         mapPane.add(editUnit, 1, 0);
         editUnit.setBounds(0, 0, TILE_WIDTH * 3, TILE_HEIGHT * 4 / 3);
-        editUnit.setVisible(false);
-
         JButton remove = new JButton("Remove");
         remove.setPreferredSize(new Dimension(TILE_WIDTH * 3,
                 TILE_HEIGHT * 2 / 3));
@@ -346,6 +336,7 @@ public class Gui extends JFrame {
 
         editUnit.add(remove);
         editUnit.add(change);
+        editUnit.setVisible(false);
         
         uSetup.start();
     }
@@ -406,24 +397,51 @@ public class Gui extends JFrame {
         pathOptions.setVisible(false);    
         
         editCommand = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
-        delayOption.setBounds(0, 0, TILE_WIDTH * 2, TILE_HEIGHT * 4 / 3);
+        editCommand.setBounds(0, 0, TILE_WIDTH * 2, TILE_HEIGHT * 6 / 3);
         mapPane.add(editCommand, 1, 0);
         
-        // changePath
-        // setDelay
-        // changeDelay
+        JButton changePath = new JButton("Change Path");
+        changePath.setPreferredSize(new Dimension(TILE_WIDTH * 3,
+                TILE_HEIGHT * 2 / 3));
+        changePath.setFont(new Font("Arial", Font.PLAIN, 8));
+        changePath.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            }
+        });
+        JButton setDelay = new JButton("Set Delay");
+        setDelay.setPreferredSize(new Dimension(TILE_WIDTH * 3,
+                TILE_HEIGHT * 2 / 3));
+        setDelay.setFont(new Font("Arial", Font.PLAIN, 8));
+        setDelay.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                cInput.getDelay();
+            }
+        });
+        JButton changeDelay = new JButton("Change Delay");
+        changeDelay.setPreferredSize(new Dimension(TILE_WIDTH * 3,
+                TILE_HEIGHT * 2 / 3));
+        changeDelay.setFont(new Font("Arial", Font.PLAIN, 8));
+        changeDelay.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            }
+        });
+
+        editCommand.add(changePath);
+        editCommand.add(setDelay);
+        editCommand.add(changeDelay);
+        editCommand.setVisible(false);
         
         delayOption = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
         delayOption.setBounds(0, 0, TILE_WIDTH * 2, TILE_HEIGHT * 4 / 3);
         mapPane.add(delayOption, 1, 0);
         
-        delay = new JFormattedTextField(NumberFormat.getIntegerInstance());
+        final JTextField delay = new JTextField();
         delay.setPreferredSize(new Dimension(TILE_WIDTH * 2,
                 TILE_HEIGHT * 2 / 3));
         delay.setFont(new Font("Arial", Font.PLAIN, 10));
         delay.setHorizontalAlignment(JTextField.CENTER);
 
-        delayOK = new JButton("OK");
+        JButton delayOK = new JButton("OK");
         delayOK.setPreferredSize(new Dimension(TILE_WIDTH * 2,
                 TILE_HEIGHT * 2 / 3));
         delayOK.setFont(new Font("Arial", Font.PLAIN, 8));
