@@ -5,6 +5,7 @@ import player.Unit;
 import map.Path;
 import map.Pathtype;
 
+import java.awt.Component;
 import java.awt.event.*;
 import java.util.ArrayList;
 
@@ -24,23 +25,27 @@ public class CommandInput implements MouseListener {
     private ArrayList<Unit> unitsMoved;
     private ArrayList<TileButton> lastPath;
     private int pathNum;
+    private int command;
 
     private TileButton selected;
-
+    private TileButton lastButton;
+    
     public CommandInput(Gui gui) {
         this.gui = gui;
 
         this.paths = new ArrayList<Path>();
         this.unitsMoved = new ArrayList<Unit>();
         this.lastPath = new ArrayList<TileButton>();
-
+        
         this.pathNum = 0;
         this.listening = false;
         this.drawingPath = false;
         this.finished = false;
         this.choosingPathtype = false;
         this.settingDelay = false;
+        
         this.selected = null;
+        this.lastButton = null;
     }
 
     public boolean isFinished() {
@@ -70,7 +75,6 @@ public class CommandInput implements MouseListener {
                 pathNum--;
                 unitsMoved.remove(unitsMoved.size() - 1);
                 paths.remove(paths.size() - 1);
-
                 for (TileButton b : lastPath) {
                     b.setIcon(chooseIcon(b));
                 }
@@ -107,6 +111,15 @@ public class CommandInput implements MouseListener {
             gui.pathOptions.setVisible(false);
             printf("log.txt", "Chose %s move\n", paths.get(paths.size() - 1)
                     .getType());
+        }
+    }
+
+    public void changePath() {
+        if (listening) {
+            Unit u = selected.getTile().getUnit();
+            if (u.hasPathDelay()) {
+                
+            }
         }
     }
 
@@ -151,6 +164,7 @@ public class CommandInput implements MouseListener {
                         && !unitsMoved.contains(b.getTile().getUnit())
                         && b.getTile().getUnit().getTeam().getName() == gui
                                 .getCurrentTeam().getName()) {
+                    lastButton = b;
                     lastPath.clear();
                     drawingPath = true;
                     unitsMoved.add(b.getTile().getUnit());
@@ -166,39 +180,36 @@ public class CommandInput implements MouseListener {
     public void mouseReleased(MouseEvent e) {
         if (listening && drawingPath) {
             if (e.getModifiers() == MouseEvent.BUTTON1_MASK) {
-                pathNum++;
-                TileButton b = (TileButton) e.getSource();
-                b.getTile().getUnit().setPath(paths.get(pathNum - 1));
-                printf("log.txt", "%s\n", b.getTile().getUnit().getPath());
-                drawingPath = false;
-                choosingPathtype = true;
-    
-                // tile height/width = 32
-                // horizontal padding = 73
-                // vertical padding = 37
-                int x = 0;
-                int y = 0;
-                if (b.getTile().getX() < 6) {
-                    x = (b.getTile().getX() * 32) + 32 + 73;
+                if (!paths.get(pathNum).isEmpty()) {
+                   pathNum++;
+                    unitsMoved.get(unitsMoved.size() - 1)
+                            .setPath(paths.get(pathNum - 1));
+                    /*TileButton b = (TileButton) e.getSource();
+                    b.getTile().getUnit().setPath(paths.get(pathNum - 1));*/
+                    printf("log.txt", "%s\n", unitsMoved.get(unitsMoved.size() - 1)
+                            .getPath());
+                    drawingPath = false;
+                    choosingPathtype = true;
+        
+                    // tile height/width = 32
+                    // horizontal padding = 73
+                    // vertical padding = 37
+                    int x = (lastButton.getTile().getX() * 32) + 32 + 73;
+                    int y = (lastButton.getTile().getY() * 32) + 32 + 37;
+                    gui.pathOptions.setLocation(x, y);
+                    gui.pathOptions.setVisible(true);
+        
+                    gui.revalidate();
+        
+                    // Turn MAX_COMMANDS
+                    if (pathNum == 3) {
+                        listening = false;
+                    }
                 }
                 else {
-                    x = (b.getTile().getX() * 32) - 32 * 3 + 73;
-                }
-                if (b.getTile().getY() < 3) {
-                    y = (b.getTile().getY() * 32) + 32 + 37;
-                }
-                else {
-                    y = (b.getTile().getY() * 32) 
-                             - (32 * 6 / 3) + 37;
-                }
-                gui.pathOptions.setLocation(x, y);
-                gui.pathOptions.setVisible(true);
-    
-                gui.revalidate();
-    
-                // Turn MAX_COMMANDS
-                if (pathNum == 3) {
-                    listening = false;
+                    drawingPath = false;
+                    lastButton.setIcon(chooseIcon(lastButton));
+                    lastButton = null;
                 }
             }
         }
@@ -212,8 +223,10 @@ public class CommandInput implements MouseListener {
                 if (!paths.get(pathNum).isValid(b.getTile())) {
                     return;
                 }
-                paths.get(pathNum).add(b.getTile());
-                lastPath.add(b);
+                if (paths.get(pathNum).add(b.getTile()) != null) {
+                    lastPath.add(b);
+                    lastButton = b;
+                }
                 b.setIcon(chooseIcon(b));
             }
         }
@@ -229,11 +242,23 @@ public class CommandInput implements MouseListener {
             if (e.getModifiers() == MouseEvent.BUTTON3_MASK) {
                 TileButton b = (TileButton) e.getSource();
                 if (!b.getTile().isEmpty()) {
-                    selected = b;
-                    int x = (selected.getTile().getX() * 32) + 32 + 73;
-                    int y = (selected.getTile().getY() * 32) + 32 + 37;
-                    gui.editCommand.setLocation(x,y);
-                    gui.editCommand.setVisible(true);
+                    Unit u = b.getTile().getUnit();
+                    if (!u.isPathEmpty()) {
+                        selected = b;
+                        int x = (selected.getTile().getX() * 32) + 32 + 73;
+                        int y = (selected.getTile().getY() * 32) + 32 + 37;
+                        gui.editCommand.setLocation(x,y);
+                        Component[] c = gui.editCommand.getComponents();
+                        if (!u.hasPathDelay()) {
+                            c[1].setVisible(true);
+                            c[2].setVisible(false);
+                        }
+                        else {
+                            c[1].setVisible(false);
+                            c[2].setVisible(true);
+                        }
+                        gui.editCommand.setVisible(true);
+                    }
                 }
             }
         }

@@ -16,6 +16,7 @@ public class Unit implements Comparable<Unit> {
     protected Tile tile; // Unit's current tile
     protected Tile next; // Unit's next tile
     protected Path path; // Path to new tile
+    protected boolean delay; // Has delay been set
 
     /* Public methods */
     public Unit(Team team, int num, UnitType type, Tile tile) {
@@ -130,6 +131,10 @@ public class Unit implements Comparable<Unit> {
         return path;
     }
 
+    public boolean hasPathDelay() {
+        return path.getDelay() > 0;
+    }
+    
     public int getPathDelay() {
         return path.getDelay();
     }

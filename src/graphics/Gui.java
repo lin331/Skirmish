@@ -19,7 +19,6 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
@@ -33,7 +32,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.JFormattedTextField;
 import javax.swing.table.DefaultTableModel;
 
 @SuppressWarnings("serial")
@@ -397,7 +395,7 @@ public class Gui extends JFrame {
         pathOptions.setVisible(false);    
         
         editCommand = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
-        editCommand.setBounds(0, 0, TILE_WIDTH * 2, TILE_HEIGHT * 6 / 3);
+        editCommand.setBounds(0, 0, TILE_WIDTH * 2, TILE_HEIGHT * 4 / 3);
         mapPane.add(editCommand, 1, 0);
         
         JButton changePath = new JButton("Change Path");
@@ -406,6 +404,7 @@ public class Gui extends JFrame {
         changePath.setFont(new Font("Arial", Font.PLAIN, 8));
         changePath.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                cInput.changePath();
             }
         });
         JButton setDelay = new JButton("Set Delay");

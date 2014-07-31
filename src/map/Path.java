@@ -29,10 +29,12 @@ public class Path {
     }
     
     /* Add position to path */
-    public void add(Tile t) {
+    public Tile add(Tile t) {
         if (isValid(t)) {
             tiles.add(t);
+            return t;
         }
+        return null;
     }
 
     /* Get next tile in path */
@@ -78,7 +80,34 @@ public class Path {
         }
         return false;
     }
-
+    
+    public boolean isValid(Tile t, boolean flag) {
+        if (tiles.size() == 0) {
+            Tile cur = unit.getTile();
+            if (t.isAdjacent(cur)) {
+                return true;
+            }
+            return false;
+        }
+        if (flag) {
+            if (maxMoves == tiles.size() - 1) {
+                return false;
+            }
+        }
+        if (maxMoves == tiles.size()) {
+            return false;
+        }
+        if (t.isAdjacent(tiles.get(tiles.size() - 1))) {
+            for (Tile tile : tiles) {
+                if (t.equals(tile)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+    
     /* Clear path */
     public void clear() {
         this.tiles.clear();

@@ -1,5 +1,7 @@
 package graphics;
 
+import static output.Output.Print.*;
+
 import map.Tile;
 import player.Archer;
 import player.Team;
@@ -143,6 +145,7 @@ public class UnitSetup implements MouseListener {
                 else {
                     unit = new Unit(t, unitNum, type, tiles.get(unitNum - 1));
                 }
+                printf("log.txt", "%s %s\n", unit, unit.getTile());
                 units.add(unit);
                 t.addUnit(unit);
                 tiles.get(unitNum - 1).setUnit(unit);
