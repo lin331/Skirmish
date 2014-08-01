@@ -188,6 +188,14 @@ public class Gui extends JFrame {
         uSetup.start();
         int unitNum = 0;
         while (!uSetup.isFinished()) {
+            if (uSetup.getUnitNum() == 0) {
+                undo.setEnabled(false);
+                clear.setEnabled(false);
+            }
+            else {
+                undo.setEnabled(true);
+                clear.setEnabled(true);
+            }
             unitNum = uSetup.getUnitNum() + 1;
             teamLabel.setText("Team " + currentTeam + ":");
             commandLabel.setText("Place Unit #" 
@@ -205,6 +213,12 @@ public class Gui extends JFrame {
     public void requestPath() {
         cInput.start();
         while (!cInput.isFinished()) {
+            if (cInput.isBusy()) {
+                endTurn.setEnabled(false);
+            }
+            else {
+                endTurn.setEnabled(true);
+            }
             int commandsLeft = game.getTurn().getMaxCommands()
                     - cInput.getPathNum();
             teamLabel.setText("Team " + currentTeam + "'s Turn:");
@@ -454,22 +468,15 @@ public class Gui extends JFrame {
         delayOption.add(delayOK);
         delayOption.setVisible(false);
 
-        undo.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                cInput.undo();
-            }
-        });
-        clear.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                cInput.clear();
-            }
-        });
         endTurn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 cInput.endTurn();
             }
         });
         
+        undo.setVisible(false);
+        clear.setVisible(false);
+
         cInput.start();
     }
 

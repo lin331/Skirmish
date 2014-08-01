@@ -28,7 +28,19 @@ public class Unit implements Comparable<Unit> {
         this.moves = type.getMove();
         this.tile = tile;
         this.next = null;
-        path = new Path(this);
+        this.path = new Path(this);
+    }
+
+    /* Cloning constructor */
+    public Unit(Unit u) {
+        this.team = u.getTeam();
+        this.num = u.getNum();
+        this.type = u.getType();
+        this.health = u.getHealth();
+        this.attack = u.getAttack();
+        this.tile = u.getTile();
+        this.next = u.getNext();
+        this.path = u.getPath();
     }
 
     /* Check if unit is blocking this */

@@ -22,7 +22,8 @@ public class CommandInput implements MouseListener {
     private boolean settingDelay;
 
     private ArrayList<Path> paths;
-    private ArrayList<Unit> unitsMoved;
+    private ArrayList<Unit> units;
+    private ArrayList<Unit> tempUnits;
     private ArrayList<TileButton> lastPath;
     private int pathNum;
     private int command;
@@ -34,7 +35,7 @@ public class CommandInput implements MouseListener {
         this.gui = gui;
 
         this.paths = new ArrayList<Path>();
-        this.unitsMoved = new ArrayList<Unit>();
+        this.units = new ArrayList<Unit>();
         this.lastPath = new ArrayList<TileButton>();
         
         this.pathNum = 0;
@@ -56,6 +57,10 @@ public class CommandInput implements MouseListener {
         return this.listening;
     }
     
+    public boolean isBusy() {
+        return drawingPath || choosingPathtype || settingDelay;
+    }
+
     public int getPathNum() {
         return this.pathNum;
     }
@@ -69,11 +74,12 @@ public class CommandInput implements MouseListener {
     }
 
     public void undo() {
+        // TODO: FIX THIS or remove it
         if (listening && !choosingPathtype) {
             if (pathNum > 0) {
                 listening = true;
                 pathNum--;
-                unitsMoved.remove(unitsMoved.size() - 1);
+                units.remove(units.size() - 1);
                 paths.remove(paths.size() - 1);
                 for (TileButton b : lastPath) {
                     b.setIcon(chooseIcon(b));
@@ -85,14 +91,14 @@ public class CommandInput implements MouseListener {
     }
 
     public void clear() {
-        // TODO Auto-generated method stub
+        // TODO: Clear path array
         
     }
 
     public void endTurn() {
         if (listening && !choosingPathtype) {
             pathNum = 0;
-            unitsMoved.clear();
+            units.clear();
             paths.clear();
             lastPath.clear();
             gui.render();
@@ -161,13 +167,13 @@ public class CommandInput implements MouseListener {
             if (e.getModifiers() == MouseEvent.BUTTON1_MASK) {
                 TileButton b = (TileButton) e.getSource();
                 if (!b.getTile().isEmpty()
-                        && !unitsMoved.contains(b.getTile().getUnit())
+                        && !units.contains(b.getTile().getUnit())
                         && b.getTile().getUnit().getTeam().getName() == gui
                                 .getCurrentTeam().getName()) {
                     lastButton = b;
                     lastPath.clear();
                     drawingPath = true;
-                    unitsMoved.add(b.getTile().getUnit());
+                    units.add(b.getTile().getUnit());
                     paths.add(b.getTile().getUnit().getPath());
                     lastPath.add(b);
                     b.setIcon(chooseIcon(b));
@@ -182,11 +188,11 @@ public class CommandInput implements MouseListener {
             if (e.getModifiers() == MouseEvent.BUTTON1_MASK) {
                 if (!paths.get(pathNum).isEmpty()) {
                    pathNum++;
-                    unitsMoved.get(unitsMoved.size() - 1)
+                    units.get(units.size() - 1)
                             .setPath(paths.get(pathNum - 1));
                     /*TileButton b = (TileButton) e.getSource();
                     b.getTile().getUnit().setPath(paths.get(pathNum - 1));*/
-                    printf("log.txt", "%s\n", unitsMoved.get(unitsMoved.size() - 1)
+                    printf("log.txt", "%s\n", units.get(units.size() - 1)
                             .getPath());
                     drawingPath = false;
                     choosingPathtype = true;
@@ -239,6 +245,12 @@ public class CommandInput implements MouseListener {
     @Override
     public void mouseClicked(MouseEvent e) {
         if (listening && !drawingPath && !choosingPathtype) {
+            if (e.getModifiers() == MouseEvent.BUTTON1_MASK) {
+                if (choosingPathtype) {
+                    // TODO: Cancel path type selecting
+                    // and restore tile icons
+                }
+            }
             if (e.getModifiers() == MouseEvent.BUTTON3_MASK) {
                 TileButton b = (TileButton) e.getSource();
                 if (!b.getTile().isEmpty()) {
