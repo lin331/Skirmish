@@ -5,7 +5,6 @@ import static output.Output.Print.*;
 import player.Archer;
 import player.Team;
 import player.Unit;
-import player.UnitType;
 import map.Map;
 import map.Pathtype;
 import map.Tile;
@@ -20,8 +19,11 @@ public class Combat {
     private ArrayList<Unit> units = new ArrayList<Unit>();
     private ArrayList<AdjNode> adj = new ArrayList<AdjNode>();
     private ArrayList<Battle> battles = new ArrayList<Battle>();
+    private ArrayList<Archer> archers;
 
-    /* Public methods */
+    /*
+     *  Public methods 
+    */
     public Combat(Map map, Turn turn, Team[] teams) {
         this.turn = turn;
         this.map = map;
@@ -102,38 +104,27 @@ public class Combat {
                 }
             }
         }
+        checkArchers();
         printf("log.txt", "Combat: done checking\n");
     }
     
     /* Check if archers need to attack */
     public void checkArchers() {
-        // Add attacking archers to list
-        ArrayList<Archer> archers = new ArrayList<Archer>();
-        for (Unit u : units) {
-            if (u.getType() == UnitType.ARCHER) {
-                Archer archer = (Archer) u;
-                if (archer.getAttackTile() != null) {
-                    archers.add(archer);
-                }
-            }
-        }
-        check:
-        for (Archer a : archers) {
-            if (a.isPathEmpty()) {
+        this.archers = this.turn.getArchers();
+        ListIterator<Archer> aIter = archers.listIterator();
+        while (aIter.hasNext()) {
+            Archer a = aIter.next();
+            if (a.getRemaining() > 0) {
                 Tile t = a.getAttackTile();
-                Unit enemy = t.getUnit();
-                if (enemy != null) {
-                    if (enemy.getTeam() != a.getTeam()) {
-                        for (Battle b : battles) {
-                            if (b.contains(a, enemy)) {
-                                break check;
-                            }
-                        }
-                        Battle battle = new Battle(a, enemy, 0);
-                        battles.add(battle);
-                        battle.doBattle(a);
-                    }
+                if (!t.isEmpty()) {
+                    Unit enemy = t.getUnit();
+                    Battle battle = new Battle(a, enemy, 5);
+                    battle.doBattle(a);
                 }
+                a.reduceRemaining();
+            }
+            else {
+                aIter.remove();
             }
         }
     }
@@ -143,15 +134,21 @@ public class Combat {
         this.battles.clear();
     }
     
-    /* Private methods */
-    /* Setters */
+    /*
+     * Private methods
+     */
+    /* 
+     * Setters
+    */
     private void setAdjacent(Unit u1, int dir, Unit u2) {
         int i = findUnit(u1);
         AdjNode node = adj.get(i);
         node.setAdjacent(dir, u2);
     }
 
-    /* Getters */
+    /*
+     *  Getters
+     */
     private Unit[] getAdjacent(Unit unit) {
         int i = findUnit(unit);
         AdjNode node = adj.get(i);
@@ -268,6 +265,7 @@ public class Combat {
                 this.units.add(u);
             }
         }
+        this.archers = null;
     }
 
     /* Find index for specified adjacent unit */

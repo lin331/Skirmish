@@ -18,7 +18,9 @@ public class Unit implements Comparable<Unit> {
     protected Path path; // Path to new tile
     protected boolean delay; // Has delay been set
 
-    /* Public methods */
+    /*
+     *  Public methods 
+    */
     public Unit(Team team, int num, UnitType type, Tile tile) {
         this.team = team;
         this.num = num;
@@ -40,7 +42,10 @@ public class Unit implements Comparable<Unit> {
         this.attack = u.getAttack();
         this.tile = u.getTile();
         this.next = u.getNext();
-        this.path = u.getPath();
+        this.path = new Path(this);
+        for (Tile t : u.getPath().getTiles()) {
+            path.add(t);
+        }
     }
 
     /* Check if unit is blocking this */
@@ -77,8 +82,13 @@ public class Unit implements Comparable<Unit> {
         this.next = tile;
     }
 
-    public void setPath(Path p) {
-        this.path = p;
+    public void setPath(Path p) throws Exception {
+        if (!this.path.isEmpty()) {
+            throw new Exception("Path not empty");
+        }
+        for (Tile t : p.getTiles()) {
+            this.path.add(t);
+        }
     }
 
     public void setDelay(int d) {

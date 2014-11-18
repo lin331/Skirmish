@@ -18,7 +18,9 @@ public class Game {
     private Turn turn; // Used for list of command
     private Combat combat;
 
-    /* Public methods */
+    /*
+     *  Public methods 
+    */
     /* Getters */
     public Map getMap() {
         return map;
@@ -32,8 +34,9 @@ public class Game {
         return turn;
     }
 
-    /* Private methods */
-    /* Constructor for game */
+    /*
+     * Private methods
+     */
     private Game() {
         this.gui = null;
         this.map = null;
@@ -43,7 +46,6 @@ public class Game {
         this.combat = null;
     }
 
-    /* Setters */
     /* Begins the game */
     private void start() {
         this.active = true;
@@ -56,14 +58,14 @@ public class Game {
         this.active = false;
     }
 
-    /* Getters */
+    /* Check if game is active */
     private boolean isActive() {
         return active;
     }
 
     /* Check if turn is empty */
     public boolean isTurnEmpty() {
-        return this.turn.isEmpty();
+        return this.turn.isFinished();
     }
 
     /* Initialize game map and create teams */
@@ -92,6 +94,7 @@ public class Game {
         this.map.setUnits(teams);
     }
 
+    /* Needed for gui apparently... */
     private void setGui(Gui gui) {
         this.gui = gui;
     }
@@ -111,11 +114,11 @@ public class Game {
             map.printMap();
             gui.render();
             combat.checkBattle();
-            combat.checkArchers();
             i++;
-        } while (!turn.isEmpty());
+        } while (!turn.isFinished());
         combat.clearBattles();
         turn.checkDelay();
+        turn.clearArchers();
         printStats();
     }
 
@@ -171,7 +174,9 @@ public class Game {
         }
     }
 
-    /* Testing-purposes */
+    /*
+     * Testing-purposes
+     */
     /* Reset game */
     private void reset() {
         initialize();
@@ -198,7 +203,7 @@ public class Game {
         gui.setInfoPanel();
         game.start();
         while (game.isActive()) {
-            if (game.turn.isEmpty()) {
+            if (game.turn.isFinished()) {
                 game.requestTurn();
             }
             game.processTurn();

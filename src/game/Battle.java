@@ -13,7 +13,9 @@ public class Battle {
     int bDmg;
     int flanked;
     
-    /* Public methods */
+    /*
+     *  Public methods 
+    */
     public Battle(Unit a, Unit b, int flanked) {
         printf("log.txt", "Battle engaged: %s vs. %s\n", a, b);
         this.a = a;
@@ -37,7 +39,7 @@ public class Battle {
         if (this.flanked == 0 || this.flanked == 3) {
             normal();
         }
-        else {
+        else if (this.flanked == 1 || this.flanked == 2) {
             try {
                 flanked();
             } catch (Exception e) {
@@ -259,7 +261,6 @@ public class Battle {
                 printf("log.txt", "%s killed by %s\n", a, b);
                 a.setDead();
             }
-        }
-            
+        } 
     }
 }

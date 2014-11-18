@@ -1,9 +1,10 @@
 package game;
 
 import static output.Output.Print.*;
-
 import player.Team;
 import player.Unit;
+import player.Archer;
+import player.UnitType;
 import map.Path;
 import map.Pathtype;
 import map.Tile;
@@ -17,9 +18,12 @@ public class Turn {
 
     private final int MAX_COMMANDS = 3;
     private ArrayList<Unit> units; // Units represent move commands
+    private ArrayList<Archer> archers = new ArrayList<Archer>();
     private Team[] teams; // Used to get
 
-    /* Public methods */
+    /*
+     *  Public methods 
+    */
     public Turn(Team[] teams) {
         units = new ArrayList<Unit>();
         this.teams = teams;
@@ -41,9 +45,9 @@ public class Turn {
         return this.teams;
     }
 
-    /* Check if list is empty */
-    public boolean isEmpty() {
-        return units.isEmpty();
+    /* Check if turn is finished */
+    public boolean isFinished() {
+        return units.isEmpty() && archers.isEmpty();
     }
 
     /* Returns size of list */
@@ -61,10 +65,16 @@ public class Turn {
         while (iterator.hasNext()) {
             Unit u = iterator.next();
             if (u.isDead()) {
+                if (u.getType() == UnitType.ARCHER) {
+                    ((Archer) u).resetRemaining();
+                }
                 // Remove unit from Turn if unit is dead
                 iterator.remove();
             }
             else if (u.getNext() == null) {
+                if (u.getType() == UnitType.ARCHER) {
+                    archers.add((Archer) u);
+                }
                 // Remove unit from Turn if unit finished moving
                 printf("log.txt", "Removed %s\n", u);
                 iterator.remove();
@@ -89,14 +99,23 @@ public class Turn {
         }
     }
 
+    /* Return list of archers attacking */
+    public ArrayList<Archer> getArchers() {
+        return this.archers;
+    }
+    
+    /* Clear archer list */
+    public void clearArchers() {
+        this.archers.clear();
+    }
+    
     /* Test printing */
     public void print() {
         for (Unit u : units) {
             printf("log.txt", "%s - %s: %s\n", u.getTeam(), u, u.getPath());
         }
     }
-
-    /* Override */
+    
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -106,7 +125,9 @@ public class Turn {
         return sb.toString();
     }
 
-    /* Private methods */
+    /*
+     * Private methods
+     */
     /* Add unit to list */
     private void add(Unit unit) {
         units.add(unit);
