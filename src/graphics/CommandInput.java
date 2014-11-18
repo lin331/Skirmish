@@ -4,6 +4,7 @@ import static output.Output.Print.*;
 import player.Unit;
 import map.Path;
 import map.Pathtype;
+import map.Tile;
 
 import java.awt.Component;
 import java.awt.event.*;
@@ -16,17 +17,18 @@ public class CommandInput implements MouseListener {
     private Gui gui;
 
     private boolean listening;
-    private boolean drawingPath;
     private boolean finished;
+    private boolean drawingPath;
     private boolean choosingPathtype;
+    private boolean editing;
     private boolean settingDelay;
 
-    private ArrayList<Path> paths;
     private ArrayList<Unit> units;
     private ArrayList<Unit> tempUnits;
+    private ArrayList<Path> paths;
     private ArrayList<TileButton> lastPath;
-    private int pathNum;
-    private int command;
+    private int num;
+    private int commands;
 
     private TileButton selected;
     private TileButton lastButton;
@@ -34,16 +36,20 @@ public class CommandInput implements MouseListener {
     public CommandInput(Gui gui) {
         this.gui = gui;
 
-        this.paths = new ArrayList<Path>();
         this.units = new ArrayList<Unit>();
+        this.tempUnits = new ArrayList<Unit>();
+        this.paths = new ArrayList<Path>();
         this.lastPath = new ArrayList<TileButton>();
         
-        this.pathNum = 0;
         this.listening = false;
-        this.drawingPath = false;
         this.finished = false;
+        this.drawingPath = false;
         this.choosingPathtype = false;
         this.settingDelay = false;
+        this.editing = false;
+
+        this.num = 0;
+        this.commands = 0;
         
         this.selected = null;
         this.lastButton = null;
@@ -61,8 +67,8 @@ public class CommandInput implements MouseListener {
         return drawingPath || choosingPathtype || settingDelay;
     }
 
-    public int getPathNum() {
-        return this.pathNum;
+    public int getNum() {
+        return this.num;
     }
 
     public void activate(boolean flag) {
@@ -73,41 +79,33 @@ public class CommandInput implements MouseListener {
         this.finished = false;
     }
 
-    public void undo() {
-        // TODO: FIX THIS or remove it
-        if (listening && !choosingPathtype) {
-            if (pathNum > 0) {
-                listening = true;
-                pathNum--;
-                units.remove(units.size() - 1);
-                paths.remove(paths.size() - 1);
-                for (TileButton b : lastPath) {
-                    b.setIcon(chooseIcon(b));
-                }
-            }
-            choosingPathtype = false;
-            gui.pathOptions.setVisible(false);
-        }
-    }
-
-    public void clear() {
-        // TODO: Clear path array
-        
-    }
-
     public void endTurn() {
         if (listening && !choosingPathtype) {
-            pathNum = 0;
             units.clear();
+            tempUnits.clear();
             paths.clear();
             lastPath.clear();
+            selected = null;
+            lastButton = null;
+            num = 0;
+            commands = 0;
             gui.render();
             finished = true;
         }
     }
 
     public void setPathtype(Pathtype type) {
-        paths.get(paths.size() - 1).setType(type);
+        // set tempPath type
+        paths.get(num).setType(type);
+        // add unit to units move list
+        units.add(selected.getTile().getUnit());
+        // set temp variables to null
+        lastPath.clear();
+        selected = null;
+        lastButton = null;
+        // increment counts
+        num++;
+        commands++;
     }
 
     public void choosePathtype(Pathtype type) {
@@ -115,8 +113,8 @@ public class CommandInput implements MouseListener {
             setPathtype(type);
             choosingPathtype = false;
             gui.pathOptions.setVisible(false);
-            printf("log.txt", "Chose %s move\n", paths.get(paths.size() - 1)
-                    .getType());
+            /*printf("log.txt", "Chose %s move\n", paths.get(paths.size() - 1)
+                    .getType());*/
         }
     }
 
@@ -129,35 +127,141 @@ public class CommandInput implements MouseListener {
         }
     }
 
-    public void setDelay(String d) {
-        if (listening && settingDelay) {
-            if (!selected.getTile().getUnit().isPathEmpty()) {
-                int delay = 0;
-                try {
-                    delay = Integer.parseInt(d);
-                } catch (NumberFormatException e) {
-                    delay = 0;
-                }
-                selected.getTile().getUnit().setDelay(delay);
-                gui.delayOption.setVisible(false);
+    public void cancelPath() throws Exception {
+        if (listening) {
+            Unit u = selected.getTile().getUnit();
+            if (selected.getTile().getUnit().isPathEmpty()) {
+                throw new Exception("Path empty");
             }
+            else {
+                u.getPath().clear();
+                selected = null;
+            }
+        }
+    }
+
+    public void setDelay(String d) throws Exception {
+        if (listening && settingDelay) {
+            if (selected.getTile().getUnit().isPathEmpty()) {
+                throw new Exception("Path empty");
+            }
+            int delay = 0;
+            try {
+                delay = Integer.parseInt(d);
+            } catch (NumberFormatException e) {
+                delay = 0;
+            }
+            selected.getTile().getUnit().setDelay(delay);
+            settingDelay = false;
+            gui.delayOption.setVisible(false);
+            gui.updateTable();
             selected = null;
         }
     }
 
-    public void getDelay() {
+    public void undoChanges() {
         if (listening) {
-            if (!selected.getTile().getUnit().isPathEmpty()) {
-                settingDelay = true;
-                int x = (selected.getTile().getX() * 32) + 32 + 73;
-                int y = (selected.getTile().getY() * 32) + 32 + 37;
-                gui.delayOption.setLocation(x,y);
-                gui.delayOption.setVisible(true);
+            // TODO: GET THIS WORKING
+            // Update tiles i think
+            /*Unit u = selected.getTile().getUnit();
+            Unit temp = findUnit(u);
+            units.remove(temp);
+            u.setDelay(temp.getDelay());
+            u.getPath().clear();*/
+        }
+    }
+
+    public void getDelay() throws Exception {
+        if (listening) {
+            if (selected.getTile().getUnit().isPathEmpty()) {
+                throw new Exception("Path empty");
             }
-            else {
-                selected = null;
-            }
+            settingDelay = true;
+            int x = (selected.getTile().getX() * 32) + 32 + 73;
+            int y = (selected.getTile().getY() * 32) + 32 + 37;
+            gui.delayOption.setLocation(x,y);
+            gui.delayOption.setVisible(true);
             gui.editCommand.setVisible(false);
+        }
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        if (listening && !drawingPath && !choosingPathtype) {
+            // Right-click
+            if (e.getModifiers() == MouseEvent.BUTTON3_MASK) {
+                TileButton b = (TileButton) e.getSource();
+                if (!b.getTile().isEmpty()
+                    && b.getTile().getUnit().getTeam()
+                            == gui.getCurrentTeam()) {
+                    Unit u = b.getTile().getUnit();
+                    if (!u.isPathEmpty()) {
+                        editing = true;
+                        selected = b;
+                        Component[] c = gui.editCommand.getComponents();
+                        // 0 = change path
+                        // 1 = cancel path
+                        // 2 = set delay
+                        // 3 = change delay
+                        // 4 = undo changes
+                        if (u.getPath().isEmpty()) {
+                            c[0].setVisible(false);
+                            c[1].setVisible(false);
+                        }
+                        else {
+                            c[0].setVisible(false);
+                            c[1].setVisible(false);
+                        }
+                        if (!u.hasPathDelay()) {
+                            c[2].setVisible(true);
+                            c[3].setVisible(false);
+                        }
+                        else {
+                            c[2].setVisible(false);
+                            c[3].setVisible(true);
+                        }
+                        if (units.contains(u)) {
+                            c[4].setVisible(true);
+                        }
+                        else {
+                            c[4].setVisible(false);
+                        }
+                        int x = (selected.getTile().getX() * 32) + 32 + 73;
+                        int y = (selected.getTile().getY() * 32) + 32 + 37;
+                        gui.editCommand.setLocation(x,y);
+                        gui.editCommand.setVisible(true);
+                    }
+                }
+            }
+        }
+        else if (listening && !drawingPath && (choosingPathtype || editing)) {
+            // Left-click
+            if (e.getModifiers() == MouseEvent.BUTTON1_MASK) {
+                if (choosingPathtype) {
+                    choosingPathtype = false;
+                    gui.pathOptions.setVisible(false);
+                    for (TileButton b : lastPath) {
+                        b.setIcon(chooseIcon(b));
+                    }
+                    lastPath.clear();
+                    Unit u = selected.getTile().getUnit();
+                    u.getPath().clear();
+                    Path p = tempUnits.remove(num).getPath();
+                    for (Tile t : p.getTiles()) {
+                        u.getPath().add(t);
+                    }
+                    paths.remove(num);
+                    selected = null;
+                    lastButton = null;
+                }
+                if (editing) {
+                    // TODO: GET THIS WORKING
+                    editing = false;
+                    gui.editCommand.setVisible(false);
+                    selected.setIcon(chooseIcon(selected));
+                    selected = null;
+                }
+            }
         }
     }
 
@@ -165,16 +269,22 @@ public class CommandInput implements MouseListener {
     public void mousePressed(MouseEvent e) {
         if (listening && !choosingPathtype) {
             if (e.getModifiers() == MouseEvent.BUTTON1_MASK) {
+                if (commands == 3) {
+                    return;
+                }
                 TileButton b = (TileButton) e.getSource();
                 if (!b.getTile().isEmpty()
                         && !units.contains(b.getTile().getUnit())
-                        && b.getTile().getUnit().getTeam().getName() == gui
-                                .getCurrentTeam().getName()) {
+                        && b.getTile().getUnit().getTeam() 
+                                == gui.getCurrentTeam()) {
+                    selected = b;
                     lastButton = b;
-                    lastPath.clear();
+                    Unit u = selected.getTile().getUnit();
+                    tempUnits.add(new Unit(u));
+                    paths.add(u.getPath());
                     drawingPath = true;
-                    units.add(b.getTile().getUnit());
-                    paths.add(b.getTile().getUnit().getPath());
+                    // units.add(b.getTile().getUnit());
+                    // paths.add(u.getPath());
                     lastPath.add(b);
                     b.setIcon(chooseIcon(b));
                 }
@@ -186,14 +296,14 @@ public class CommandInput implements MouseListener {
     public void mouseReleased(MouseEvent e) {
         if (listening && drawingPath) {
             if (e.getModifiers() == MouseEvent.BUTTON1_MASK) {
-                if (!paths.get(pathNum).isEmpty()) {
-                   pathNum++;
-                    units.get(units.size() - 1)
-                            .setPath(paths.get(pathNum - 1));
+                if (!lastPath.isEmpty()) {
+                    // pathNum++;
+                    /*units.get(units.size() - 1)
+                            .setPath(paths.get(pathNum - 1));*/
                     /*TileButton b = (TileButton) e.getSource();
                     b.getTile().getUnit().setPath(paths.get(pathNum - 1));*/
-                    printf("log.txt", "%s\n", units.get(units.size() - 1)
-                            .getPath());
+                    /*printf("log.txt", "%s\n", units.get(units.size() - 1)
+                            .getPath());*/
                     drawingPath = false;
                     choosingPathtype = true;
         
@@ -208,9 +318,9 @@ public class CommandInput implements MouseListener {
                     gui.revalidate();
         
                     // Turn MAX_COMMANDS
-                    if (pathNum == 3) {
+                    /*if (pathNum == 3) {
                         listening = false;
-                    }
+                    }*/
                 }
                 else {
                     drawingPath = false;
@@ -226,14 +336,14 @@ public class CommandInput implements MouseListener {
         if (listening && drawingPath) {
             if (e.getModifiers() == MouseEvent.BUTTON1_MASK) {
                 TileButton b = (TileButton) e.getSource();
-                if (!paths.get(pathNum).isValid(b.getTile())) {
+                if (!paths.get(num).isValid(b.getTile())) {
                     return;
                 }
-                if (paths.get(pathNum).add(b.getTile()) != null) {
+                if (paths.get(num).add(b.getTile()) != null) {
                     lastPath.add(b);
                     lastButton = b;
+                    b.setIcon(chooseIcon(b));
                 }
-                b.setIcon(chooseIcon(b));
             }
         }
     }
@@ -242,46 +352,12 @@ public class CommandInput implements MouseListener {
     public void mouseExited(MouseEvent e) {
     }
 
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        if (listening && !drawingPath && !choosingPathtype) {
-            if (e.getModifiers() == MouseEvent.BUTTON1_MASK) {
-                if (choosingPathtype) {
-                    // TODO: Cancel path type selecting
-                    // and restore tile icons
-                }
-            }
-            if (e.getModifiers() == MouseEvent.BUTTON3_MASK) {
-                TileButton b = (TileButton) e.getSource();
-                if (!b.getTile().isEmpty()) {
-                    Unit u = b.getTile().getUnit();
-                    if (!u.isPathEmpty()) {
-                        selected = b;
-                        int x = (selected.getTile().getX() * 32) + 32 + 73;
-                        int y = (selected.getTile().getY() * 32) + 32 + 37;
-                        gui.editCommand.setLocation(x,y);
-                        Component[] c = gui.editCommand.getComponents();
-                        if (!u.hasPathDelay()) {
-                            c[1].setVisible(true);
-                            c[2].setVisible(false);
-                        }
-                        else {
-                            c[1].setVisible(false);
-                            c[2].setVisible(true);
-                        }
-                        gui.editCommand.setVisible(true);
-                    }
-                }
-            }
-        }
-    }
-
     private ImageIcon chooseIcon(TileButton b) {
         if (listening) {
             ImageIcon icon = null;
             if (drawingPath) {
                 if (b.getTile().isEmpty()) {
-                    switch (pathNum) {
+                    switch (num) {
                         case 0:
                             icon = new ImageIcon("res/pathTile1.png");
                             break;
@@ -324,7 +400,7 @@ public class CommandInput implements MouseListener {
                     else if (b.getTile().getUnit().getTeam().getName() == "B") {
                         sb.append("2");
                     }
-                    switch (pathNum) {
+                    switch (num) {
                         case 0:
                             sb.append("Tile1");
                             break;
@@ -379,6 +455,15 @@ public class CommandInput implements MouseListener {
                 }
             }
             return icon;
+        }
+        return null;
+    }
+
+    private Unit findUnit(Unit unit) {
+        for (Unit u : tempUnits) {
+            if (unit.equals(u)) {
+                return u;
+            }
         }
         return null;
     }

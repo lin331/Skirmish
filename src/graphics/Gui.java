@@ -47,6 +47,8 @@ public class Gui extends JFrame {
     private final int TILE_WIDTH = 32;
     private final int TILE_HEIGHT = 32;
     
+    private final Dimension buttonDim
+            = new Dimension(TILE_WIDTH * 3, TILE_HEIGHT * 2 / 3);
     // left side of gui
     // table for unit info
     private JScrollPane infoPane;
@@ -120,67 +122,8 @@ public class Gui extends JFrame {
     }
 
     public void render() {
-        // render info table
-        int teamASize = game.getTeams()[0].getSize();
-        for (int i = 0; i < 2; i++) {
-            Team t = game.getTeams()[i];
-            int index = 0;
-            if (i == 1) {
-                index = teamASize;
-            }
-            for (int j = 0; j < t.getSize(); j++) {
-                if (t.getUnits().get(j).isDead()) {
-                    infoModel.setValueAt(new ImageIcon("res/deadUnit.png"),
-                            index + j, 0);
-                }
-                infoModel.setValueAt(t.getUnits().get(j).getPath().getDelay(),
-                        index + j, 1);
-                infoModel.setValueAt(t.getUnits().get(j).getHealth(),
-                        index + j, 2);
-            }
-        }
-
-        // render tiles
-        for (TileButton b : tileButtons) {
-            ImageIcon icon = null;
-            if (b.getTile().isEmpty()) {
-                icon = new ImageIcon("res/tile.png");
-            }
-            else {
-                Unit u = b.getTile().getUnit();
-                StringBuilder sb = new StringBuilder("res/");
-                switch (u.getType()) {
-                    case FOOTMAN:
-                        sb.append("Footman");
-                        break;
-                    case SPEARMAN:
-                        sb.append("Spearman");
-                        break;
-                    case ARCHER:
-                        sb.append("Archer");
-                        break;
-                    case CAVALRY:
-                        sb.append("Cavalry");
-                        break;
-                    case BARBARIAN:
-                        sb.append("Barbarian");
-                        break;
-                    default:
-                        sb.append("Unit");
-                        break;
-                }
-                if (b.getTile().getUnit().getTeam().getName() == "A") {
-                    sb.append("1");
-                }
-                else if (b.getTile().getUnit().getTeam().getName() == "B") {
-                    sb.append("2");
-                }
-                sb.append("Tile.png");
-                icon = new ImageIcon(sb.toString());
-            }
-            b.setIcon(icon);
-        }
-
+        updateMap();
+        updateTable();
         revalidate();
     }
 
@@ -220,7 +163,7 @@ public class Gui extends JFrame {
                 endTurn.setEnabled(true);
             }
             int commandsLeft = game.getTurn().getMaxCommands()
-                    - cInput.getPathNum();
+                    - cInput.getNum();
             teamLabel.setText("Team " + currentTeam + "'s Turn:");
             commandLabel.setText(commandsLeft
                     + " commands remaining");
@@ -266,8 +209,7 @@ public class Gui extends JFrame {
         mapPane.add(unitOptions, 1, 0);
         
         JButton footman = new JButton("Footman");
-        footman.setPreferredSize(new Dimension(TILE_WIDTH * 3,
-                TILE_HEIGHT * 2 / 3));
+        footman.setPreferredSize(buttonDim);
         footman.setFont(new Font("Arial", Font.PLAIN, 8));
         footman.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -276,8 +218,7 @@ public class Gui extends JFrame {
         });
 
         JButton spearman = new JButton("Spearman");
-        spearman .setPreferredSize(new Dimension(TILE_WIDTH * 3,
-                TILE_HEIGHT * 2 / 3));
+        spearman .setPreferredSize(buttonDim);
         spearman .setFont(new Font("Arial", Font.PLAIN, 8));
         spearman .addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -286,8 +227,7 @@ public class Gui extends JFrame {
         });
 
         JButton cavalry = new JButton("Cavalry");
-        cavalry.setPreferredSize(new Dimension(TILE_WIDTH * 3,
-                TILE_HEIGHT * 2 / 3));
+        cavalry.setPreferredSize(buttonDim);
         cavalry.setFont(new Font("Arial", Font.PLAIN, 8));
         cavalry.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -296,8 +236,7 @@ public class Gui extends JFrame {
         });
         
         JButton archer = new JButton("Archer");
-        archer.setPreferredSize(new Dimension(TILE_WIDTH * 3,
-                TILE_HEIGHT * 2 / 3));
+        archer.setPreferredSize(buttonDim);
         archer.setFont(new Font("Arial", Font.PLAIN, 8));
         archer.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -306,8 +245,7 @@ public class Gui extends JFrame {
         });
         
         JButton barbarian = new JButton("Barbarian");
-        barbarian.setPreferredSize(new Dimension(TILE_WIDTH * 3,
-                TILE_HEIGHT * 2 / 3));
+        barbarian.setPreferredSize(buttonDim);
         barbarian.setFont(new Font("Arial", Font.PLAIN, 8));
         barbarian.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -327,8 +265,7 @@ public class Gui extends JFrame {
         mapPane.add(editUnit, 1, 0);
         editUnit.setBounds(0, 0, TILE_WIDTH * 3, TILE_HEIGHT * 4 / 3);
         JButton remove = new JButton("Remove");
-        remove.setPreferredSize(new Dimension(TILE_WIDTH * 3,
-                TILE_HEIGHT * 2 / 3));
+        remove.setPreferredSize(buttonDim);
         remove.setFont(new Font("Arial", Font.PLAIN, 8));
         remove.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -337,8 +274,7 @@ public class Gui extends JFrame {
         });
 
         JButton change = new JButton("Change Type");
-        change.setPreferredSize(new Dimension(TILE_WIDTH * 3,
-                TILE_HEIGHT * 2 / 3));
+        change.setPreferredSize(buttonDim);
         change.setFont(new Font("Arial", Font.PLAIN, 8));
         change.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -374,8 +310,7 @@ public class Gui extends JFrame {
         mapPane.add(pathOptions, 1, 0);
 
         JButton safeGoal = new JButton("Safe Goal Move");
-        safeGoal.setPreferredSize(new Dimension(TILE_WIDTH * 3,
-                TILE_HEIGHT * 2 / 3));
+        safeGoal.setPreferredSize(buttonDim);
         safeGoal.setFont(new Font("Arial", Font.PLAIN, 8));
         safeGoal.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -384,8 +319,7 @@ public class Gui extends JFrame {
         });
 
         JButton goal = new JButton("Goal Move");
-        goal.setPreferredSize(new Dimension(TILE_WIDTH * 3,
-                TILE_HEIGHT * 2 / 3));
+        goal.setPreferredSize(buttonDim);
         goal.setFont(new Font("Arial", Font.PLAIN, 8));
         goal.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -394,8 +328,7 @@ public class Gui extends JFrame {
         });
 
         JButton standard = new JButton("Standard Move");
-        standard.setPreferredSize(new Dimension(TILE_WIDTH * 3,
-                TILE_HEIGHT * 2 / 3));
+        standard.setPreferredSize(buttonDim);
         standard.setFont(new Font("Arial", Font.PLAIN, 8));
         standard.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -413,35 +346,60 @@ public class Gui extends JFrame {
         mapPane.add(editCommand, 1, 0);
         
         JButton changePath = new JButton("Change Path");
-        changePath.setPreferredSize(new Dimension(TILE_WIDTH * 3,
-                TILE_HEIGHT * 2 / 3));
+        changePath.setPreferredSize(buttonDim);
         changePath.setFont(new Font("Arial", Font.PLAIN, 8));
         changePath.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 cInput.changePath();
             }
         });
+        JButton cancelPath = new JButton("Cancel Path");
+        cancelPath.setPreferredSize(buttonDim);
+        cancelPath.setFont(new Font("Arial", Font.PLAIN, 8));
+        cancelPath.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    cInput.cancelPath();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    System.exit(-1);
+                }
+            }
+        });
         JButton setDelay = new JButton("Set Delay");
-        setDelay.setPreferredSize(new Dimension(TILE_WIDTH * 3,
-                TILE_HEIGHT * 2 / 3));
+        setDelay.setPreferredSize(buttonDim);
         setDelay.setFont(new Font("Arial", Font.PLAIN, 8));
         setDelay.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                cInput.getDelay();
+                try {
+                    cInput.getDelay();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    System.exit(-1);
+                }
             }
         });
         JButton changeDelay = new JButton("Change Delay");
-        changeDelay.setPreferredSize(new Dimension(TILE_WIDTH * 3,
-                TILE_HEIGHT * 2 / 3));
+        changeDelay.setPreferredSize(buttonDim);
         changeDelay.setFont(new Font("Arial", Font.PLAIN, 8));
         changeDelay.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             }
         });
+        JButton undoChanges = new JButton("Undo");
+        undoChanges.setPreferredSize(buttonDim);
+        undoChanges.setFont(new Font("Arial", Font.PLAIN, 8));
+        undoChanges.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                cInput.undoChanges();
+            }
+        });
 
         editCommand.add(changePath);
+        editCommand.add(cancelPath);
         editCommand.add(setDelay);
         editCommand.add(changeDelay);
+        editCommand.add(undoChanges);
         editCommand.setVisible(false);
         
         delayOption = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
@@ -449,18 +407,22 @@ public class Gui extends JFrame {
         mapPane.add(delayOption, 1, 0);
         
         final JTextField delay = new JTextField();
-        delay.setPreferredSize(new Dimension(TILE_WIDTH * 2,
-                TILE_HEIGHT * 2 / 3));
+        delay.setPreferredSize(buttonDim);
         delay.setFont(new Font("Arial", Font.PLAIN, 10));
         delay.setHorizontalAlignment(JTextField.CENTER);
 
         JButton delayOK = new JButton("OK");
-        delayOK.setPreferredSize(new Dimension(TILE_WIDTH * 2,
-                TILE_HEIGHT * 2 / 3));
+        delayOK.setPreferredSize(buttonDim);
         delayOK.setFont(new Font("Arial", Font.PLAIN, 8));
         delayOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                cInput.setDelay(delay.getText());
+                try {
+                    cInput.setDelay(delay.getText());
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    System.exit(-1);
+                }
+                delay.setText("");
             }
         });
 
@@ -587,5 +549,69 @@ public class Gui extends JFrame {
         setVisible(true);
 
         revalidate();
+    }
+
+    private void updateMap() {
+        for (TileButton b : tileButtons) {
+            ImageIcon icon = null;
+            if (b.getTile().isEmpty()) {
+                icon = new ImageIcon("res/tile.png");
+            }
+            else {
+                Unit u = b.getTile().getUnit();
+                StringBuilder sb = new StringBuilder("res/");
+                switch (u.getType()) {
+                    case FOOTMAN:
+                        sb.append("Footman");
+                        break;
+                    case SPEARMAN:
+                        sb.append("Spearman");
+                        break;
+                    case ARCHER:
+                        sb.append("Archer");
+                        break;
+                    case CAVALRY:
+                        sb.append("Cavalry");
+                        break;
+                    case BARBARIAN:
+                        sb.append("Barbarian");
+                        break;
+                    default:
+                        sb.append("Unit");
+                        break;
+                }
+                if (b.getTile().getUnit().getTeam().getName() == "A") {
+                    sb.append("1");
+                }
+                else if (b.getTile().getUnit().getTeam().getName() == "B") {
+                    sb.append("2");
+                }
+                sb.append("Tile.png");
+                icon = new ImageIcon(sb.toString());
+            }
+            b.setIcon(icon);
+        }
+    }
+
+    public void updateTable() {
+        // render info table
+        int teamASize = game.getTeams()[0].getSize();
+        for (int i = 0; i < 2; i++) {
+            Team t = game.getTeams()[i];
+            int index = 0;
+            if (i == 1) {
+                index = teamASize;
+            }
+            for (int j = 0; j < t.getSize(); j++) {
+                if (t.getUnits().get(j).isDead()) {
+                    infoModel.setValueAt(new ImageIcon("res/deadUnit.png"),
+                            index + j, 0);
+                }
+                infoModel.setValueAt(t.getUnits().get(j).getPath().getDelay(),
+                        index + j, 1);
+                infoModel.setValueAt(t.getUnits().get(j).getHealth(),
+                        index + j, 2);
+            }
+        }
     }
 }

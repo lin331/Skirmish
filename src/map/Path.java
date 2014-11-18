@@ -14,7 +14,9 @@ public class Path {
     private int maxMoves; // Total moves in path
     private int delay;
     
-    /* Public methods */
+    /*
+     *  Public methods 
+    */
     public Path(Unit unit) {
         this.type = Pathtype.STATIONARY;
         this.unit = unit;
@@ -112,6 +114,7 @@ public class Path {
     public void clear() {
         this.tiles.clear();
         this.type = Pathtype.STATIONARY;
+        this.delay = 0;
     }
 
     /* Setters below */
@@ -142,6 +145,10 @@ public class Path {
     /* Check if path is empty */
     public boolean isEmpty() {
         return tiles.isEmpty();
+    }
+
+    public ArrayList<Tile> getTiles() {
+        return this.tiles;
     }
 
     /* Overrides */
