@@ -442,7 +442,9 @@ public class Gui extends JFrame {
         cInput.start();
     }
 
-    /* Private methods */
+    /*
+     * Private methods
+     */
     private void initialize() {
         // set up info panel
         String[] columnNames = { "Unit", "Turn Delay", "Health" };

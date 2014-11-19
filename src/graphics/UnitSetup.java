@@ -294,7 +294,9 @@ public class UnitSetup implements MouseListener {
         }
     }
 
-    /* Private methods */
+    /*
+     * Private methods
+     */
     private ImageIcon chooseIcon(TileButton b) {
         if (listening) {
             ImageIcon icon = new ImageIcon("res/tile.png");

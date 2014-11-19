@@ -12,7 +12,9 @@ public class Map {
     private final int WIDTH = 9;
     private final int HEIGHT = 6;
 
-    /* Public methods */
+    /*
+     * Public methods
+    */
     public Map() {
         initialize();
     }
@@ -97,7 +99,9 @@ public class Map {
         return HEIGHT;
     }
 
-    /* Private methods */
+    /*
+     * Private methods
+     */
     /* Initializes tile map */
     private void initialize() {
         tiles = new Tile[HEIGHT][WIDTH];

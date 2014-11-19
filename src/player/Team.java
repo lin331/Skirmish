@@ -7,7 +7,9 @@ public class Team {
     private String name;
     private ArrayList<Unit> units;
 
-    /* Public methods */
+    /*
+     * Public methods
+    */
     public Team(String name) {
         this.name = name;
         this.units = new ArrayList<Unit>();

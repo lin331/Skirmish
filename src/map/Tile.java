@@ -8,7 +8,9 @@ public class Tile {
     private int x;
     private int y;
 
-    /* Public methods */
+    /*
+     * Public methods
+    */
     public Tile(int x, int y) {
         unit = null;
         this.x = x;

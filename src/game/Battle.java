@@ -88,7 +88,9 @@ public class Battle {
         return false;
     }
     
-    /* Private methods */
+    /*
+     * Private methods
+     */
     /* Calculate damage modifiers */
     private void damageMods() {
         // Calculate modified attack damage

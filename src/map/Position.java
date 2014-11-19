@@ -4,7 +4,9 @@ public class Position {
     private int x;
     private int y;
 
-    /* Public methods */
+    /*
+     * Public methods
+    */
     // Not in use
     public Position() {
         x = -1;
