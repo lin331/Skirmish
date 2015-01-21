@@ -1,0 +1,25 @@
+Need to fix:
+1)move options get cut off at the bottom of the screen, pic: http://screencloud.net/v/p3DW
+  (it currently creates the dialogue box where you let go of your click) (partily fixed)
+
+Things to Implement:
+1) shorten time between cycles (appx 0.5 secs when no battles engaged, and add 0.25secs when damage is being done)
+2) optimized unit placement (instead of manually imputting coordinates from terminal, should have a visual method ingame)
+3)Movement mechanics, instead of having to press undo to fix a movement, should be able to just click the unit again and drag
+  should also be click unit first to select it, and then drag path 2nd instead of just drag all in one go
+    -can use mouse hover for pathing instead of drag if its more intuitive that way
+
+To be added in "final" product:
+1) bigger grid (at least 10x17 for <standard> 10-12 units on each side battle)
+
+Planned features:
+1) networking capabilities
+
+Aesthetics features:
+1) floating damage text
+2) make the entire thing bigger (size of grids/units etc)
+3) unit health bars and way of matching up units to their info bar
+4) line or something to mark the middle of the grid/sides (to improve map readability)
+5) damage animation (maybe flashing line or something)
+6) smooth unit cycle transitions (rather than just disappear then reappear)
+7) simple menu before game starts (like simple version of pvp.net, normal/ranked/stats/startgame
