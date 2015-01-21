@@ -2,6 +2,8 @@ package graphics;
 
 import static output.Output.Print.*;
 import player.Unit;
+import player.Archer;
+import player.UnitType;
 import map.Path;
 import map.Pathtype;
 import map.Tile;
@@ -14,6 +16,9 @@ import javax.swing.*;
 
 public class CommandInput implements MouseListener {
 
+    private static final int LEFT_CLICK = MouseEvent.BUTTON1_MASK;
+    private static final int RIGHT_CLICK = MouseEvent.BUTTON3_MASK;
+
     private Gui gui;
 
     private boolean listening;
@@ -22,6 +27,7 @@ public class CommandInput implements MouseListener {
     private boolean choosingPathtype;
     private boolean editing;
     private boolean settingDelay;
+    private boolean selectArcherAttack;
 
     private ArrayList<Unit> units;
     private ArrayList<Unit> tempUnits;
@@ -47,6 +53,7 @@ public class CommandInput implements MouseListener {
         this.choosingPathtype = false;
         this.settingDelay = false;
         this.editing = false;
+        this.selectArcherAttack = false;
 
         this.num = 0;
         this.commands = 0;
@@ -101,6 +108,11 @@ public class CommandInput implements MouseListener {
         units.add(selected.getTile().getUnit());
         // set temp variables to null
         lastPath.clear();
+        if (selected.getTile().getUnit().getType() == UnitType.ARCHER) {
+            selectArcherAttack = true;
+            printf("Select archer attack tile\n");
+            return;
+        }
         selected = null;
         lastButton = null;
         // increment counts
@@ -187,9 +199,51 @@ public class CommandInput implements MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (listening && !drawingPath && !choosingPathtype) {
+        if (listening && selectArcherAttack) {
+            // Left-click
+            if (e.getModifiers() == LEFT_CLICK) {
+                /* Selects archer attack tile */
+                Archer a = (Archer) selected.getTile().getUnit();
+                Tile archerAttackTile = ((TileButton) e.getSource()).getTile();
+                a.setAttackTile(archerAttackTile);
+                if (archerAttackTile != null) {
+                    printf("Archer's attack tile: %s\n", a.getTile());
+                    selected = null;
+                    lastButton = null;
+                    num++;
+                    commands++;
+                    selectArcherAttack = false;
+                }
+                else {
+                    printf("Archer attack tile invalid\nSelect again\n");
+                }
+                return;
+            }
+        }
+        /*if (listening && !drawingPath && !choosingPathtype) {
+            // Left-click
+            if (e.getModifiers() == LEFT_CLICK) {
+                if (editing) {
+                    // TODO: GET THIS WORKING
+                    editing = false;
+                    for (Component c : gui.editCommand.getComponents()) {
+                        c.setVisible(false);
+                    }
+                    gui.editCommand.setVisible(false);
+                    selected = null;
+                }
+            }
             // Right-click
-            if (e.getModifiers() == MouseEvent.BUTTON3_MASK) {
+            if (e.getModifiers() == RIGHT_CLICK) {
+                if (editing) {
+                    editing = false;
+                    for (Component c : gui.editCommand.getComponents()) {
+                        c.setVisible(false);
+                    }
+                    gui.editCommand.setVisible(false);
+                    selected = null;
+                    return;
+                }
                 TileButton b = (TileButton) e.getSource();
                 if (!b.getTile().isEmpty()
                     && b.getTile().getUnit().getTeam()
@@ -236,7 +290,7 @@ public class CommandInput implements MouseListener {
         }
         else if (listening && !drawingPath && (choosingPathtype || editing)) {
             // Left-click
-            if (e.getModifiers() == MouseEvent.BUTTON1_MASK) {
+            if (e.getModifiers() == LEFT_CLICK) {
                 if (choosingPathtype) {
                     choosingPathtype = false;
                     gui.pathOptions.setVisible(false);
@@ -254,21 +308,17 @@ public class CommandInput implements MouseListener {
                     selected = null;
                     lastButton = null;
                 }
-                if (editing) {
-                    // TODO: GET THIS WORKING
-                    editing = false;
-                    gui.editCommand.setVisible(false);
-                    selected.setIcon(chooseIcon(selected));
-                    selected = null;
-                }
             }
-        }
+        }*/
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
         if (listening && !choosingPathtype) {
-            if (e.getModifiers() == MouseEvent.BUTTON1_MASK) {
+            if (selectArcherAttack) {
+                return;
+            }
+            if (e.getModifiers() == LEFT_CLICK) {
                 if (commands == 3) {
                     return;
                 }
@@ -295,7 +345,7 @@ public class CommandInput implements MouseListener {
     @Override
     public void mouseReleased(MouseEvent e) {
         if (listening && drawingPath) {
-            if (e.getModifiers() == MouseEvent.BUTTON1_MASK) {
+            if (e.getModifiers() == LEFT_CLICK) {
                 if (!lastPath.isEmpty()) {
                     // pathNum++;
                     /*units.get(units.size() - 1)
@@ -334,7 +384,7 @@ public class CommandInput implements MouseListener {
     @Override
     public void mouseEntered(MouseEvent e) {
         if (listening && drawingPath) {
-            if (e.getModifiers() == MouseEvent.BUTTON1_MASK) {
+            if (e.getModifiers() == LEFT_CLICK) {
                 TileButton b = (TileButton) e.getSource();
                 if (!paths.get(num).isValid(b.getTile())) {
                     return;

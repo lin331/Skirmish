@@ -210,6 +210,7 @@ public class Game {
             gui.render();
             if (game.isOver()) {
                 game.end();
+                gui.dispose();
                 game.reset();
                 printf("log.txt", "\n\n" + new Date().toString() + "\n");
             }

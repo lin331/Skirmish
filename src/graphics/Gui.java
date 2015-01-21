@@ -406,7 +406,7 @@ public class Gui extends JFrame {
         delayOption.setBounds(0, 0, TILE_WIDTH * 2, TILE_HEIGHT * 4 / 3);
         mapPane.add(delayOption, 1, 0);
         
-        final JTextField delay = new JTextField();
+        final JTextField delay = new JTextField("0");
         delay.setPreferredSize(buttonDim);
         delay.setFont(new Font("Arial", Font.PLAIN, 10));
         delay.setHorizontalAlignment(JTextField.CENTER);

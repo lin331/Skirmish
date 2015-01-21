@@ -41,10 +41,12 @@ public class Archer extends Unit {
         this.attack = flag;
     }
     
-    public void setAttackTile(Tile tile) {
+    public Tile setAttackTile(Tile tile) {
         if (checkValid(tile)) {
             this.attackTile = tile;
+            return tile;
         }
+        return null;
     }
     
     public Tile getAttackTile() {
