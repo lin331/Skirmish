@@ -20,4 +20,17 @@
    <java classname="game.Game" classpath="build" fork="true"/> 
   </target>
 
+  <target name="client" depends="compile" description="run client">
+    <java classname="netplay.client.Client" classpath="build" fork="true"/>
+  </target>
+
+  <target name="server" depends="compile" description="run server">
+    <java classname="netplay.server.Server" classpath="build" fork="true"/>
+  </target>
+
+  <target name="test1" depends="compile" description="run 1 client and a server">
+    <java classname="netplay.server.Server" classpath="build" fork="true"/>
+    <java classname="netplay.client.Client" classpath="build" fork="true"/>
+  </target>
+
 </project>
