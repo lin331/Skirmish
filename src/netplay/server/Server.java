@@ -114,9 +114,27 @@ public class Server {
         }
     }
     
+    private void testRun() {
+        try {
+            clientA = serverSocket.accept();
+            NameMessage msgA = null;
+            inputStreamA = new ObjectInputStream(clientA.getInputStream());
+            outputStreamA = new ObjectOutputStream(clientA.getOutputStream());
+            msgA = (NameMessage) inputStreamA.readObject();
+            System.out.println(msgA);
+            Message msg = new Message("Ready");
+            outputStreamA.writeObject(msg);
+            System.out.println("Message sent");
+            //clientA.close();
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Error");
+        }
+        while(true);
+    }
+    
     public static void main(String[] args) {
         System.out.println("Server");
         Server server = new Server();
-        server.run();
+        server.testRun();
     }
 }
