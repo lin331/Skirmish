@@ -1,5 +1,7 @@
 package netplay.client;
 
+import game.Game;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -9,6 +11,9 @@ import java.net.Socket;
 
 
 
+
+
+import map.Map;
 import netplay.message.Message;
 //import netplay.message.Message;
 import netplay.message.NameMessage;
@@ -19,60 +24,35 @@ public class Client {
     private ObjectOutputStream out;
     
     private ClientGui gui;
+    private Game game;
     private boolean isConnected;
     private boolean isFinished;
+    
+    public Map getMap() {
+        return game.getMap();
+    }
     
     private Client() {
         socket = null;
         in = null;
         out = null;
+        
+        gui = null;
+        game = null;
+        
         isConnected = false;
         isFinished = false;
     }
-    
 
-    
-    protected void sendTeamName() {
-        NameMessage name = new NameMessage("Team A");
-        try {
-            out.writeObject(name);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        
+    private void unitSetup() {
+        gui.unitSetup();
     }
     
-    protected Message receive() {
-        try {
-            in = new ObjectInputStream(socket.getInputStream());
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-        Message msg = null;
-        try {
-            msg = (Message) in.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return msg;
-    }
-    
-    private void run() {
-        connect();
-        sendTeamName();
-        Message msg = null;
-        while(!isFinished) {
-            msg = receive();
-            if (msg != null) {
-                isFinished = true;
-            }
-        }
-        try {
-            socket.close();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+    private void play() {
+        unitSetup();
+        boolean isFinished = false;
+        while (!isFinished) {
+            
         }
     }
     
@@ -93,6 +73,7 @@ public class Client {
             
         }
         gui.initMainGame();
+        //play();
     }
     
     protected void sendTeamName(String name) {

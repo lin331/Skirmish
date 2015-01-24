@@ -22,6 +22,8 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
 
 import map.Map;
 import map.Tile;
@@ -49,7 +51,7 @@ public class ClientGui extends JFrame {
     private Team playerTeam;
     
     /* Start screen */
-    private JPanel startPanel;
+    private ClientStartPanel startPanel;
     private JLabel namePrompt;
     private JTextField teamNameField;
     private JButton connect;
@@ -67,7 +69,10 @@ public class ClientGui extends JFrame {
     private JPanel tilePanel;
     private ArrayList<TileButton> tileButtons;
     
+    private ClientGamePanel gamePanel;
+    
     public ClientGui(Client client) {
+        super();
         this.client = client;
         map = new Map();
         initialize();
@@ -81,9 +86,40 @@ public class ClientGui extends JFrame {
         this.setLocation(dim.width/2-this.getSize().width/2,
                 dim.height/2-this.getSize().height/2);
     }
+
+    protected void unitSetup() {
+        
+    }
+    
+    protected void initMainGame() {
+        startPanel.setVisible(false);
+        getContentPane().remove(startPanel);
+        initInfoPane();
+        initGamePanel();
+        infoPane.setVisible(true);
+        gamePanel.setVisible(true);
+        getContentPane().add(infoPane, BorderLayout.WEST);
+        getContentPane().add(gamePanel, BorderLayout.EAST);
+        /*initInfoTable();
+        initMapPane();
+        infoPane.setVisible(true);
+        mainPanel.setVisible(true);*/
+        revalidate();
+        this.pack();
+    }
+    
+    private void initGamePanel() {
+        gamePanel = new ClientGamePanel(client);
+        gamePanel.setVisible(false);
+    }
+
+    private void initInfoPane() {
+        infoPane = new ClientInfoPane();
+        infoPane.setVisible(false);
+    }
     
     private void initMapPane() {
-        mainPanel = new JPanel(new BorderLayout());
+        /*mainPanel = new JPanel(new BorderLayout());
 
         mapPane = new JLayeredPane();
         mapPane.setLayout(null);
@@ -116,11 +152,11 @@ public class ClientGui extends JFrame {
         mainPanel.setBackground(Color.LIGHT_GRAY);
 
         getContentPane().add(mainPanel, BorderLayout.EAST);
-        mainPanel.setVisible(false);
+        mainPanel.setVisible(false);*/
     }
     
     private void initInfoTable() {
-        String[] columnNames = { "Unit", "Turn Delay", "Health" };
+        /*String[] columnNames = { "Unit", "Turn Delay", "Health" };
         infoModel = new DefaultTableModel(columnNames, 0) {
             private static final long serialVersionUID = 3626814961431990334L;
 
@@ -153,20 +189,13 @@ public class ClientGui extends JFrame {
         infoPane.setHorizontalScrollBarPolicy(JScrollPane.
                 HORIZONTAL_SCROLLBAR_NEVER);
         getContentPane().add(infoPane, BorderLayout.WEST);
-        infoPane.setVisible(false);
-    }
-    
-    protected void initMainGame() {
-        startPanel.setVisible(false);
-        initInfoTable();
-        initMapPane();
-        infoPane.setVisible(true);
-        mainPanel.setVisible(true);
-        this.pack();
+        infoPane.setVisible(false);*/
+        
     }
     
     private void initStartPanel() {
-        startPanel = new JPanel();
+        startPanel = new ClientStartPanel(client);
+        /*startPanel = new JPanel();
         startPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
         getContentPane().add(startPanel);
         startPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
@@ -198,7 +227,7 @@ public class ClientGui extends JFrame {
         waiting = new JLabel("Waiting...");
         startPanel.add(waiting);
         waiting.setVisible(false);
-        startPanel.add(connect);
+        startPanel.add(connect);*/
     }
     
     private void initialize() {
@@ -207,5 +236,13 @@ public class ClientGui extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().setLayout(new BorderLayout(0, 0));
         initStartPanel();
+    }
+    
+    private class FieldListener extends DocumentFilter {
+        @Override
+        public void remove(DocumentFilter.FilterBypass fb, int offset, int len)
+                throws BadLocationException {
+            fb.remove(offset, len);
+        }
     }
 }

@@ -10,6 +10,11 @@ import java.net.Socket;
 import netplay.message.*;
 
 public class Server {
+    private static final int LISTENING = 0;
+    private static final int UNIT_SETUP = 1;
+    private static final int TURN = 2;
+    private static final int FINISHED = 3;
+    
     private ServerSocket serverSocket;
     private Socket clientA;
     private Socket clientB;
@@ -19,6 +24,8 @@ public class Server {
     private ObjectOutputStream outputStreamB;
     private int connected;
     
+    private int status;
+    
     private Server() {
         serverSocket = null;
         clientA = null;
@@ -27,8 +34,8 @@ public class Server {
         inputStreamB = null;
         outputStreamA = null;
         outputStreamB = null;
-        //out = null;
         connected = 0;
+        status = 0;
         initialize();
     }
     
@@ -102,7 +109,7 @@ public class Server {
         }       
     }
     
-    private void run() {
+    private void run1() {
         connectClients();
         getTeamNames();
         send(new Message());
@@ -114,6 +121,14 @@ public class Server {
         }
     }
     
+    private void run() {
+        while (status != FINISHED) {
+            switch(status) {
+                case LISTENING:
+                    
+            }
+        }
+    }
     private void testRun() {
         try {
             clientA = serverSocket.accept();
@@ -129,7 +144,6 @@ public class Server {
         } catch (IOException | ClassNotFoundException e) {
             System.out.println("Error");
         }
-        while(true);
     }
     
     public static void main(String[] args) {
