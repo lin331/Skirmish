@@ -7,41 +7,28 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-
-
-
-
-
-
 import map.Map;
+import netplay.message.ClientMessage;
 import netplay.message.Message;
 //import netplay.message.Message;
-import netplay.message.NameMessage;
+import netplay.message.ServerMessage;
 
 public class Client {
-    private Socket socket;
-    private ObjectInputStream in;
-    private ObjectOutputStream out;
+    private Socket socket = null;
+    private ObjectInputStream in = null;
+    private ObjectOutputStream out = null;
     
-    private ClientGui gui;
-    private Game game;
-    private boolean isConnected;
-    private boolean isFinished;
+    private ClientGui gui = null;
+    private ClientMessageBox msgBox= null;
+    private int playerID = -1;
+    private Game game = null;
+    private boolean isConnected = false;
     
     public Map getMap() {
         return game.getMap();
     }
     
     private Client() {
-        socket = null;
-        in = null;
-        out = null;
-        
-        gui = null;
-        game = null;
-        
-        isConnected = false;
-        isFinished = false;
     }
 
     private void unitSetup() {
@@ -57,27 +44,21 @@ public class Client {
     }
     
     protected void receiveMatch() {
-        boolean waiting = true;
-        Message msg = null;
+        ServerMessage msg = null;
         try {
-            while (waiting) {
-                if (in != null ) { 
-                    msg = (Message) in.readObject();
-                    if (msg != null) {
-                        waiting = false;
-                        System.out.println("Received");
-                    }
-                }
-            }
+            msg = (ServerMessage) in.readObject();
+            playerID = msg.getID();
+            System.out.println("Received ID: " + playerID);
+            msgBox.append("\n" + msg.getMsg());
         } catch (IOException | ClassNotFoundException e) {
-            
+            e.printStackTrace();
         }
         gui.initMainGame();
         //play();
     }
     
-    protected void sendTeamName(String name) {
-        NameMessage team = new NameMessage(name);
+    private void sendTeamName(String name) {
+        ClientMessage team = new ClientMessage(Message.CLIENT_NAME, name);
         try {
             out.writeObject(team);
         } catch (IOException e) {
@@ -85,28 +66,38 @@ public class Client {
         }        
     }
     
-    protected void connect() {
-        try {
-            while(!isConnected) {
+    private void connect(String name) {
+        while(!isConnected) {
+            try {
                 socket = new Socket("localhost", 4444);
                 System.out.println("Connected");
                 isConnected = true;
                 out = new ObjectOutputStream(socket.getOutputStream());
                 in = new ObjectInputStream(socket.getInputStream());
-            }
-        } catch (IOException e) {
-            
+                sendTeamName(name);
+            } catch (IOException e) {}
         }
     }
     
-    private void start() {
+    protected void start(String name) {
+        connect(name);
+        receiveMatch();
+        try {
+            out.writeObject(new ClientMessage(Message.GAME_OVER));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    private void run() {
         gui = new ClientGui(this);
+        msgBox = gui.getMsgBox();
         gui.start();
     }
     
     public static void main(String[] args) {
         System.out.println("Client");
         Client client = new Client();
-        client.start();
+        client.run();
     }
 }

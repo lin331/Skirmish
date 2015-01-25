@@ -11,7 +11,7 @@ public class ClientMessageBox extends JTextArea {
     private static final int COL_DEFAULT = 32;
     
     public ClientMessageBox() {
-        super("This is the message box", ROW_LIMIT, COL_DEFAULT);
+        super("Message box:", ROW_LIMIT, COL_DEFAULT);
         initialize();
         setLineWrap(true);
         setWrapStyleWord(true);

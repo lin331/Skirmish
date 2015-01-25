@@ -30,6 +30,7 @@ public class ClientInfoPane extends JScrollPane {
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
+            @SuppressWarnings({ "unchecked", "rawtypes" })
             public Class getColumnClass(int column) {
                 if (column == 0)
                     return Icon.class;

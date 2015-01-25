@@ -53,15 +53,16 @@ public class ClientStartPanel extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getButton() == LEFT_BUTTON) {
-                    client.connect();
-                    client.sendTeamName(teamNameField.getText());
                     namePrompt.setVisible(false);
                     teamNameField.setVisible(false);
                     connect.setVisible(false);
                     waiting.setVisible(true);
                     System.out.println("Clicked");
-                    //repaint();
-                    client.receiveMatch();
+                    new Thread() {
+                        public void run() {
+                            client.start(teamNameField.getText());                            
+                        }
+                    }.start();
                 }
             }
         });

@@ -10,33 +10,133 @@ import java.net.Socket;
 import netplay.message.*;
 
 public class Server {
-    private static final int LISTENING = 0;
-    private static final int UNIT_SETUP = 1;
-    private static final int TURN = 2;
-    private static final int FINISHED = 3;
     
-    private ServerSocket serverSocket;
-    private Socket clientA;
-    private Socket clientB;
-    private ObjectInputStream inputStreamA;
-    private ObjectInputStream inputStreamB;
-    private ObjectOutputStream outputStreamA;
-    private ObjectOutputStream outputStreamB;
-    private int connected;
+    private ServerSocket serverSocket = null;
+    private Socket clientA = null;
+    private Socket clientB = null;
+    private ObjectInputStream inputStreamA = null;
+    private ObjectInputStream inputStreamB = null;
+    private ObjectOutputStream outputStreamA = null;
+    private ObjectOutputStream outputStreamB = null;
     
-    private int status;
+    private boolean isFinished = false;
+    private int connected = 0;
     
     private Server() {
-        serverSocket = null;
-        clientA = null;
-        clientB = null;
-        inputStreamA = null;
-        inputStreamB = null;
-        outputStreamA = null;
-        outputStreamB = null;
-        connected = 0;
-        status = 0;
         initialize();
+    }
+    
+    /* Message handler */
+    private void handleMessage(Message msg) {
+        if (msg == null) {
+            return;
+        }
+        ClientMessage clientMsg = (ClientMessage) msg;
+        int type = msg.getType();
+        switch(type) {
+            case Message.CLIENT_NAME:
+                try {
+                    if (connected == 0) {
+                        System.out.println("Received name from A");
+                        outputStreamB.writeObject(new ServerMessage(
+                                Message.SERVER_NAME, 1, clientMsg.getName(), 
+                                "Playing against " + clientMsg.getName()));
+                        connected++;
+                    }
+                    else if (connected == 1) {
+                        System.out.println("Received name from B");
+                        outputStreamA.writeObject(new ServerMessage(
+                                Message.SERVER_NAME, 0, clientMsg.getName(),
+                                "Playing against " + clientMsg.getName()));
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case Message.CLIENT_UNITS:
+                try {
+                    if (clientMsg.getID() == 0) {
+                        System.out.println("Received units from A");
+                        outputStreamB.writeObject(new ServerMessage(
+                                Message.SERVER_NAME, clientMsg.getUnits()));
+                    }
+                    else if (clientMsg.getID() == 1) {
+                        System.out.println("Received units from B");
+                        outputStreamA.writeObject(new ServerMessage(
+                                Message.SERVER_NAME, clientMsg.getUnits()));                        
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            case Message.CLIENT_COMMAND:
+                try {
+                    if (clientMsg.getID() == 0) {
+                        System.out.println("Received commands from A");
+                        outputStreamB.writeObject(new ServerMessage(
+                                Message.SERVER_NAME, clientMsg.getUnits()));
+                    }
+                    else if (clientMsg.getID() == 1) {
+                        System.out.println("Received commands from B");
+                        outputStreamA.writeObject(new ServerMessage(
+                                Message.SERVER_NAME, clientMsg.getUnits()));                        
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case Message.GAME_OVER:
+                try {
+                    clientA.close();
+                    clientB.close();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                isFinished = true;
+            default:
+                    break;
+        }
+        try {
+            serverSocket.close();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    /*
+     * Connect to clients
+     */
+    private void connect() {
+        try {
+            clientA = serverSocket.accept();
+            inputStreamA = new ObjectInputStream(clientA.getInputStream());
+            outputStreamA = new ObjectOutputStream(clientA.getOutputStream());
+            System.out.println("A Connected");
+        } catch (IOException e) {}
+        try {
+            clientB = serverSocket.accept();
+            inputStreamB = new ObjectInputStream(clientB.getInputStream());
+            outputStreamB = new ObjectOutputStream(clientB.getOutputStream());
+            System.out.println("B Connected");
+        } catch (IOException e) {}
+    }
+    
+    private void run() {
+        connect();
+        //getTeamNames();
+        Message msgA = null;
+        Message msgB = null;
+        while (!isFinished) {
+            try {
+                msgA = (Message) inputStreamA.readObject();
+                msgB = (Message) inputStreamB.readObject();
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            handleMessage(msgA);
+            handleMessage(msgB);       
+        }
     }
     
     private void initialize() {
@@ -45,110 +145,12 @@ public class Server {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-    
-    private void connectClients() {
-        try {
-            while (connected != 2) {
-                if (clientA == null) {
-                    clientA = serverSocket.accept();            
-                    connected++;
-                    System.out.println("Connected " + connected);
-                }
-                if (clientB == null) {
-                    clientB = serverSocket.accept();
-                    connected++;
-                    System.out.println("Connected " + connected);
-                }
-            }
-        } catch (IOException e) {
-            
-        }   
-        try {
-            inputStreamA = new ObjectInputStream(clientA.getInputStream());
-            inputStreamB = new ObjectInputStream(clientB.getInputStream());
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-        try {
-            outputStreamA = new ObjectOutputStream(clientA.getOutputStream());
-            outputStreamB = new ObjectOutputStream(clientB.getOutputStream());
-        } catch (IOException e2) {
-            e2.printStackTrace();
-        }
-    }
-    
-    private void getTeamNames() {
-        int received = 0;
-        NameMessage msgA = null;
-        NameMessage msgB = null;
-        try {
-            while (received != 2) {
-                if (msgA == null) {
-                    msgA = (NameMessage) inputStreamA.readObject();
-                    received++;
-                    System.out.println("msgA: " + msgA);
-                }
-                if (msgB == null) {
-                    msgB = (NameMessage) inputStreamB.readObject();
-                    received++;
-                    System.out.println("msgB: " + msgB);
-                }                
-            }
-        } catch (IOException | ClassNotFoundException e1) {
-            e1.printStackTrace();
-        }
-    }
-    
-    private void send(Message msg) {
-        try {
-            outputStreamA.writeObject(msg);
-            outputStreamB.writeObject(msg); 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }       
-    }
-    
-    private void run1() {
-        connectClients();
-        getTeamNames();
-        send(new Message());
-        try {
-            serverSocket.close();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
-    
-    private void run() {
-        while (status != FINISHED) {
-            switch(status) {
-                case LISTENING:
-                    
-            }
-        }
-    }
-    private void testRun() {
-        try {
-            clientA = serverSocket.accept();
-            NameMessage msgA = null;
-            inputStreamA = new ObjectInputStream(clientA.getInputStream());
-            outputStreamA = new ObjectOutputStream(clientA.getOutputStream());
-            msgA = (NameMessage) inputStreamA.readObject();
-            System.out.println(msgA);
-            Message msg = new Message("Ready");
-            outputStreamA.writeObject(msg);
-            System.out.println("Message sent");
-            //clientA.close();
-        } catch (IOException | ClassNotFoundException e) {
-            System.out.println("Error");
-        }
+        isFinished = false;
     }
     
     public static void main(String[] args) {
         System.out.println("Server");
         Server server = new Server();
-        server.testRun();
+        server.run();
     }
 }

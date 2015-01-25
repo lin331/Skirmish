@@ -9,12 +9,16 @@ public class ClientGamePanel extends JPanel {
     ClientMapPane mapPane;
     ClientMessageBox msgBox;
     
-    public ClientGamePanel(Client client) {
+    protected ClientGamePanel(Client client) {
         super();
         initialize(client);
     }
     
-    public void initialize(Client client) {
+    protected ClientMessageBox getMsgBox() {
+        return msgBox;
+    }
+    
+    private void initialize(Client client) {
         this.setLayout(new BorderLayout());
         this.setBackground(Color.LIGHT_GRAY);
         
