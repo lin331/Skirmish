@@ -116,12 +116,14 @@ public class Combat {
             Archer a = aIter.next();
             if (a.getRemaining() > 0) {
                 Tile t = a.getAttackTile();
-                if (!t.isEmpty()) {
-                    Unit enemy = t.getUnit();
-                    Battle battle = new Battle(a, enemy, 5);
-                    battle.doBattle(a);
+                if (t != null ) {
+                    if (!t.isEmpty()) {
+                        Unit enemy = t.getUnit();
+                        Battle battle = new Battle(a, enemy, 5);
+                        battle.doBattle(a);
+                    }
+                    a.reduceRemaining();
                 }
-                a.reduceRemaining();
             }
             else {
                 aIter.remove();

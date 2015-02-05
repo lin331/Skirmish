@@ -1,5 +1,7 @@
 package player;
 
+import java.util.ArrayList;
+
 import map.Tile;
 
 public class Archer extends Unit {
@@ -58,7 +60,8 @@ public class Archer extends Unit {
     }
     
     private boolean checkValid(Tile tile) {
-        int distance = this.tile.distanceFrom(tile);
+        ArrayList<Tile> path = getPath().getTiles();
+        int distance = path.get(path.size()-1).distanceFrom(tile);
         return distance > 1 && distance <= 5;
     }
 }
